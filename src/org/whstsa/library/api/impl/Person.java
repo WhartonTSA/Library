@@ -19,8 +19,9 @@ import java.util.*;
  */
 public class Person implements IPerson {
 
-    private StringProperty firstName;
-    private StringProperty lastName;
+    private String firstName;
+    private String lastName;
+
     private boolean teacher;
     private Map<ILibrary, IMember> memberships;
     private double wallet = 0;
@@ -28,10 +29,8 @@ public class Person implements IPerson {
     private UUID uuid;
 
     public Person(String firstName, String lastName, boolean teacher) {
-        this.firstName = new SimpleStringProperty(this, "firstName");
-        this.lastName = new SimpleStringProperty(this, "lastName");
-        this.firstName.set(firstName);
-        this.lastName.set(lastName);
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.teacher = teacher;
         this.memberships = new HashMap<>();
         this.uuid = UUID.randomUUID();
@@ -107,12 +106,12 @@ public class Person implements IPerson {
 
     @Override
     public String getFirstName() {
-        return this.firstName.get();
+        return this.firstName;
     }
 
     @Override
     public String getLastName() {
-        return this.lastName.get();
+        return this.lastName;
     }
 
     @Override
@@ -170,15 +169,5 @@ public class Person implements IPerson {
     @Override
     public void load() {
         Loader.getLoader().loadPerson(this);
-    }
-
-    @Override
-    public StringProperty firstNameProperty() {
-        return this.firstName;
-    }
-
-    @Override
-    public StringProperty lastNameProperty() {
-        return this.lastName;
     }
 }
