@@ -45,7 +45,8 @@ public class GuiMain implements Gui {
         StackPane personButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newPersonButton, editPersonButton, deletePersonButton);
 
         Table<Person> personTable = new Table<>();
-        personTable.addColumn("People", "name", true, TableColumn.SortType.DESCENDING, 100);
+        personTable.addColumn("First Name", "firstName", true, TableColumn.SortType.DESCENDING, 50);
+        personTable.addColumn("Last Name", "lastName", true, TableColumn.SortType.DESCENDING, 50);
         List<Person> personList = ArrayUtils.castList(ObjectDelegate.getPeople(), new ArrayList<Person>());
         personTable.addItems(personList);
 
