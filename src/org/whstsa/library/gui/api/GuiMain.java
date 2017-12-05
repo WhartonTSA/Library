@@ -53,7 +53,7 @@ public class GuiMain implements Gui {
 
         StackPane container = GuiUtils.createTitledSplitPane("Library Manager", GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer);
 
-        return new Scene(container, 768, 512);
+        return new Scene(container, 800, 512);
     }
 
     @Override
