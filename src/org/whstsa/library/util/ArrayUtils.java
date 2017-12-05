@@ -1,5 +1,8 @@
 package org.whstsa.library.util;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ArrayUtils {
 	public static String join(Object[] array, Character delimiter) {
 		StringBuilder joined = new StringBuilder();
@@ -29,5 +32,9 @@ public class ArrayUtils {
 			prevLength = array.length;
 		}
 		return mainArray;
+	}
+
+	public static <F, T> List<T> castList(List<F> list, List<T> expectedValue) {
+		return list.stream().map(entry -> (T) entry).collect(Collectors.toList());
 	}
 }
