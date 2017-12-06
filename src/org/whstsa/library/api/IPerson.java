@@ -89,18 +89,4 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
      */
     double deductMoney(double money) throws NotEnoughMoneyException;
 
-    /**
-     * Returns the first name as a StringProperty
-     *
-     * @return the first name
-     */
-    StringProperty firstNameProperty();
-
-    /**
-     * Returns the last name as a StringProperty
-     *
-     * @return the last name
-     */
-    StringProperty lastNameProperty();
-
 }

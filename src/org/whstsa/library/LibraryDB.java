@@ -57,8 +57,8 @@ public class LibraryDB extends Application {
         LOGGER.debug("Splashing JSON GUI");
         File rawJSON = this.jsonFileBrowser.getFile();
         try {
-            IOFileDelegate fileDelegate = new IOFileDelegate(rawJSON);
-            JSONObject root = fileDelegate.parse();
+            FILE_DELEGATE = new IOFileDelegate(rawJSON);
+            JSONObject root = FILE_DELEGATE.parse();
             Loader.getLoader().load(root);
         } catch (UncheckedIOException | IOException | NullPointerException | JSONException ex) {
             Alert alert = DialogUtils.createDialog("Invalid file", "You have provided an invalid file. Please check that you chose the correct file, or try a new database.", null, Alert.AlertType.ERROR, (Callback<Boolean> arg1) -> {
