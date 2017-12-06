@@ -1,0 +1,16 @@
+{
+    "books": [],
+    "libraries": [{
+        "books": [],
+        "members": [],
+        "name": "test 123",
+        "uuid": "b995f803-8e9f-4533-b72f-9ae783087449"
+    }],
+    "people": [{
+        "firstName": "Eric",
+        "lastName": "Rabil",
+        "teacher": false,
+        "wallet": 0,
+        "uuid": "57709fc1-f5a8-4db5-9583-aa499a77d805"
+    }]
+}
