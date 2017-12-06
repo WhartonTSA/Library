@@ -36,15 +36,12 @@ public class DayGenerator {
 	 **/
 	
 	public static void simulateDay() {
-		System.out.print("a");
 		if (chance(5)) {
-			// Creating a new person and adding them to a random library
-			System.out.print("A");
-			IPerson person = new Person(generateFirstName(), generateLastName(), chance(5)); System.out.print("B");
-			ILibrary library = randomLibrary();
-			library.addMember(person);
-		} System.out.print("b");
-		if (chance(15)) {
+			System.out.print("a");
+			generateMember();
+		}
+		if (chance(10)) {
+			System.out.print("b");
 			// Attempt removing a random member from a random library
 			IMember member = randomMember();
 			ILibrary library = member.getLibrary();
@@ -53,9 +50,12 @@ public class DayGenerator {
 				System.out.println(String.format("Deregistered %s from %s", library.getName()));
 			} catch (CannotDeregisterException ex) {
 				System.out.println(String.format("Couldn't deregister %s: %s", member.getName(), ex.getMessage()));
+			} catch (NullPointerException ex) {
+				System.out.println("Got em!");
 			}
-		} System.out.print("c");
+		}
 		if (chance(5)) {
+			System.out.print("c");
 			String bookName = generateBook();
 			String authorName = generateName();
 			BookType bookType = randomBookType();
@@ -63,9 +63,10 @@ public class DayGenerator {
 			ILibrary library = randomLibrary();
 			library.addBook(book);
 			System.out.println(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthor(), library.getName()));
-		} System.out.print("d");
+		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
+				System.out.print("d");
 				if (member.getBooks().size() != 0 && RANDOM.nextBoolean()) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
@@ -73,7 +74,7 @@ public class DayGenerator {
 					} catch (CheckedInException e) {
 						System.out.println(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
 					}
-				} else {
+				} else if (member.getLibrary().getBooks().size() != 0) {
 					List<IBook> bookDB = member.getLibrary().getBooks();
 					ILibrary library = member.getLibrary();
 					int randomBookIndex = RANDOM.nextInt(bookDB.size());
@@ -85,9 +86,13 @@ public class DayGenerator {
 						library.reserveBook(member, book);
 					}
 				}
+				else {
+					System.out.print("Got em dot 2.0");
+				}
 			}
-		}); System.out.print("e");
+		});
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
+			System.out.print("e");
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
 				try {
@@ -97,9 +102,16 @@ public class DayGenerator {
 				}
 			}
 		});
-		System.out.println("f");
 	}
-	
+
+	public static void generateMember() {
+		// Creating a new person and adding them to a random library
+		IPerson person = new Person(generateFirstName(), generateLastName(), chance(5));
+		ILibrary library = randomLibrary();
+		library.addMember(person);
+		System.out.println(String.format("Added %s %s to %s", person.getFirstName(), person.getLastName(), library.getName()));
+	}
+
 	public static String generateFirstName() {
 		String[] firstNames = new String[] {"Jacob" , "Emily" , "Michael" , "Madison" , "Joshua" , "Emma" , "Matthew" , "Olivia" , "Daniel" , "Hannah" , "Christopher" , "Abigail" , "Andrew" , "Isabella" , "Ethan" , "Samantha" , "Joseph" , "Elizabeth" , "William" , "Ashley" , "Anthony" , "Alexis" , "David" , "Sarah" , "Alexander" , "Sophia" , "Nicholas" , "Alyssa" , "Ryan" , "Grace" , "Tyler" , "Ava" , "James" , "Taylor", "John" , "Brianna" , "Johnathan" , "Lauren" , "Noah" , "Chloe" , "Brandon" , "Natalie" , "Christian" , "Kayla" , "Dylan" , "Jessica" , "Samuel" , "Anna" , "Benjamin" , "Victoria"};
 		return firstNames[RANDOM.nextInt(firstNames.length - 1)];
@@ -135,6 +147,12 @@ public class DayGenerator {
 	public static IMember randomMember() {
 		ILibrary library = randomLibrary();
 		List<IMember> members = library.getMembers();
+		if (members.size() == 1) {
+			return members.get(0);
+		}
+		if (members.size() == 0) {
+			return null;
+		}
 		return members.get(RANDOM.nextInt(members.size() - 1));
 	}
 

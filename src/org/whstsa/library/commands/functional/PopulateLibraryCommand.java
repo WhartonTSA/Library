@@ -1,14 +1,11 @@
 package org.whstsa.library.commands.functional;
 
 import org.json.JSONObject;
-import org.whstsa.library.LibraryDB;
 import org.whstsa.library.World;
 import org.whstsa.library.commands.api.ICommand;
 import org.whstsa.library.commands.api.ICommandSender;
-import org.whstsa.library.db.Loader;
 import org.whstsa.library.util.DayGenerator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -16,7 +13,7 @@ import java.util.List;
 /**
  * Created by eric on 11/19/17.
  */
-public class DayGeneratorCommand implements ICommand {
+public class PopulateLibraryCommand implements ICommand {
     @Override
     public JSONObject handle(String[] args, ICommandSender commandSender) {
         int totalDaysAdvanced = Integer.parseInt(args[0]);

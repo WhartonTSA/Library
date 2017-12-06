@@ -1,1 +1,10 @@
-{}
+{
+    "books": [],
+    "libraries": [{
+        "books": [],
+        "members": [],
+        "name": "Wharton High School",
+        "uuid": "213078bd-945e-4fee-959e-aa668974b04c"
+    }],
+    "people": []
+}

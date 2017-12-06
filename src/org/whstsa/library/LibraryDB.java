@@ -42,10 +42,10 @@ public class LibraryDB extends Application {
             } catch (Exception e) {
             }
         }
-        /*this.loadJSON((arg0) -> {
-            LOGGER.debug("JSON Loaded.");
-            this.interfaceManager.display(new GuiMain());
-        });*/
+        this.loadJSON((arg0) -> {
+            /*LOGGER.debug("JSON Loaded.");
+            this.interfaceManager.display(new GuiMain());*/
+        });
         new CommandWatcher(System.in, System.out).start();
     }
 
