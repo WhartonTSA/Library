@@ -36,12 +36,14 @@ public class DayGenerator {
 	 **/
 	
 	public static void simulateDay() {
+		System.out.print("a");
 		if (chance(5)) {
 			// Creating a new person and adding them to a random library
-			IPerson person = new Person(generateFirstName(), generateLastName(), chance(5));
+			System.out.print("A");
+			IPerson person = new Person(generateFirstName(), generateLastName(), chance(5)); System.out.print("B");
 			ILibrary library = randomLibrary();
 			library.addMember(person);
-		}
+		} System.out.print("b");
 		if (chance(15)) {
 			// Attempt removing a random member from a random library
 			IMember member = randomMember();
@@ -52,7 +54,7 @@ public class DayGenerator {
 			} catch (CannotDeregisterException ex) {
 				System.out.println(String.format("Couldn't deregister %s: %s", member.getName(), ex.getMessage()));
 			}
-		}
+		} System.out.print("c");
 		if (chance(5)) {
 			String bookName = generateBook();
 			String authorName = generateName();
@@ -61,7 +63,7 @@ public class DayGenerator {
 			ILibrary library = randomLibrary();
 			library.addBook(book);
 			System.out.println(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthor(), library.getName()));
-		}
+		} System.out.print("d");
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
 				if (member.getBooks().size() != 0 && RANDOM.nextBoolean()) {
@@ -84,7 +86,7 @@ public class DayGenerator {
 					}
 				}
 			}
-		});
+		}); System.out.print("e");
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
@@ -95,6 +97,7 @@ public class DayGenerator {
 				}
 			}
 		});
+		System.out.println("f");
 	}
 	
 	public static String generateFirstName() {
@@ -123,6 +126,9 @@ public class DayGenerator {
 
 	public static ILibrary randomLibrary() {
 		List<ILibrary> libraries = ObjectDelegate.getLibraries();
+		if (libraries.size() == 1) {
+			return libraries.get(0);
+		}
 		return libraries.get(RANDOM.nextInt(libraries.size() - 1));
 	}
 
