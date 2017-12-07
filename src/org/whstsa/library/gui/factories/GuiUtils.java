@@ -60,10 +60,7 @@ public class GuiUtils {
 	public static Scene createScene(Parent parent) {
 		return new Scene(parent, 512, 512);
 	}
-	
-	// 1 4 7 10 13 16 19
-	// 17 20 21 42 45 69 72 25 39
-	
+
 	public static Button createButton(String title, ClickHandler clickHandler) {
 		LibraryDB.LOGGER.debug("Assembling button with title " + title + " (CLICK HANDLER: " + Logger.assertion(clickHandler != null) + ")");
 		Button button = new Button(title);
@@ -76,6 +73,10 @@ public class GuiUtils {
 			});
 		}
 		return button;
+	}
+
+	public static Button createButton(String title) {
+		return createButton(title, null);
 	}
 	
 	public static InputGroup createInputGroup(String label, boolean inline) {
