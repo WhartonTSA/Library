@@ -66,29 +66,36 @@ public class DialogUtils {
 	public static Alert createDialog() {
 		return createDialog(null);
 	}
-	
-	public static Dialog<Map<String, String>> createInputDialog(ButtonType button, boolean cancelButton, String title, String ...fields) {
+
+	public static Dialog<Map<String, String>> createInputDialog(ButtonType button, boolean cancelButton, String title, InputGroup ...inputGroups) {
 		Dialog<Map<String, String>> dialog = new Dialog<>();
 		dialog.setTitle(title);
-		
+
 		dialog.getDialogPane().getButtonTypes().addAll(DialogUtils.createButtonList(cancelButton, button));
-		
+
 		GridPane grid = DialogUtils.buildGridPane();
-		
+
 		int incr = 0;
-		for (String field : fields) {
-			InputGroup group = GuiUtils.createInputGroup(field);
-			grid.add(group.getNode(), 0, incr);
+		for (InputGroup inputGroup : inputGroups) {
+			grid.add(inputGroup.getNode(), 0, incr);
 			incr++;
 		}
-		
+
 		dialog.getDialogPane().setContent(grid);
-		
+
 		Platform.runLater(() -> grid.getChildren().get(0).requestFocus());
-		
+
 		DialogUtils.addInputVieldMatcher(dialog);
-		
+
 		return dialog;
+	}
+	
+	public static Dialog<Map<String, String>> createInputDialog(ButtonType button, boolean cancelButton, String title, String ...fields) {
+		InputGroup[] inputGroups = new InputGroup[fields.length];
+		for (int i = 0; i < fields.length; i++) {
+			inputGroups[i] = GuiUtils.createInputGroup(fields[i]);
+		}
+		return createInputDialog(button, cancelButton, title, inputGroups);
 	}
 	
 	public static void getDialogResults(Dialog<Map<String, String>> dialog, Callback<Map<String, String>> callback, boolean requireContent, String[] expectedKeys) {

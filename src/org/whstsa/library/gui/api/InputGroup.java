@@ -34,4 +34,8 @@ public class InputGroup {
 	public TextField getField() {
 		return this.field;
 	}
+
+	public void setValue(String value) {
+		this.getField().setText(value);
+	}
 }
