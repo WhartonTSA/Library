@@ -14,13 +14,14 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by eric on 11/19/17.
+ * Created by Andre on 12/7/17
  */
 public class DayGeneratorCommand implements ICommand {
     @Override
     public JSONObject handle(String[] args, ICommandSender commandSender) {
         int totalDaysAdvanced = Integer.parseInt(args[0]);
         for (int currentDate = 0; currentDate < totalDaysAdvanced; currentDate++) {
+            System.out.println("x");
             DayGenerator.simulateDay();
             Calendar cal = Calendar.getInstance();
             cal.setTime(World.getDate());

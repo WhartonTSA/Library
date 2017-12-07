@@ -4,9 +4,7 @@ import org.json.JSONObject;
 import org.whstsa.library.commands.api.ICommand;
 import org.whstsa.library.commands.api.ICommandSender;
 import org.whstsa.library.commands.api.impl.ConsoleSender;
-import org.whstsa.library.commands.functional.DayGeneratorCommand;
-import org.whstsa.library.commands.functional.HelpCommand;
-import org.whstsa.library.commands.functional.SaveCommand;
+import org.whstsa.library.commands.functional.*;
 import org.whstsa.library.commands.getters.*;
 import org.whstsa.library.commands.patchers.UpdateWalletCommand;
 import org.whstsa.library.commands.setters.*;
@@ -107,6 +105,8 @@ public class CommandWatcher {
         commands.add(new HelpCommand(this));
 
         commands.add(new DayGeneratorCommand());
+        commands.add(new PopulatePeopleCommand());
+        commands.add(new PopulateBooksCommand());
 
 
         commands.forEach(command -> this.commandMap.put(command.getName(), command));

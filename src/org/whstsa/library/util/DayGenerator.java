@@ -38,7 +38,7 @@ public class DayGenerator {
 	public static void simulateDay() {
 		if (chance(5)) {
 			System.out.print("a");
-			generateMember();
+			generateMember(randomLibrary());
 		}
 		if (chance(10)) {
 			System.out.print("b");
@@ -56,13 +56,7 @@ public class DayGenerator {
 		}
 		if (chance(5)) {
 			System.out.print("c");
-			String bookName = generateBook();
-			String authorName = generateName();
-			BookType bookType = randomBookType();
-			IBook book = new Book(bookName, authorName, bookType);
-			ILibrary library = randomLibrary();
-			library.addBook(book);
-			System.out.println(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthor(), library.getName()));
+			generateBook();
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
@@ -104,12 +98,24 @@ public class DayGenerator {
 		});
 	}
 
-	public static void generateMember() {
+	public static void generateMember(ILibrary library) {
 		// Creating a new person and adding them to a random library
 		IPerson person = new Person(generateFirstName(), generateLastName(), chance(5));
-		ILibrary library = randomLibrary();
 		library.addMember(person);
+		Loader.getLoader().loadPerson(person);
 		System.out.println(String.format("Added %s %s to %s", person.getFirstName(), person.getLastName(), library.getName()));
+	}
+
+	public static void generateBook() {
+		// Creating a new book and adding it to a random library
+		String bookName = generateBookTitle();
+		String authorName = generateName();
+		BookType bookType = randomBookType();
+		IBook book = new Book(bookName, authorName, bookType);
+		ILibrary library = randomLibrary();
+		Loader.getLoader().loadBook(book);
+		library.addBook(book);
+		System.out.println(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthor(), library.getName()));
 	}
 
 	public static String generateFirstName() {
@@ -126,8 +132,8 @@ public class DayGenerator {
 		return generateFirstName() + " " + generateLastName();
 	}
 	
-	public static String generateBook() {
-		String[] bookName = new String[] {"Harry Potter" , "The Book Thief" , "The Chronicles of Narnia" , "Animal Farm" , "Gone with the Wind" , "The Hobbit" , "The Fault in Our Stars" , "The Hitchiker's Guide to the Galaxy" , "The Giving Tree" , "Wuthering Heights" , "The Da Vinci Code" , "Alice's Adventures in Wonderland" , "Divergent" , "Romeo and Juliet" , "The Alchemist" , "Lord of the Flies" , "Crime and Punishment" , "Ender's Game" , "City of Bones" , "Charlotte's Web" , "Of Mice and Men" , "Dracula" , "Brave New World" , "One Hundred Years of Solitude" , "A Wrinkle in Time" , "The Catcher in the Rye" , "The Adventures of Huckleberry Finn" , "Where the Wild Things Are" , "Green Eggs and Ham" , "Game of Thrones" , "The Lightning Thief" , "Life of Pi"	, "Diary of a Wimpy Kid" , "The Adventures of Sherlock Holmes" , "The Wolf Queen" , "The Doors of Sovngarde" , "Sixteen Accords of Happiness" , "The Argonian Maid" , "A Dance in Fire" , "The Infernal City" , "Tales of Tamriel" , "The Book of the Dragonborn" , "The Phantom Menace" , "The Attack of the Clones" , "The Revenge of the Sith" , "A New Hope" , "The Empire Strikes Back" , "Return of the Jedi" , "The Force Awakens" , "The Last Jedi"};	
+	public static String generateBookTitle() {
+		String[] bookName = new String[] {"Harry Potter" , "The Book Thief" , "The Chronicles of Narnia" , "Animal Farm" , "Gone with the Wind" , "The Hobbit" , "The Fault in Our Stars" , "The Hitchiker's Guide to the Galaxy" , "The Giving Tree" , "Wuthering Heights" , "The Da Vinci Code" , "Alice's Adventures in Wonderland" , "Divergent" , "Romeo and Juliet" , "The Alchemist" , "Lord of the Flies" , "Crime and Punishment" , "Ender's Game" , "City of Bones" , "Charlotte's Web" , "Of Mice and Men" , "Dracula" , "Brave New World" , "One Hundred Years of Solitude" , "A Wrinkle in Time" , "The Catcher in the Rye" , "The Adventures of Huckleberry Finn" , "Where the Wild Things Are" , "Green Eggs and Ham" , "Game of Thrones" , "The Lightning Thief" , "Life of Pi"	, "Diary of a Wimpy Kid" , "The Adventures of Sherlock Holmes" , "The Wolf Queen" , "The Doors of Sovngarde" , "Sixteen Accords of Happiness" , "The Argonian Maid" , "A Dance in Fire" , "The Infernal City" , "Tales of Tamriel" , "The Book of the Dragonborn" , "The Phantom Menace" , "The Attack of the Clones" , "The Revenge of the Sith" , "A New Hope" , "The Empire Strikes Back" , "Return of the Jedi" , "The Force Awakens" , "The Last Jedi"};
 		return bookName[RANDOM.nextInt(bookName.length - 1)];
 	}
 
