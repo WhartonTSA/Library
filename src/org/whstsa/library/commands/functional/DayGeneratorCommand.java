@@ -7,6 +7,7 @@ import org.whstsa.library.commands.api.ICommand;
 import org.whstsa.library.commands.api.ICommandSender;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.util.DayGenerator;
+import org.whstsa.library.util.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ import java.util.List;
  * Created by Andre on 12/7/17
  */
 public class DayGeneratorCommand implements ICommand {
+
+    private static Logger LOGGER = new Logger("DayGenerator");
+
     @Override
     public JSONObject handle(String[] args, ICommandSender commandSender) {
         int totalDaysAdvanced = Integer.parseInt(args[0]);
@@ -26,7 +30,7 @@ public class DayGeneratorCommand implements ICommand {
             cal.setTime(World.getDate());
             cal.add(Calendar.DAY_OF_MONTH, 1);
             World.setDate(cal.getTime());
-            System.out.println(currentDate);
+            LOGGER.debug(""  + currentDate);
         }
         commandSender.sendMessage("Successfully generated day.");
         return null;

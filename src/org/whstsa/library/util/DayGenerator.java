@@ -12,6 +12,7 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
 import org.whstsa.library.api.exceptions.CheckedInException;
 import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.library.ICheckout;
@@ -35,39 +36,40 @@ public class DayGenerator {
 	 * Reserve Books (if trys to get book, instead reserve if not there)
 	 **/
 	
+	private static Logger LOGGER = new Logger("DayGenerator");
+	
 	public static void simulateDay() {
 		if (chance(5)) {
-			System.out.print("a");
+			LOGGER.debug("a");
 			generateMember(randomLibrary());
 		}
 		if (chance(10)) {
-			System.out.print("b");
+			LOGGER.debug("b");
 			// Attempt removing a random member from a random library
-			IMember member = randomMember();System.out.print("hi");
-			ILibrary library = member.getLibrary();System.out.print("bi");
+			IMember member = randomMember();
+			ILibrary library = member.getLibrary();
 			try {
-				library.removeMember(member);System.out.print("wtf");
-				System.out.println(String.format("Deregistered %s from %s", member.getName(), library.getName()));
+				library.removeMember(member);
 			} catch (CannotDeregisterException ex) {
-				System.out.println(String.format("Couldn't deregister %s: %s", member.getName(), ex.getMessage()));
-			} catch (NullPointerException ex) {
-				System.out.println("Got em!");
+				LOGGER.debug(String.format("Couldn't deregister %s: %s", member.getName(), ex.getMessage()));
 			}
 		}
 		if (chance(5)) {
-			System.out.print("c");
+			LOGGER.debug("c");
 			generateBook();
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
-				System.out.print("d" + member.getName());
+				LOGGER.debug("d");
 				if (member.getBooks().size() != 0 && RANDOM.nextBoolean()) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
 						member.checkIn(checkout);
-						System.out.println(member.getName() + " returned " + checkout.getBook().getTitle());
+						LOGGER.debug(member.getName() + " returned " + checkout.getBook().getTitle());
 					} catch (CheckedInException e) {
-						System.out.println(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
+						LOGGER.debug(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
+					} catch (OutstandingFinesException e) {
+						LOGGER.debug(e.getMessage());
 					}
 				} else if (member.getLibrary().getBooks().size() != 0) {
 					List<IBook> bookDB = member.getLibrary().getBooks();
@@ -79,21 +81,24 @@ public class DayGenerator {
 					IBook book = bookDB.get(randomBookIndex);
 					if (book != null) {
 						library.reserveBook(member, book);
+						LOGGER.debug(member.getName() + " took " + book.getTitle());
 					}
-				}
-				else {
-					System.out.print("Got em dot 2.0");
 				}
 			}
 		});
+		ObjectDelegate.getAllMembers().forEach(member -> {
+			if (chance(5)) {
+
+			}
+		});
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
-			System.out.print("e");
+			LOGGER.debug("f");
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
 				try {
 					checkout.payFine();
 				} catch (NotEnoughMoneyException ex) {
-					System.out.println(String.format("Not paying off fee for %s for %s of %.2f", checkout.getBook().getTitle(), checkout.getOwner().getName(), ex.getTransaction()));
+					LOGGER.debug(String.format("Not paying off fee for %s for %s of %.2f", checkout.getBook().getTitle(), checkout.getOwner().getName(), ex.getTransaction()));
 				}
 			}
 		});
@@ -104,7 +109,7 @@ public class DayGenerator {
 		IPerson person = new Person(generateFirstName(), generateLastName(), chance(5));
 		library.addMember(person);
 		Loader.getLoader().loadPerson(person);
-		System.out.println(String.format("Added %s %s to %s", person.getFirstName(), person.getLastName(), library.getName()));
+		LOGGER.debug(String.format("Added %s %s to %s", person.getFirstName(), person.getLastName(), library.getName()));
 	}
 
 	public static void generateBook() {
@@ -116,7 +121,7 @@ public class DayGenerator {
 		ILibrary library = randomLibrary();
 		Loader.getLoader().loadBook(book);
 		library.addBook(book);
-		System.out.println(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthor(), library.getName()));
+		LOGGER.debug(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthor(), library.getName()));
 	}
 
 	public static String generateFirstName() {
