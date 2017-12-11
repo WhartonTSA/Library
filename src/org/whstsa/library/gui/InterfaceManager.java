@@ -7,8 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.gui.api.Gui;
-import org.whstsa.library.gui.api.GuiJXML;//TODO
-import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.util.Logger;
 
 public class InterfaceManager {
@@ -16,8 +14,8 @@ public class InterfaceManager {
 	private LibraryDB libraryDB;
 	
 	private Scene oldScene;
-	private GuiJXML oldGui;
-	private GuiJXML currentGui;
+	private Gui oldGui;
+	private Gui currentGui;
 	
 	private Map<String, Scene> sceneCache = new HashMap<>();
 	
@@ -42,7 +40,7 @@ public class InterfaceManager {
 	 * @param gui The scene to set the stage with
 	 * @return The old scene, or null if there is no old scene.
 	 */
-	public Scene display(GuiJXML gui) {//TODO
+	public Scene display(Gui gui) {//TODO
 		final String guiName = gui.getClass().getSimpleName() + " (" + gui.getUUID() + ")";
 		LOGGER.debug("Switching to " + guiName);
 		Scene scene;

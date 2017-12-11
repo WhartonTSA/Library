@@ -3,25 +3,21 @@ package org.whstsa.library;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.ObjectUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.InterfaceManager;
-//import org.whstsa.library.gui.api.GuiMain;TODO
-import org.whstsa.library.gui.api.GuiJXML;
+import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.scenes.IOFileSelection;
-import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.charset.MalformedInputException;
 import java.util.Scanner;
 
 /**
@@ -45,8 +41,7 @@ public class LibraryDB extends Application {
         }
         this.loadJSON((arg0) -> {
             LOGGER.debug("JSON Loaded.");
-            //this.interfaceManager.display(new GuiMain());TODO
-            this.interfaceManager.display(new GuiJXML());
+            this.interfaceManager.display(new GuiMain());
         });
         // new CommandWatcher(System.in, System.out).start();
     }
