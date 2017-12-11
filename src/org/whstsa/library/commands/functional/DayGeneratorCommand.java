@@ -21,7 +21,6 @@ public class DayGeneratorCommand implements ICommand {
     public JSONObject handle(String[] args, ICommandSender commandSender) {
         int totalDaysAdvanced = Integer.parseInt(args[0]);
         for (int currentDate = 0; currentDate < totalDaysAdvanced; currentDate++) {
-            System.out.println("x");
             DayGenerator.simulateDay();
             Calendar cal = Calendar.getInstance();
             cal.setTime(World.getDate());

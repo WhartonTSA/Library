@@ -108,7 +108,8 @@ public class Member implements IMember {
             throw new MemberMismatchException(String.format(MEMBER_MISMATCH_CHECKIN, checkout.getOwner().getID(), this.getID()));
         }
         if (checkout.getFine() != 0) {
-            throw new OutstandingFinesException(this, OutstandingFinesException.Actions.CHECK_IN, checkout.getFine());
+            System.out.println("yo u broke dawg");
+            //throw new OutstandingFinesException(this, OutstandingFinesException.Actions.CHECK_IN, checkout.getFine());
         }
         checkout.checkIn();
     }
@@ -200,10 +201,12 @@ public class Member implements IMember {
         }
         if (!this.books.containsKey(checkout.getBook())) {
             this.books.put(checkout.getBook(), new ArrayList<>());
+            System.out.println(getName() + " took " + checkout.getBook().getTitle());
         }
         List<ICheckout> checkouts = this.books.get(checkout.getBook());
         if (!checkouts.contains(checkout)) {
             checkouts.add(checkout);
+            System.out.println(getName() + " reserved " + checkout.getBook().getTitle());
         }
     }
 

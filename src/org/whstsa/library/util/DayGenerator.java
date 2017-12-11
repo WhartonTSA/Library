@@ -43,11 +43,11 @@ public class DayGenerator {
 		if (chance(10)) {
 			System.out.print("b");
 			// Attempt removing a random member from a random library
-			IMember member = randomMember();
-			ILibrary library = member.getLibrary();
+			IMember member = randomMember();System.out.print("hi");
+			ILibrary library = member.getLibrary();System.out.print("bi");
 			try {
-				library.removeMember(member);
-				System.out.println(String.format("Deregistered %s from %s", library.getName()));
+				library.removeMember(member);System.out.print("wtf");
+				System.out.println(String.format("Deregistered %s from %s", member.getName(), library.getName()));
 			} catch (CannotDeregisterException ex) {
 				System.out.println(String.format("Couldn't deregister %s: %s", member.getName(), ex.getMessage()));
 			} catch (NullPointerException ex) {
@@ -60,11 +60,12 @@ public class DayGenerator {
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
-				System.out.print("d");
+				System.out.print("d" + member.getName());
 				if (member.getBooks().size() != 0 && RANDOM.nextBoolean()) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
 						member.checkIn(checkout);
+						System.out.println(member.getName() + " returned " + checkout.getBook().getTitle());
 					} catch (CheckedInException e) {
 						System.out.println(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
 					}
