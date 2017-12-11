@@ -1,5 +1,8 @@
 package org.whstsa.library.gui.api;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -10,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.Gui;
@@ -20,6 +24,7 @@ import java.util.List;
 
 public class GuiMain implements Gui {
     @FXML private TableView librariesTable;
+    @FXML private TableColumn nameColumn;
     @Override
     public Scene draw() {
         try {
@@ -30,8 +35,10 @@ public class GuiMain implements Gui {
             for (int i = 0; i < libraryList.size(); i++) {
                 libraryData.add(libraryList.get(i).getName());
             }
-            librariesTable = new TableView(libraryData);
-
+            nameColumn = new TableColumn("Name");
+            librariesTable = new TableView();
+            librariesTable.setItems(libraryData);
+            librariesTable.getColumns().addAll(nameColumn);
 
             return activeScene;
         } catch(IOException e) {
