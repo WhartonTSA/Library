@@ -2,13 +2,16 @@ package org.whstsa.library.gui.factories;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.Callback;
-import org.whstsa.library.gui.api.InputGroup;
+import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.util.Logger;
 
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import java.util.Map;
 public class DialogUtils {
 	
 	private static final int ELEMENT_PADDING = 10;
+	private static final Logger LOGGER = new Logger("DialogFactory");
 	
 	public static Alert createDialog(String title, String body, String header, AlertType type, Callback<Callback<Boolean>> onClose) {
 		Alert alert;
@@ -67,8 +71,8 @@ public class DialogUtils {
 		return createDialog(null);
 	}
 
-	public static Dialog<Map<String, String>> createInputDialog(ButtonType button, boolean cancelButton, String title, InputGroup ...inputGroups) {
-		Dialog<Map<String, String>> dialog = new Dialog<>();
+	public static Dialog<Map<String, Element>> createInputDialog(ButtonType button, boolean cancelButton, String title, Element ...elements) {
+		Dialog<Map<String, Element>> dialog = new Dialog<>();
 		dialog.setTitle(title);
 
 		dialog.getDialogPane().getButtonTypes().addAll(DialogUtils.createButtonList(cancelButton, button));
@@ -76,8 +80,8 @@ public class DialogUtils {
 		GridPane grid = DialogUtils.buildGridPane();
 
 		int incr = 0;
-		for (InputGroup inputGroup : inputGroups) {
-			grid.add(inputGroup.getNode(), 0, incr);
+		for (Element element : elements) {
+			grid.add(element.getComputedElement(), 0, incr);
 			incr++;
 		}
 
@@ -85,20 +89,12 @@ public class DialogUtils {
 
 		Platform.runLater(() -> grid.getChildren().get(0).requestFocus());
 
-		DialogUtils.addInputVieldMatcher(dialog);
+		DialogUtils.addInputFieldMatcher(dialog);
 
 		return dialog;
 	}
 	
-	public static Dialog<Map<String, String>> createInputDialog(ButtonType button, boolean cancelButton, String title, String ...fields) {
-		InputGroup[] inputGroups = new InputGroup[fields.length];
-		for (int i = 0; i < fields.length; i++) {
-			inputGroups[i] = GuiUtils.createInputGroup(fields[i]);
-		}
-		return createInputDialog(button, cancelButton, title, inputGroups);
-	}
-	
-	public static void getDialogResults(Dialog<Map<String, String>> dialog, Callback<Map<String, String>> callback, boolean requireContent, String[] expectedKeys) {
+	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback, boolean requireContent, String[] expectedKeys) {
 		Stage alertStage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		final List<Boolean> isClosable = new ArrayList<>();
 		isClosable.add(false);
@@ -109,10 +105,10 @@ public class DialogUtils {
 		});
 		dialog.show();
 		dialog.setOnCloseRequest((event) -> {
-			Map<String, String> responses = dialog.getResult();
+			Map<String, Element> responses = dialog.getResult();
 			List<String> missingKeys = new ArrayList<>();
 			for (String key : expectedKeys) {
-				if (!responses.containsKey(key) || responses.get(key).length() == 0) {
+				if (!responses.containsKey(key)) {
 					missingKeys.add(key);
 				}
 			}
@@ -131,7 +127,7 @@ public class DialogUtils {
 		});
 	}
 	
-	public static void getDialogResults(Dialog<Map<String, String>> dialog, Callback<Map<String, String>> callback) {
+	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback) {
 		DialogUtils.getDialogResults(dialog, callback, false, new String[] {});
 	}
 	
@@ -141,20 +137,23 @@ public class DialogUtils {
 		//alertStage.initStyle(StageStyle.UTILITY);
 		alert.showAndWait();
 	}
+
+	private static void addNode(Map<String, Element> valueMap, Node node) {
+		if (node instanceof Element) {
+			valueMap.put(((Element) node).getID(), (Element) node);
+		} else if (node instanceof Pane) {
+			((Pane) node).getChildren().forEach((node1) -> addNode(valueMap, node1));
+		}
+	}
 	
-	private static void addInputVieldMatcher(Dialog<Map<String, String>> dialog) {
+	private static void addInputFieldMatcher(Dialog<Map<String, Element>> dialog) {
 		dialog.setResultConverter((buttonType) -> {
-			Map<String, String> valueMap = new HashMap<>();
+			Map<String, Element> valueMap = new HashMap<>();
 			dialog.getDialogPane().getChildren().forEach(node -> {
 				if (node instanceof GridPane) {
 					GridPane grid = (GridPane) node;
 					grid.getChildren().forEach((child) -> {
-						if (child instanceof TextField) {
-							TextField field = (TextField) child;
-							if (field.getPromptText().length() >= 1) {
-								valueMap.put(field.getPromptText(), field.getText());
-							}
-						}
+						addNode(valueMap, child);
 					});
 				}
 			});

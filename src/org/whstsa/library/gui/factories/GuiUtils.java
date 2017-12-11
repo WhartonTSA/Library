@@ -15,11 +15,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
-import org.whstsa.library.gui.api.InputGroup;
+import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
-
-import java.util.List;
 
 public class GuiUtils {
 	
@@ -79,24 +77,24 @@ public class GuiUtils {
 		return createButton(title, null);
 	}
 	
-	public static InputGroup createInputGroup(String label, boolean inline) {
-		TextField field = new TextField();
-		Label inputLabel = null;
-		Node group;
-		if (inline) {
-			field.setPromptText(label);
-			group = field;
-		} else {
-			inputLabel = GuiUtils.createLabel(label);
-			group = GuiUtils.createSplitPane(Orientation.HORIZONTAL, inputLabel, field);
-		}
-		return new InputGroup(group, inputLabel, field);
+	public static TextFieldElement createTextField(String prompt, boolean inline, String placeholder, String id) {
+		TextFieldElement element = new TextFieldElement(id, prompt, inline);
+		element.setText(placeholder);
+		return element;
 	}
-	
-	public static InputGroup createInputGroup(String label) {
-		return GuiUtils.createInputGroup(label, true);
+
+	public static TextFieldElement createTextField(String prompt, boolean inline, String placeholder) {
+		return createTextField(prompt, inline, placeholder, prompt);
 	}
-	
+
+	public static TextFieldElement createTextField(String prompt, boolean inline) {
+		return createTextField(prompt, inline, null);
+	}
+
+	public static TextFieldElement createTextField(String prompt) {
+		return createTextField(prompt, false);
+	}
+
 	public static Label createLabel(String text) {
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);
 		Label label = new Label(text);
