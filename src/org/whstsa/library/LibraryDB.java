@@ -55,6 +55,7 @@ public class LibraryDB extends Application {
 
     private void loadJSON(Callback<Object> callback) {
         LOGGER.debug("Splashing JSON GUI");
+        /*testing library based on "start" date World.setToDefaultDate();*/
         File rawJSON = this.jsonFileBrowser.getFile();
         try {
             FILE_DELEGATE = new IOFileDelegate(rawJSON);

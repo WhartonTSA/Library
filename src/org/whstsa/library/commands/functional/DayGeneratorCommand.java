@@ -24,13 +24,15 @@ public class DayGeneratorCommand implements ICommand {
     @Override
     public JSONObject handle(String[] args, ICommandSender commandSender) {
         int totalDaysAdvanced = Integer.parseInt(args[0]);
-        for (int currentDate = 0; currentDate < totalDaysAdvanced; currentDate++) {
+        for (int currentDate = 1; currentDate - 1< totalDaysAdvanced; currentDate++) {
+            LOGGER.debug("" + World.getDate());
+            LOGGER.debug();
             DayGenerator.simulateDay();
             Calendar cal = Calendar.getInstance();
             cal.setTime(World.getDate());
             cal.add(Calendar.DAY_OF_MONTH, 1);
             World.setDate(cal.getTime());
-            LOGGER.debug(""  + currentDate);
+            LOGGER.debug();
         }
         commandSender.sendMessage("Successfully generated day.");
         return null;
