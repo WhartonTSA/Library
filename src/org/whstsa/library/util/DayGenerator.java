@@ -27,24 +27,33 @@ public class DayGenerator {
 	
 	
 	/* List of things needed to randomize (brainstorm)
-	 * Advance time only by user
-	 * Adding Members (which means, RANDOMIZING NAMES AHHHH) 1/5 pd
-	 * Removing Members (more rare-ish) 1/15 pd, MUST NOT HAVE FINE/BOOK
+	 * Adding Members 1/5 pd
+	 * Removing Members (more rare-ish) 1/100 per person, MUST NOT HAVE FINE/BOOK, if cannot remove, will remove as soon as possible
+	 * Adding New Books (names) 1/4 pd
 	 * Getting Books / Removing Books 1/5 per person, MUST HAVE NO FINE
-	 * Pay Fine  1/5 per person
-	 * Adding New Books (names) 1/10 pd
-	 * Reserve Books (if trys to get book, instead reserve if not there)
+	 * Add Money To Wallet 1/5 per person
+	 * Pay Fine  1/2 per person with fine, IF THEY HAVE ENOUGH
 	 **/
 	
 	private static Logger LOGGER = new Logger("DayGenerator");
+	private static List<IMember> deregisterPendingPeople = new ArrayList<>();
 	
 	public static void simulateDay() {
+		for (int member = 0; member < deregisterPendingPeople.size(); member++) {
+			ILibrary library = deregisterPendingPeople.get(member).getLibrary();
+			try {
+				library.removeMember(deregisterPendingPeople.get(member));
+				LOGGER.debug(String.format("%s has finally been deregistered ", deregisterPendingPeople.get(member).getName()));
+			} catch (CannotDeregisterException ex) {
+				LOGGER.debug(String.format("Couldn't deregister %s yet", deregisterPendingPeople.get(member).getName()));
+			}
+		}
 		while (chance(5)) {
 			LOGGER.debug("a");
 			generateMember(randomLibrary());
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
-			if (chance(25)) {
+			if (chance(100)) {
 				LOGGER.debug("b");
 				// Attempt removing a random member from a random library
 				ILibrary library = member.getLibrary();
@@ -52,11 +61,12 @@ public class DayGenerator {
 					library.removeMember(member);
 					LOGGER.debug(String.format("%s has been deregistered ", member.getName()));
 				} catch (CannotDeregisterException ex) {
-					LOGGER.debug(String.format("Couldn't deregister %s: %s", member.getName(), ex.getMessage()));
+					LOGGER.debug(String.format("Couldn't deregister %s: %s, deregistering as soon as possible", member.getName(), ex.getMessage()));
+					deregisterPendingPeople.add(member);
 				}
 			}
 		});
-		if (chance(5)) {
+		while (chance(4)) {
 			LOGGER.debug("c");
 			generateBook();
 		}
@@ -68,9 +78,6 @@ public class DayGenerator {
 					try {
 						member.checkIn(checkout);
 						LOGGER.debug(member.getName() + " returned " + checkout.getBook().getTitle());
-						if (member.getFine() != 0) { //fixy
-							LOGGER.debug(member.getName() + "has a fine of " + member.getFine());
-						}
 					} catch (CheckedInException e) {
 						LOGGER.debug(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
 					} catch (OutstandingFinesException e) {
@@ -93,14 +100,14 @@ public class DayGenerator {
 			}
 		});
 		ObjectDelegate.getActivePeople().forEach(person -> {
-			if (chance(10)) {
+			if (chance(5)) {
 				LOGGER.debug("e");
 				double randomAmountAdded = RANDOM.nextInt(10) * 1.0 + RANDOM.nextInt(3) * 0.25;
 				person.addMoney(randomAmountAdded);
 				LOGGER.debug(person.getName() + " has $" + person.getWallet() + " in their wallet");
 			}
 		});
-		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
+		ObjectDelegate.getAllMembers().stream().filter(member -> chance(2) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
 			LOGGER.debug("f");
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
@@ -108,9 +115,9 @@ public class DayGenerator {
 				if (fine != 0.0) {
 					try {
 						checkout.payFine();
-						LOGGER.debug(String.format("Payed off fee for %s for %s of %s", checkout.getBook().getTitle(), checkout.getOwner().getName(), fine));
+						LOGGER.debug(String.format("Payed off fee for %s for %s of $%s, $%s remaining", checkout.getBook().getTitle(), checkout.getOwner().getName(), fine, checkout.getOwner().getPerson().getWallet()));
 					} catch (NotEnoughMoneyException ex) {
-						LOGGER.debug(String.format("Not paying off fee for %s for %s of %.2f", checkout.getBook().getTitle(), checkout.getOwner().getName(), ex.getTransaction()));
+						LOGGER.debug(String.format("Not paying off fee for %s for %s of $%.2f", checkout.getBook().getTitle(), checkout.getOwner().getName(), ex.getTransaction()));
 					}
 				}
 			}
@@ -122,7 +129,7 @@ public class DayGenerator {
 		IPerson person = new Person(generateFirstName(), generateLastName(), chance(5));
 		library.addMember(person);
 		Loader.getLoader().loadPerson(person);
-		LOGGER.debug(String.format("Added %s %s to %s", person.getFirstName(), person.getLastName(), library.getName()));
+		LOGGER.debug(String.format("Added %s %s to %s (%s)", person.getFirstName(), person.getLastName(), library.getName(), person.isTeacher()));
 	}
 
 	public static void generateBook() {
