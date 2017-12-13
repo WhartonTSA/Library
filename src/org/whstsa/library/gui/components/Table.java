@@ -1,10 +1,14 @@
 package org.whstsa.library.gui.components;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.whstsa.library.api.library.ILibrary;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Table<T> {
@@ -32,7 +36,11 @@ public class Table<T> {
     }
 
     public void addItem(T item) {
-        this.view.getItems().add(item);
+        this.addItems(item);
+    }
+
+    public void addItems(T ...items) {
+        this.addItems(Arrays.asList(items));
     }
 
     public void addColumn(String title, String property, boolean sortable, TableColumn.SortType sortType, Integer width) {
@@ -57,6 +65,11 @@ public class Table<T> {
 
     public void addColumn(String title, String property) {
         this.addColumn(title, property, false);
+    }
+
+    public void refresh() {
+        this.view.getColumns().get(0).setVisible(false);
+        this.view.getColumns().get(0).setVisible(true);
     }
 
 }
