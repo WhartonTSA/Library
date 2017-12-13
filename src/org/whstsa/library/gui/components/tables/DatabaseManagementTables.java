@@ -40,7 +40,7 @@ public class DatabaseManagementTables {
                 return;
             }
             LibraryMetaDialogs.updateLibrary(getSelectedLibrary(libraryTable), (library) -> {
-                
+                libraryTable.refresh();
             });
         });
         editLibraryButton.setDisable(true);
