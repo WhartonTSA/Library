@@ -108,6 +108,9 @@ public class GuiUtils {
 		label.setFont(TITLE_FONT);
 		return label;
 	}
+	public static void defaultCloseOperation(ActionEvent event) {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+	}
 
 //	public static TableView<T> createTableView(T dataStore, List<String> columns) {
 //

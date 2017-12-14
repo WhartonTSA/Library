@@ -40,7 +40,7 @@ public class InterfaceManager {
 	 * @param gui The scene to set the stage with
 	 * @return The old scene, or null if there is no old scene.
 	 */
-	public Scene display(Gui gui) {//TODO
+	public Scene display(Gui gui) {
 		final String guiName = gui.getClass().getSimpleName() + " (" + gui.getUUID() + ")";
 		LOGGER.debug("Switching to " + guiName);
 		Scene scene;

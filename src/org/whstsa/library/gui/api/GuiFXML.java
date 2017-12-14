@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class GuiFXML implements FXMLGui {
+public class GuiFXML {
 
     @FXML
     private HBox hboxContainer;
@@ -57,12 +57,10 @@ public class GuiFXML implements FXMLGui {
         });*/
     }
 
-    @Override
     public String getFXMLFile() {
         return "org/whstsa/library/gui/scenes/fxml/FXMLgui.fxml";
     }
 
-    @Override
     public String getUUID() {
         return "GUI_JXML";
     }
