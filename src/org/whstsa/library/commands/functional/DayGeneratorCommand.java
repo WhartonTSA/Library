@@ -24,7 +24,7 @@ public class DayGeneratorCommand implements ICommand {
     @Override
     public JSONObject handle(String[] args, ICommandSender commandSender) {
         int totalDaysAdvanced = Integer.parseInt(args[0]);
-        for (int currentDate = 1; currentDate - 1< totalDaysAdvanced; currentDate++) {
+        for (int currentDate = 0; currentDate< totalDaysAdvanced; currentDate++) {
             LOGGER.debug("" + World.getDate());
             LOGGER.debug();
             DayGenerator.simulateDay();
@@ -34,6 +34,7 @@ public class DayGeneratorCommand implements ICommand {
             World.setDate(cal.getTime());
             LOGGER.debug();
         }
+        DayGenerator.showCounters();
         commandSender.sendMessage("Successfully generated day.");
         return null;
     }
