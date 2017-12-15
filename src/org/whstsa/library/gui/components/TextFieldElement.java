@@ -40,4 +40,12 @@ public class TextFieldElement extends TextField implements Element {
         this.id = id;
     }
 
+    public String getString() {
+        return this.getText();
+    }
+
+    public boolean getBoolean() {
+        return false;
+    }
+
 }

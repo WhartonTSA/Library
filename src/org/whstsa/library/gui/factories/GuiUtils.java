@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -15,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
+import org.whstsa.library.gui.components.CheckBoxElement;
 import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
@@ -94,6 +96,20 @@ public class GuiUtils {
 	public static TextFieldElement createTextField(String prompt) {
 		return createTextField(prompt, false);
 	}
+
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline) {
+        CheckBoxElement checkBoxElement = new CheckBoxElement(prompt, prompt, inline);
+        checkBoxElement.setSelected(selected);
+        return checkBoxElement;
+    }
+
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected) {
+	    return createCheckBox(prompt, selected, false);
+    }
+
+    public static CheckBoxElement createCheckBox(String prompt) {
+	    return createCheckBox(prompt, false);
+    }
 
 	public static Label createLabel(String text) {
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);
