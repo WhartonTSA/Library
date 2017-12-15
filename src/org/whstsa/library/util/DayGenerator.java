@@ -28,12 +28,12 @@ public class DayGenerator {
 	
 	
 	/* List of things needed to randomize (brainstorm)
-	 * Adding Members 1/5 pd
-	 * Removing Members (more rare-ish) 1/100 per person, MUST NOT HAVE FINE/BOOK, if cannot remove, will remove as soon as possible
+	 * Adding Members 1/4 pd
+	 * Removing Members (more rare-ish) 1/50 per person, MUST NOT HAVE FINE/BOOK, if cannot remove, will remove as soon as possible
 	 * Adding New Books (names) 1/4 pd
-	 * Getting Books / Removing Books 1/5 per person, MUST HAVE NO FINE
-	 * Add Money To Wallet 1/3 per person
-	 * Pay Fine  1/2 per person with fine, IF THEY HAVE ENOUGH
+	 * Getting Books / Removing Books 1/5 per person, MUST HAVE NO FINE AND NOT ON DEREGISTERED LIST
+	 * Add Money To Wallet 1/5 per person (increases chance for those who have fine at the time)
+	 * Pay Fine  1/5 per person with fine, IF THEY HAVE ENOUGH
 	 **/
 	
 	private static Logger LOGGER = new Logger("DayGenerator");
@@ -55,12 +55,12 @@ public class DayGenerator {
 				LOGGER.debug(String.format("Couldn't deregister %s yet: %s ", member.getName(), ex.getMessage()));
 			}
 		});
-		while (chance(5)) {
+		while (chance(4)) {
 			LOGGER.debug("a");countActionA++;
 			generateMember(randomLibrary());
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
-			if (chance(50) && !deregisterPendingPeople.contains(member)) {
+			if (chance(40) && !deregisterPendingPeople.contains(member)) {
 				LOGGER.debug("b");countActionB++;
 				try {
 					member.getLibrary().removeMember(member);
@@ -78,18 +78,19 @@ public class DayGenerator {
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
 				LOGGER.debug("d");countActionD++;
-				if (member.getBooks().size() != 0 && RANDOM.nextBoolean()) {
+				if (member.getBooks().size() != 0 && (RANDOM.nextBoolean() || deregisterPendingPeople.contains(member.getID()))) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
-						member.checkIn(checkout); //FIXING DIS THING
+						member.checkIn(checkout);
 						LOGGER.debug(member.getName() + " returned " + checkout.getBook().getTitle());
+						member.removeBook(checkout.getBook());
 					} catch (CheckedInException e) {
 						LOGGER.debug(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
 					} catch (OutstandingFinesException e) {
 						LOGGER.debug(e.getMessage());
 					}
 				}
-				else if (member.getLibrary().getBooks().size() != 0 && member.getFine() == 0) {
+				else if (member.getLibrary().getBooks().size() != 0 && member.getFine() == 0 && !deregisterPendingPeople.contains(member.getID())) {
 					List<IBook> bookDB = member.getLibrary().getBooks();
 					ILibrary library = member.getLibrary();
 					int randomBookIndex = RANDOM.nextInt(bookDB.size());
@@ -103,19 +104,20 @@ public class DayGenerator {
 					}
 				}
 				else {
-					LOGGER.debug(member.getName() + " still has fines to pay before they can grab another book ($" + member.getFine()  + ")");
+					LOGGER.debug(member.getName() + " still has fines to pay before they can grab another book ($" + member.getFine()  + ") or they are on the deregister list");
 				}
 			}
 		});
-		ObjectDelegate.getActivePeople().forEach(person -> {
-			if (chance(5)) {
+		ObjectDelegate.getAllMembers().forEach(member -> {
+			IPerson person = member.getPerson();
+			if (chance(10) || (member.getFine() != 0.0 && chance(5))) {
 				LOGGER.debug("e");countActionE++;
 				double randomAmountAdded = RANDOM.nextInt(10) * 1.0 + RANDOM.nextInt(3) * 0.25;
 				person.addMoney(randomAmountAdded);
 				LOGGER.debug(person.getName() + " has $" + person.getWallet() + " in their wallet");
 			}
 		});
-		ObjectDelegate.getAllMembers().stream().filter(member -> chance(2) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
+		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
 			LOGGER.debug("f");countActionF++;
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
