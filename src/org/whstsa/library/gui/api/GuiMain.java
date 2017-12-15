@@ -6,6 +6,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.layout.StackPane;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.InterfaceManager;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.components.tables.DatabaseManagementTables;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -17,11 +18,8 @@ import java.util.List;
 
 public class GuiMain implements Gui {
 
-    private ClickHandler defaultClickConsumer = (arg0) -> {};
-
     @Override
     public Scene draw() {
-
         StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable();
 
         StackPane personContainer = DatabaseManagementTables.personOverviewTable();

@@ -74,7 +74,7 @@ public class GuiUtils {
 		}
 		return button;
 	}
-
+  
 	public static Button createButton(String title) {
 		return createButton(title, null);
 	}
@@ -123,6 +123,16 @@ public class GuiUtils {
 		label.setFont(TITLE_FONT);
 		return label;
 	}
+	public static void defaultCloseOperation(ActionEvent event) {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+	}
+
+	public static ClickHandler defaultClickHandler() {
+	    return new ClickHandler() {
+	        @Override
+	        public void onclick(Button button) {}
+        };
+    }
 
 //	public static TableView<T> createTableView(T dataStore, List<String> columns) {
 //
