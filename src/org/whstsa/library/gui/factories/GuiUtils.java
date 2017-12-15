@@ -79,6 +79,7 @@ public class GuiUtils {
 	}
 	
 	public static InputGroup createInputGroup(String label, boolean inline) {
+        LibraryDB.LOGGER.debug("Assembling InputGroup with label " + label);
 		TextField field = new TextField();
 		Label inputLabel = null;
 		Node group;
@@ -111,6 +112,13 @@ public class GuiUtils {
 	public static void defaultCloseOperation(ActionEvent event) {
         ((Node)(event.getSource())).getScene().getWindow().hide();
 	}
+
+	public static ClickHandler defaultClickHandler() {
+	    return new ClickHandler() {
+	        @Override
+	        public void onclick(Button button) {}
+        };
+    }
 
 //	public static TableView<T> createTableView(T dataStore, List<String> columns) {
 //

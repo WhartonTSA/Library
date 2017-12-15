@@ -9,17 +9,20 @@ import org.whstsa.library.util.ClickHandler;
 
 public class GuiNewLibrary implements Gui {
 
-    private ClickHandler defaultClickHandler = (arg0) -> {};
 
     @Override
     public Scene draw() {
 
-        Button createNewLibraryButton = GuiUtils.createButton("Create New Library", this.defaultClickHandler);
-        Button cancelButton = GuiUtils.createButton("Cancel", this.defaultClickHandler);
+        Button createButton = GuiUtils.createButton("Create", GuiUtils.defaultClickHandler());
+        Button cancelButton = GuiUtils.createButton("Cancel", GuiUtils.defaultClickHandler());
         cancelButton.addEventHandler(ActionEvent.ACTION, event -> GuiUtils.defaultCloseOperation(event));
 
-        StackPane container = GuiUtils.createTitledSplitPane("Library Manager", GuiUtils.Orientation.HORIZONTAL, createNewLibraryButton, cancelButton);
-        return new Scene(container, 500, 200);
+        InputGroup newLibraryTextField = GuiUtils.createInputGroup("New Library Text Field", true);
+
+        StackPane inputContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, newLibraryTextField.getNode());
+        StackPane buttonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, createButton, cancelButton);
+        StackPane mainContainer = GuiUtils.createTitledSplitPane("Create a new Library", GuiUtils.Orientation.HORIZONTAL, inputContainer, buttonContainer);
+        return new Scene(mainContainer, 500, 200);
     }
     @Override
     public String getUUID() {

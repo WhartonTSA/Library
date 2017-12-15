@@ -18,15 +18,13 @@ import java.util.List;
 
 public class GuiMain implements Gui {
 
-    private ClickHandler defaultClickHandler = (arg0) -> {};
-
     @Override
     public Scene draw() {
 
 
-        Button editLibraryButton = GuiUtils.createButton("Edit Library", this.defaultClickHandler);
-        Button deleteLibraryButton = GuiUtils.createButton("Delete Library", this.defaultClickHandler);
-        Button openLibraryButton = GuiUtils.createButton("Open Library", this.defaultClickHandler);
+        Button editLibraryButton = GuiUtils.createButton("Edit Library", GuiUtils.defaultClickHandler());
+        Button deleteLibraryButton = GuiUtils.createButton("Delete Library", GuiUtils.defaultClickHandler());
+        Button openLibraryButton = GuiUtils.createButton("Open Library", GuiUtils.defaultClickHandler());
 
         Table<Library> libraryTable = new Table<>();
         libraryTable.addColumn("Library Name", "name", true, TableColumn.SortType.DESCENDING, 100);
@@ -38,7 +36,7 @@ public class GuiMain implements Gui {
             public void onclick(Button button) {
                 libraryList.add(new Library("Libraryyy"));
                 libraryTable.setItems(libraryList);
-                display(new GuiNewLibrary());
+                //display(new GuiNewLibrary());
             }
         });
 
@@ -46,9 +44,9 @@ public class GuiMain implements Gui {
 
         StackPane libraryContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, libraryButtonContainer, libraryTable.getTable());
 
-        Button newPersonButton = GuiUtils.createButton("New Person", this.defaultClickHandler);
-        Button editPersonButton = GuiUtils.createButton("Edit Person", this.defaultClickHandler);
-        Button deletePersonButton = GuiUtils.createButton("Delete Person", this.defaultClickHandler);
+        Button newPersonButton = GuiUtils.createButton("New Person", GuiUtils.defaultClickHandler());
+        Button editPersonButton = GuiUtils.createButton("Edit Person", GuiUtils.defaultClickHandler());
+        Button deletePersonButton = GuiUtils.createButton("Delete Person", GuiUtils.defaultClickHandler());
         StackPane personButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newPersonButton, editPersonButton, deletePersonButton);
 
         Table<Person> personTable = new Table<>();
