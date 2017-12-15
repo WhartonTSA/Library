@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.library.ILibrary;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 public class Table<T> {
 
     private TableView<T> view;
+    private ObservableReference<List<T>> observableReference;
 
     {
         view = new TableView<>();
@@ -23,24 +25,13 @@ public class Table<T> {
         return this.view;
     }
 
-    public void setItems(List<T> items) {
-        this.view.setItems(FXCollections.observableList(items));
-    }
-
     public void clearItems() {
         this.view.getItems().clear();
     }
 
-    public void addItems(List<T> items) {
-        this.view.getItems().addAll(items);
-    }
-
-    public void addItem(T item) {
-        this.addItems(item);
-    }
-
-    public void addItems(T ...items) {
-        this.addItems(Arrays.asList(items));
+    public void setReference(ObservableReference<List<T>> observableReference) {
+        this.observableReference = observableReference;
+        this.getTable().setItems(this.getItems());
     }
 
     public void addColumn(String title, String property, boolean sortable, TableColumn.SortType sortType, Integer width) {
@@ -67,9 +58,22 @@ public class Table<T> {
         this.addColumn(title, property, false);
     }
 
+    public T getSelected() {
+        return this.getTable().getSelectionModel().getSelectedItem();
+    }
+
+    public void pollItems() {
+        this.view.setItems(this.getItems());
+    }
+
     public void refresh() {
+        this.pollItems();
         this.view.getColumns().get(0).setVisible(false);
         this.view.getColumns().get(0).setVisible(true);
+    }
+
+    public ObservableList<T> getItems() {
+        return FXCollections.observableList(observableReference.poll());
     }
 
 }
