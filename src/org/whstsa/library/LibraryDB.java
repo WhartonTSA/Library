@@ -10,8 +10,6 @@ import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.InterfaceManager;
 import org.whstsa.library.gui.api.GuiMain;
-import org.whstsa.library.gui.api.GuiMainFXML;
-import org.whstsa.library.gui.api.GuiNewLibrary;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.scenes.IOFileSelection;
 import org.whstsa.library.util.Logger;
@@ -44,7 +42,7 @@ public class LibraryDB extends Application {
         }
         this.loadJSON((arg0) -> {
             LOGGER.debug("JSON Loaded.");
-            this.interfaceManager.display(new GuiNewLibrary());//Temporary for testing
+            this.interfaceManager.display(new GuiMain());
         });
         // new CommandWatcher(System.in, System.out).start();
     }
