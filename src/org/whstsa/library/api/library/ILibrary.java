@@ -32,6 +32,13 @@ public interface ILibrary extends IBookContainer, Loadable {
     IMember addMember(IPerson person);
 
     /**
+     * Changes the name of the library
+     *
+     * @param name the new name of the library
+     */
+    void setName(String name);
+
+    /**
      * Removes a member from the library
      *
      * @param member the member to remove
