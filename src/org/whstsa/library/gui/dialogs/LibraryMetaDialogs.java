@@ -5,8 +5,10 @@ import javafx.scene.control.Dialog;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ILibrary;
+import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.TextFieldElement;
+import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 
@@ -41,6 +43,21 @@ public class LibraryMetaDialogs {
             library.setName(newName);
             callback.callback(library);
         });
+    }
+
+    public static void deleteLibrary(ILibrary library, Callback<ILibrary> callback) {
+        new DialogBuilder()
+                .setTitle("Delete Library")
+                .addButton(ButtonType.YES, true, event -> {
+                    Loader.getLoader().unloadLibrary(library.getID());
+                    callback.callback(library);
+                })
+                .addButton(ButtonType.NO, true, event -> {
+                    callback.callback(null);
+                })
+                .setIsCancellable(false)
+                .build()
+                .show();
     }
 
 }
