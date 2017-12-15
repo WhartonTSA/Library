@@ -9,6 +9,7 @@ import org.whstsa.library.api.DateUtils;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.LoadingException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.impl.library.Checkout;
@@ -17,6 +18,7 @@ import org.whstsa.library.api.impl.library.Member;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
+import org.whstsa.library.util.Logger;
 
 import java.util.*;
 
@@ -129,6 +131,39 @@ public class Loader {
             return book;
         }
         throw new LoadingException("Raw book was not of JSONObject type");
+    }
+
+    /**
+     * Removes the book data from the database.
+     *
+     * Make sure that you have cleared all references to the book ID
+     * or the program will error out on next run.
+     *
+     * @param uuid the book uuid
+     */
+    public void unloadBook(UUID uuid) {
+        this.bookMap.remove(uuid);
+    }
+
+    /**
+     * Removes the person data from the database.
+     *
+     * Make sure that you have cleared all references to the person ID
+     * or the program will error out on next run.
+     *
+     * @param uuid the person uuid
+     */
+    public void unloadPerson(UUID uuid) {
+        this.personMap.remove(uuid);
+    }
+
+    /**
+     * Removes the library from the library database.
+     *
+     * @param uuid the library uuid
+     */
+    public void unloadLibrary(UUID uuid) {
+        this.libraryMap.remove(uuid);
     }
 
     /**

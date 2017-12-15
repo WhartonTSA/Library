@@ -40,4 +40,14 @@ public class CheckBoxElement extends CheckBox implements Element {
     public Boolean getResult() {
         return this.isSelected();
     }
+
+    @Override
+    public String getString() {
+        return null;
+    }
+
+    @Override
+    public boolean getBoolean() {
+        return this.getResult();
+    }
 }

@@ -24,18 +24,7 @@ public class GuiMain implements Gui {
 
         StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable();
 
-        Button newPersonButton = GuiUtils.createButton("New Person", this.defaultClickConsumer);
-        Button editPersonButton = GuiUtils.createButton("Edit Person", this.defaultClickConsumer);
-        Button deletePersonButton = GuiUtils.createButton("Delete Person", this.defaultClickConsumer);
-        StackPane personButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newPersonButton, editPersonButton, deletePersonButton);
-
-        Table<Person> personTable = new Table<>();
-        personTable.addColumn("First Name", "firstName", true, TableColumn.SortType.DESCENDING, 50);
-        personTable.addColumn("Last Name", "lastName", true, TableColumn.SortType.DESCENDING, 50);
-        List<Person> personList = ArrayUtils.castList(ObjectDelegate.getPeople(), new ArrayList<Person>());
-        personTable.addItems(personList);
-
-        StackPane personContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, personTable.getTable(), personButtonContainer);
+        StackPane personContainer = DatabaseManagementTables.personOverviewTable();
 
         StackPane container = GuiUtils.createTitledSplitPane("Library Manager", GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer);
 

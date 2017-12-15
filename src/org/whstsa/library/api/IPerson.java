@@ -89,4 +89,32 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
      */
     double deductMoney(double money) throws NotEnoughMoneyException;
 
+    /**
+     * Sets whether the person is now a teacher
+     *
+     * @param teacher teacher state
+     */
+    void setTeacher(boolean teacher);
+
+    /**
+     * Sets the first name of the person
+     *
+     * @param firstName the first name
+     */
+    void setFirstName(String firstName);
+
+    /**
+     * Sets the last name of the person
+     *
+     * @param lastName the last name
+     */
+    void setLastName(String lastName);
+
+    /**
+     * Returns whether this person is eligible to be removed
+     *
+     * @return whether the person can be removed
+     */
+    boolean isRemovable();
+
 }
