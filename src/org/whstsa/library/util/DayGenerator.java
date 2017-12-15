@@ -38,12 +38,6 @@ public class DayGenerator {
 	
 	private static Logger LOGGER = new Logger("DayGenerator");
 	private static List<UUID> deregisterPendingPeople = new ArrayList<>();
-	private static int countActionA = 0;
-	private static int countActionB = 0;
-	private static int countActionC = 0;
-	private static int countActionD = 0;
-	private static int countActionE = 0;
-	private static int countActionF = 0;
 	
 	public static void simulateDay() {
 		ObjectDelegate.getAllMembers().stream().filter(member -> deregisterPendingPeople.contains(member.getID())).collect(Collectors.toList()).forEach(member -> {
@@ -52,16 +46,16 @@ public class DayGenerator {
 				LOGGER.debug(String.format("%s has finally been deregistered ", member.getName()));
 				deregisterPendingPeople.remove(member.getID());
 			} catch (CannotDeregisterException ex) {
-				LOGGER.debug(String.format("Couldn't deregister %s yet: %s ", member.getName(), ex.getMessage()));
+				//LOGGER.debug(String.format("Couldn't deregister %s yet: %s ", member.getName(), ex.getMessage()));
 			}
 		});
 		while (chance(4)) {
-			LOGGER.debug("a");countActionA++;
+			//LOGGER.debug("a");
 			generateMember(randomLibrary());
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
-			if (chance(40) && !deregisterPendingPeople.contains(member)) {
-				LOGGER.debug("b");countActionB++;
+			if (chance(50) && !deregisterPendingPeople.contains(member)) {
+				//LOGGER.debug("b");
 				try {
 					member.getLibrary().removeMember(member);
 					LOGGER.debug(String.format("%s has been deregistered ", member.getName()));
@@ -72,12 +66,12 @@ public class DayGenerator {
 			}
 		});
 		while (chance(4)) {
-			LOGGER.debug("c");countActionC++;
+			//LOGGER.debug("c");
 			generateBook();
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
-				LOGGER.debug("d");countActionD++;
+				//LOGGER.debug("d");
 				if (member.getBooks().size() != 0 && (RANDOM.nextBoolean() || deregisterPendingPeople.contains(member.getID()))) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
@@ -111,14 +105,14 @@ public class DayGenerator {
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			IPerson person = member.getPerson();
 			if (chance(10) || (member.getFine() != 0.0 && chance(5))) {
-				LOGGER.debug("e");countActionE++;
+				//LOGGER.debug("e");
 				double randomAmountAdded = RANDOM.nextInt(10) * 1.0 + RANDOM.nextInt(3) * 0.25;
 				person.addMoney(randomAmountAdded);
 				LOGGER.debug(person.getName() + " has $" + person.getWallet() + " in their wallet");
 			}
 		});
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
-			LOGGER.debug("f");countActionF++;
+			//LOGGER.debug("f");
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
 				double fine = checkout.getFine();
@@ -172,11 +166,6 @@ public class DayGenerator {
 		String[] bookName = new String[] {"Harry Potter" , "The Book Thief" , "The Chronicles of Narnia" , "Animal Farm" , "Gone with the Wind" , "The Hobbit" , "The Fault in Our Stars" , "The Hitchiker's Guide to the Galaxy" , "The Giving Tree" , "Wuthering Heights" , "The Da Vinci Code" , "Alice's Adventures in Wonderland" , "Divergent" , "Romeo and Juliet" , "The Alchemist" , "Lord of the Flies" , "Crime and Punishment" , "Ender's Game" , "City of Bones" , "Charlotte's Web" , "Of Mice and Men" , "Dracula" , "Brave New World" , "One Hundred Years of Solitude" , "A Wrinkle in Time" , "The Catcher in the Rye" , "The Adventures of Huckleberry Finn" , "Where the Wild Things Are" , "Green Eggs and Ham" , "Game of Thrones" , "The Lightning Thief" , "Life of Pi"	, "Diary of a Wimpy Kid" , "The Adventures of Sherlock Holmes" , "The Wolf Queen" , "The Doors of Sovngarde" , "Sixteen Accords of Happiness" , "The Argonian Maid" , "A Dance in Fire" , "The Infernal City" , "Tales of Tamriel" , "The Book of the Dragonborn" , "The Phantom Menace" , "The Attack of the Clones" , "The Revenge of the Sith" , "A New Hope" , "The Empire Strikes Back" , "Return of the Jedi" , "The Force Awakens" , "The Last Jedi"};
 		return bookName[RANDOM.nextInt(bookName.length - 1)];
 	}
-
-	public static void showCounters() {
-		LOGGER.debug(String.format("A:%s B:%s C:%s D:%s E:%s F:%s" , countActionA, countActionB, countActionC, countActionD, countActionE, countActionF));
-	}
-
 
 	public static BookType randomBookType() {
 		BookType[] bookTypes = BookType.values();

@@ -14,6 +14,4 @@ public class World {
         currentDate = date;
     }
 
-    public static void setToDefaultDate() { currentDate = new Date(); }
-
 }

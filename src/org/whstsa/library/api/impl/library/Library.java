@@ -21,6 +21,7 @@ public class Library implements ILibrary {
 
     private List<IBook> books;
     private List<IMember> members;
+    private Map<IBook, Integer> bookQuantity;
 
     private String name;
 
@@ -31,6 +32,7 @@ public class Library implements ILibrary {
         this.members = new ArrayList<>();
         this.name = name;
         this.uuid = UUID.randomUUID();
+        this.bookQuantity = new HashMap<>();
     }
 
     public static ILibrary findLibrary(UUID memberID) {
@@ -68,6 +70,10 @@ public class Library implements ILibrary {
         object.put("uuid", this.uuid.toString());
 
         object.put("name", this.name);
+
+        JSONObject quantities = new JSONObject();
+        this.bookQuantity.forEach((book, quantity) -> quantities.put(book.getID().toString(), quantity));
+        object.put("quantities", quantities);
 
         return object;
     }
@@ -130,7 +136,10 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException {
+    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException , OutOfStockException {
+        if (this.bookQuantity.get(book) == 0 || (this.getCheckouts().get(book) == null && this.getCheckouts().get(book).size() == this.bookQuantity.get(book))) {
+            throw new OutOfStockException(book , this);
+        }
         ICheckout checkout = new Checkout(member, book);
         member.checkout(checkout);
         return checkout;
@@ -248,6 +257,14 @@ public class Library implements ILibrary {
             bookListMap.get(book).addAll(checkoutList);
         }));
         return bookListMap;
+    }
+
+    public int getQuantity(IBook book) {
+        return this.bookQuantity.get(book);
+    }
+
+    public void setQuantity(IBook book, int amount) {
+        this.bookQuantity.put(book, amount);
     }
 
 }

@@ -34,7 +34,6 @@ public class DayGeneratorCommand implements ICommand {
             World.setDate(cal.getTime());
             LOGGER.debug();
         }
-        DayGenerator.showCounters();
         commandSender.sendMessage("Successfully generated day.");
         return null;
     }

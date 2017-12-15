@@ -6,6 +6,7 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.books.IBookContainer;
 import org.whstsa.library.api.exceptions.BookNotRegisteredException;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
+import org.whstsa.library.api.exceptions.OutOfStockException;
 
 import java.util.List;
 import java.util.Map;
@@ -21,11 +22,11 @@ public interface ILibrary extends IBookContainer, Loadable {
      * @return the checkout object
      * @throws BookNotRegisteredException if {@code !books.contain(book)}
      */
-    ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException;
+    ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException , OutOfStockException;
 
     /**
      * Creates a member object and adds them to this library
-     *
+     *s
      * @param person the person joining the library
      * @return the member object
      */
@@ -97,5 +98,21 @@ public interface ILibrary extends IBookContainer, Loadable {
      * @return the checkout map
      */
     Map<IBook, List<ICheckout>> getCheckouts();
+
+    /**
+     * Returns the quantity for a certain book
+     *
+     * @param book
+     * @return quantity
+     */
+    int getQuantity(IBook book);
+
+    /**
+     * Sets quantity to book by specified integer
+     *
+     * @param book
+     * @param amount
+     */
+    void setQuantity(IBook book, int amount);
 
 }
