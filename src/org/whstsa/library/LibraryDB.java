@@ -34,6 +34,7 @@ public class LibraryDB extends Application {
 
     public void start(Stage stage) {
         this.stage = stage;
+        this.stage.setResizable(true);
         this.interfaceManager = new InterfaceManager(this);
         this.jsonFileBrowser = new IOFileSelection(this, "json");
         if (TESTING) {
