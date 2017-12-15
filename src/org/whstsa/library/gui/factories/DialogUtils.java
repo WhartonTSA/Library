@@ -1,13 +1,11 @@
 package org.whstsa.library.gui.factories;
 
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.Callback;
@@ -71,30 +69,20 @@ public class DialogUtils {
 		return createDialog(null);
 	}
 
+	/**
+	 * @deprecated Use DialogBuilder
+	 */
+	@Deprecated
 	public static Dialog<Map<String, Element>> createInputDialog(ButtonType button, boolean cancelButton, String title, Element ...elements) {
-		Dialog<Map<String, Element>> dialog = new Dialog<>();
-		dialog.setTitle(title);
-
-		dialog.getDialogPane().getButtonTypes().addAll(DialogUtils.createButtonList(cancelButton, button));
-
-		GridPane grid = DialogUtils.buildGridPane();
-
-		int incr = 0;
-		for (Element element : elements) {
-			grid.add(element.getComputedElement(), 0, incr);
-			incr++;
-		}
-
-		dialog.getDialogPane().setContent(grid);
-
-		Platform.runLater(() -> grid.getChildren().get(0).requestFocus());
-
-		DialogUtils.addInputFieldMatcher(dialog);
-
-		return dialog;
+		return new DialogBuilder()
+					.setTitle(title)
+					.setIsCancellable(cancelButton)
+					.addButton(button)
+					.addAllElements(elements)
+					.build();
 	}
 	
-	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback, boolean requireContent, String[] expectedKeys) {
+	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback, String ...expectedKeys) {
 		Stage alertStage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		final List<Boolean> isClosable = new ArrayList<>();
 		isClosable.add(false);
@@ -106,29 +94,31 @@ public class DialogUtils {
 		dialog.show();
 		dialog.setOnCloseRequest((event) -> {
 			Map<String, Element> responses = dialog.getResult();
-			List<String> missingKeys = new ArrayList<>();
-			for (String key : expectedKeys) {
-				if (!responses.containsKey(key)) {
-					missingKeys.add(key);
+			if (expectedKeys.length != 0) {
+				List<String> missingKeys = new ArrayList<>();
+				for (String key : expectedKeys) {
+					if (!responses.containsKey(key)) {
+						missingKeys.add(key);
+					}
 				}
-			}
-			isClosable.set(0, false);
-			if (missingKeys.size() >= 1) {
-				event.consume();
-				StringBuilder message = new StringBuilder();
-				for (String missing : missingKeys) {
-					message.append("- " + missing + "\n");
+				isClosable.set(0, false);
+				if (missingKeys.size() >= 1) {
+					event.consume();
+					StringBuilder message = new StringBuilder();
+					for (String missing : missingKeys) {
+						message.append("- " + missing + "\n");
+					}
+					DialogUtils.notify("Please answer all required fields", message.toString(), AlertType.ERROR);
+					return;
 				}
-				DialogUtils.notify("Please answer all required fields", message.toString(), AlertType.ERROR);
-				return;
+				isClosable.set(0, true);
 			}
-			isClosable.set(0, true);
 			callback.callback(dialog.getResult());
 		});
 	}
 	
 	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback) {
-		DialogUtils.getDialogResults(dialog, callback, false, new String[] {});
+		DialogUtils.getDialogResults(dialog, callback, new String[] {});
 	}
 	
 	private static void notify(String title, String message, AlertType type) {
@@ -146,7 +136,7 @@ public class DialogUtils {
 		}
 	}
 	
-	private static void addInputFieldMatcher(Dialog<Map<String, Element>> dialog) {
+	public static void addInputFieldMatcher(Dialog<Map<String, Element>> dialog) {
 		dialog.setResultConverter((buttonType) -> {
 			Map<String, Element> valueMap = new HashMap<>();
 			dialog.getDialogPane().getChildren().forEach(node -> {
@@ -161,14 +151,14 @@ public class DialogUtils {
 		});
 	}
 	
-	private static GridPane buildGridPane() {
+	public static GridPane buildGridPane() {
 		GridPane gridPane = new GridPane();
 		gridPane.setHgap(ELEMENT_PADDING);
 		gridPane.setVgap(ELEMENT_PADDING);
 		return gridPane;
 	}
 	
-	private static ButtonType[] createButtonList(boolean cancelButton, ButtonType ...buttons) {
+	public static ButtonType[] createButtonList(boolean cancelButton, ButtonType ...buttons) {
 		ArrayList<ButtonType> buttonList = new ArrayList<>();
 		for (ButtonType button : buttons) {
 			buttonList.add(button);
