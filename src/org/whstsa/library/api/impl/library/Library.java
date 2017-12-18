@@ -10,6 +10,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.util.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -137,7 +138,10 @@ public class Library implements ILibrary {
 
     @Override
     public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException, OutOfStockException {
-        if (this.bookQuantity.get(book) == 0 || (this.getCheckouts().get(book) == null && this.getCheckouts().get(book).size() == this.bookQuantity.get(book))) {
+        boolean hasCheckouts = this.getCheckouts().get(book) != null;
+        boolean noBooksLeft = hasCheckouts ? this.getCheckouts().get(book).size() == this.bookQuantity.get(book) : false;
+        Logger.DEFAULT_LOGGER.debug((this.bookQuantity == null) + "");
+        if (this.bookQuantity.get(book) == 0 || noBooksLeft) {
             throw new OutOfStockException(book , this);
         }
         ICheckout checkout = new Checkout(member, book);

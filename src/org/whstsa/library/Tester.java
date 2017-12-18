@@ -6,6 +6,7 @@ import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.Serializable;
 import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.impl.library.Checkout;
@@ -111,7 +112,11 @@ public class Tester {
     private void testDeregistrationWhileHavingBooks() {
         IMember member = this.library.getMembers().get(0);
         IBook book = this.library.getBooks().get(0);
-        ICheckout checkout = this.library.reserveBook(member, book);
+        try {
+            ICheckout checkout = this.library.reserveBook(member, book);
+        } catch (OutOfStockException ex) {
+            System.out.format("Failed: %s", ex.getMessage());
+        }
         System.out.println("Removing member while they have a book checked-out");
         try {
             this.library.removeMember(member);
@@ -226,7 +231,11 @@ public class Tester {
         System.out.format("Checking out a random book for each member of library %s", library.getName());
         for (IMember member : library.getMembers()) {
             IBook book = library.getBooks().get(RANDOM.nextInt(library.getBooks().size()));
-            library.reserveBook(member, book);
+            try {
+                library.reserveBook(member, book);
+            } catch (OutOfStockException ex) {
+                System.out.format("Failed: %s", ex.getMessage());
+            }
         }
     }
 

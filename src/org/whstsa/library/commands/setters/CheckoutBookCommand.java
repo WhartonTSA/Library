@@ -2,6 +2,7 @@ package org.whstsa.library.commands.setters;
 
 import org.json.JSONObject;
 import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.commands.CommandUtil;
@@ -39,7 +40,11 @@ public class CheckoutBookCommand implements ICommand {
         if (book == null) {
             return CommandUtil.createErrorResponse("No book with the given ID could be found.");
         }
-        result = member.getLibrary().reserveBook(member, book).toJSON();
+        try {
+            result = member.getLibrary().reserveBook(member, book).toJSON();
+        } catch (OutOfStockException ex) {
+            return CommandUtil.createErrorResponse("There are no more books that can be checked out");
+        }
         return result;
     }
 
