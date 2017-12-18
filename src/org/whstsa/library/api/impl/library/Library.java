@@ -136,7 +136,7 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException , OutOfStockException {
+    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException, OutOfStockException {
         if (this.bookQuantity.get(book) == 0 || (this.getCheckouts().get(book) == null && this.getCheckouts().get(book).size() == this.bookQuantity.get(book))) {
             throw new OutOfStockException(book , this);
         }

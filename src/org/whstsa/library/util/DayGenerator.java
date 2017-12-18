@@ -10,10 +10,7 @@ import org.whstsa.library.Tester;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.CannotDeregisterException;
-import org.whstsa.library.api.exceptions.CheckedInException;
-import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
-import org.whstsa.library.api.exceptions.OutstandingFinesException;
+import org.whstsa.library.api.exceptions.*;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.library.ICheckout;
@@ -93,7 +90,12 @@ public class DayGenerator {
 					}
 					IBook book = bookDB.get(randomBookIndex);
 					if (book != null) {
-						library.reserveBook(member, book);
+						try {
+							library.reserveBook(member, book);
+						}
+						catch (OutOfStockException e) {
+							LOGGER.debug(e.getMessage());
+						}
 						LOGGER.debug(member.getName() + " took " + book.getTitle());
 					}
 				}
