@@ -1,0 +1,109 @@
+{
+    "books": [
+        {
+            "authorName": "Anthony Young",
+            "title": "The Wolf Queen",
+            "uuid": "eee82d5b-cde6-4ee5-93e3-5fe21f771851",
+            "bookType": "HORROR"
+        },
+        {
+            "authorName": "Lauren Edwards",
+            "title": "Game of Thrones",
+            "uuid": "446df4b1-90ae-408c-b23c-ff0e80488999",
+            "bookType": "HORROR"
+        },
+        {
+            "authorName": "Samuel Williams",
+            "title": "The Empire Strikes Back",
+            "uuid": "49dbc398-f172-4d48-933b-ce43ed230c8f",
+            "bookType": "NONFICTION"
+        },
+        {
+            "authorName": "Johnathan Baker",
+            "title": "The Attack of the Clones",
+            "uuid": "3a10fe4b-50c5-4ffa-a101-5e68ea88bb48",
+            "bookType": "FICTION"
+        },
+        {
+            "authorName": "Anna Nelson",
+            "title": "The Attack of the Clones",
+            "uuid": "2e021ee6-74f3-4d22-bb70-ca388d32e801",
+            "bookType": "FICTION"
+        }
+    ],
+    "libraries": [{
+        "books": [
+            "446df4b1-90ae-408c-b23c-ff0e80488999",
+            "49dbc398-f172-4d48-933b-ce43ed230c8f",
+            "eee82d5b-cde6-4ee5-93e3-5fe21f771851",
+            "2e021ee6-74f3-4d22-bb70-ca388d32e801",
+            "3a10fe4b-50c5-4ffa-a101-5e68ea88bb48"
+        ],
+        "members": [
+            {
+                "checkouts": {},
+                "personID": "b921aee1-62c4-4684-9d76-ed982cb97b88",
+                "uuid": "72261de0-148e-47a1-b4c8-61ed79e14cbd"
+            },
+            {
+                "checkouts": {},
+                "personID": "b0fb7e27-85b5-4b95-b788-3ab3f19283be",
+                "uuid": "6b21a101-8f26-4b14-bebd-b556f6bbb0e7"
+            },
+            {
+                "checkouts": {},
+                "personID": "53298fe5-d537-477b-bf81-8730f28e4170",
+                "uuid": "f4240179-f393-4a31-90a2-af11eb81cb7a"
+            },
+            {
+                "checkouts": {},
+                "personID": "4ec97cab-00ef-4e57-b3bb-cf3ee0e6bafb",
+                "uuid": "eac4756c-dca9-4ded-8fcc-2ec92d1bbcdb"
+            },
+            {
+                "checkouts": {},
+                "personID": "bc525b5b-d6ba-42ba-9011-3eb568da3641",
+                "uuid": "db453ae2-35dd-4c97-88cd-fbae326ef38b"
+            }
+        ],
+        "name": "Wharton High School",
+        "uuid": "57b7e5dc-7554-4e93-9217-2f8a0c0c45ba"
+    }],
+    "people": [
+        {
+            "firstName": "Kayla",
+            "lastName": "Gonzalez",
+            "teacher": true,
+            "wallet": 0,
+            "uuid": "4ec97cab-00ef-4e57-b3bb-cf3ee0e6bafb"
+        },
+        {
+            "firstName": "Benjamin",
+            "lastName": "Taylor",
+            "teacher": false,
+            "wallet": 0,
+            "uuid": "bc525b5b-d6ba-42ba-9011-3eb568da3641"
+        },
+        {
+            "firstName": "Brandon",
+            "lastName": "Adams",
+            "teacher": false,
+            "wallet": 0,
+            "uuid": "b0fb7e27-85b5-4b95-b788-3ab3f19283be"
+        },
+        {
+            "firstName": "Joseph",
+            "lastName": "Garcia",
+            "teacher": true,
+            "wallet": 0,
+            "uuid": "b921aee1-62c4-4684-9d76-ed982cb97b88"
+        },
+        {
+            "firstName": "Sophia",
+            "lastName": "Green",
+            "teacher": true,
+            "wallet": 0,
+            "uuid": "53298fe5-d537-477b-bf81-8730f28e4170"
+        }
+    ]
+}

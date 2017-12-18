@@ -44,9 +44,9 @@ public class LibraryDB extends Application {
         }
         this.loadJSON((arg0) -> {
             LOGGER.debug("JSON Loaded.");
-            this.interfaceManager.display(new GuiNewLibrary());//Temporary for testing
+            this.interfaceManager.display(new GuiMain());
         });
-        // new CommandWatcher(System.in, System.out).start();
+        //new CommandWatcher(System.in, System.out).start();
     }
 
     public Stage getStage() {
@@ -55,6 +55,7 @@ public class LibraryDB extends Application {
 
     private void loadJSON(Callback<Object> callback) {
         LOGGER.debug("Splashing JSON GUI");
+        /*testing library based on "start" date World.setToDefaultDate();*/
         File rawJSON = this.jsonFileBrowser.getFile();
         try {
             FILE_DELEGATE = new IOFileDelegate(rawJSON);
