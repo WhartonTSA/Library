@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -15,11 +16,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
-import org.whstsa.library.gui.api.InputGroup;
+import org.whstsa.library.gui.components.CheckBoxElement;
+import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
-
-import java.util.List;
 
 public class GuiUtils {
 	
@@ -60,10 +60,7 @@ public class GuiUtils {
 	public static Scene createScene(Parent parent) {
 		return new Scene(parent, 512, 512);
 	}
-	
-	// 1 4 7 10 13 16 19
-	// 17 20 21 42 45 69 72 25 39
-	
+
 	public static Button createButton(String title, ClickHandler clickHandler) {
 		LibraryDB.LOGGER.debug("Assembling button with title " + title + " (CLICK HANDLER: " + Logger.assertion(clickHandler != null) + ")");
 		Button button = new Button(title);
@@ -77,25 +74,43 @@ public class GuiUtils {
 		}
 		return button;
 	}
-	
-	public static InputGroup createInputGroup(String label, boolean inline) {
-		TextField field = new TextField();
-		Label inputLabel = null;
-		Node group;
-		if (inline) {
-			field.setPromptText(label);
-			group = field;
-		} else {
-			inputLabel = GuiUtils.createLabel(label);
-			group = GuiUtils.createSplitPane(Orientation.HORIZONTAL, inputLabel, field);
-		}
-		return new InputGroup(group, inputLabel, field);
+  
+	public static Button createButton(String title) {
+		return createButton(title, null);
 	}
 	
-	public static InputGroup createInputGroup(String label) {
-		return GuiUtils.createInputGroup(label, true);
+	public static TextFieldElement createTextField(String prompt, boolean inline, String placeholder, String id) {
+		TextFieldElement element = new TextFieldElement(id, prompt, inline);
+		element.setText(placeholder);
+		return element;
 	}
-	
+
+	public static TextFieldElement createTextField(String prompt, boolean inline, String placeholder) {
+		return createTextField(prompt, inline, placeholder, prompt);
+	}
+
+	public static TextFieldElement createTextField(String prompt, boolean inline) {
+		return createTextField(prompt, inline, null);
+	}
+
+	public static TextFieldElement createTextField(String prompt) {
+		return createTextField(prompt, false);
+	}
+
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline) {
+        CheckBoxElement checkBoxElement = new CheckBoxElement(prompt, prompt, inline);
+        checkBoxElement.setSelected(selected);
+        return checkBoxElement;
+    }
+
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected) {
+	    return createCheckBox(prompt, selected, false);
+    }
+
+    public static CheckBoxElement createCheckBox(String prompt) {
+	    return createCheckBox(prompt, false);
+    }
+
 	public static Label createLabel(String text) {
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);
 		Label label = new Label(text);
@@ -108,6 +123,16 @@ public class GuiUtils {
 		label.setFont(TITLE_FONT);
 		return label;
 	}
+	public static void defaultCloseOperation(ActionEvent event) {
+        ((Node)(event.getSource())).getScene().getWindow().hide();
+	}
+
+	public static ClickHandler defaultClickHandler() {
+	    return new ClickHandler() {
+	        @Override
+	        public void onclick(Button button) {}
+        };
+    }
 
 //	public static TableView<T> createTableView(T dataStore, List<String> columns) {
 //

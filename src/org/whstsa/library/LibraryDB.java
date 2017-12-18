@@ -3,7 +3,6 @@ package org.whstsa.library;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import org.apache.commons.lang3.ObjectUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.whstsa.library.api.Callback;
@@ -11,16 +10,16 @@ import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.InterfaceManager;
 import org.whstsa.library.gui.api.GuiMain;
+import org.whstsa.library.gui.api.GuiMainFXML;
+import org.whstsa.library.gui.api.GuiNewLibrary;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.scenes.IOFileSelection;
-import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.charset.MalformedInputException;
 import java.util.Scanner;
 
 /**
@@ -34,6 +33,7 @@ public class LibraryDB extends Application {
 
     public void start(Stage stage) {
         this.stage = stage;
+        this.stage.setResizable(true);
         this.interfaceManager = new InterfaceManager(this);
         this.jsonFileBrowser = new IOFileSelection(this, "json");
         if (TESTING) {
@@ -43,10 +43,10 @@ public class LibraryDB extends Application {
             }
         }
         this.loadJSON((arg0) -> {
-            /*LOGGER.debug("JSON Loaded.");
-            this.interfaceManager.display(new GuiMain());*/
+            LOGGER.debug("JSON Loaded.");
+            this.interfaceManager.display(new GuiMain());
         });
-        new CommandWatcher(System.in, System.out).start();
+        //new CommandWatcher(System.in, System.out).start();
     }
 
     public Stage getStage() {

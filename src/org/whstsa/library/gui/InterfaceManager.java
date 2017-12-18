@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.gui.api.Gui;
-import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.util.Logger;
 
 public class InterfaceManager {

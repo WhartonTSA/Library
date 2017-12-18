@@ -1,14 +1,15 @@
 package org.whstsa.library.gui.factories;
 
-import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.Callback;
-import org.whstsa.library.gui.api.InputGroup;
+import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.util.Logger;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class DialogUtils {
 	
 	private static final int ELEMENT_PADDING = 10;
+	private static final Logger LOGGER = new Logger("DialogFactory");
 	
 	public static Alert createDialog(String title, String body, String header, AlertType type, Callback<Callback<Boolean>> onClose) {
 		Alert alert;
@@ -66,32 +68,21 @@ public class DialogUtils {
 	public static Alert createDialog() {
 		return createDialog(null);
 	}
-	
-	public static Dialog<Map<String, String>> createInputDialog(ButtonType button, boolean cancelButton, String title, String ...fields) {
-		Dialog<Map<String, String>> dialog = new Dialog<>();
-		dialog.setTitle(title);
-		
-		dialog.getDialogPane().getButtonTypes().addAll(DialogUtils.createButtonList(cancelButton, button));
-		
-		GridPane grid = DialogUtils.buildGridPane();
-		
-		int incr = 0;
-		for (String field : fields) {
-			InputGroup group = GuiUtils.createInputGroup(field);
-			grid.add(group.getNode(), 0, incr);
-			incr++;
-		}
-		
-		dialog.getDialogPane().setContent(grid);
-		
-		Platform.runLater(() -> grid.getChildren().get(0).requestFocus());
-		
-		DialogUtils.addInputVieldMatcher(dialog);
-		
-		return dialog;
+
+	/**
+	 * @deprecated Use DialogBuilder
+	 */
+	@Deprecated
+	public static Dialog<Map<String, Element>> createInputDialog(ButtonType button, boolean cancelButton, String title, Element ...elements) {
+		return new DialogBuilder()
+					.setTitle(title)
+					.setIsCancellable(cancelButton)
+					.addButton(button)
+					.addAllElements(elements)
+					.build();
 	}
 	
-	public static void getDialogResults(Dialog<Map<String, String>> dialog, Callback<Map<String, String>> callback, boolean requireContent, String[] expectedKeys) {
+	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback, String ...expectedKeys) {
 		Stage alertStage = (Stage) dialog.getDialogPane().getScene().getWindow();
 		final List<Boolean> isClosable = new ArrayList<>();
 		isClosable.add(false);
@@ -102,30 +93,32 @@ public class DialogUtils {
 		});
 		dialog.show();
 		dialog.setOnCloseRequest((event) -> {
-			Map<String, String> responses = dialog.getResult();
-			List<String> missingKeys = new ArrayList<>();
-			for (String key : expectedKeys) {
-				if (!responses.containsKey(key) || responses.get(key).length() == 0) {
-					missingKeys.add(key);
+			Map<String, Element> responses = dialog.getResult();
+			if (expectedKeys.length != 0) {
+				List<String> missingKeys = new ArrayList<>();
+				for (String key : expectedKeys) {
+					if (!responses.containsKey(key)) {
+						missingKeys.add(key);
+					}
 				}
-			}
-			isClosable.set(0, false);
-			if (missingKeys.size() >= 1) {
-				event.consume();
-				StringBuilder message = new StringBuilder();
-				for (String missing : missingKeys) {
-					message.append("- " + missing + "\n");
+				isClosable.set(0, false);
+				if (missingKeys.size() >= 1) {
+					event.consume();
+					StringBuilder message = new StringBuilder();
+					for (String missing : missingKeys) {
+						message.append("- " + missing + "\n");
+					}
+					DialogUtils.notify("Please answer all required fields", message.toString(), AlertType.ERROR);
+					return;
 				}
-				DialogUtils.notify("Please answer all required fields", message.toString(), AlertType.ERROR);
-				return;
+				isClosable.set(0, true);
 			}
-			isClosable.set(0, true);
 			callback.callback(dialog.getResult());
 		});
 	}
 	
-	public static void getDialogResults(Dialog<Map<String, String>> dialog, Callback<Map<String, String>> callback) {
-		DialogUtils.getDialogResults(dialog, callback, false, new String[] {});
+	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback) {
+		DialogUtils.getDialogResults(dialog, callback, new String[] {});
 	}
 	
 	private static void notify(String title, String message, AlertType type) {
@@ -134,20 +127,23 @@ public class DialogUtils {
 		//alertStage.initStyle(StageStyle.UTILITY);
 		alert.showAndWait();
 	}
+
+	private static void addNode(Map<String, Element> valueMap, Node node) {
+		if (node instanceof Element) {
+			valueMap.put(((Element) node).getID(), (Element) node);
+		} else if (node instanceof Pane) {
+			((Pane) node).getChildren().forEach((node1) -> addNode(valueMap, node1));
+		}
+	}
 	
-	private static void addInputVieldMatcher(Dialog<Map<String, String>> dialog) {
+	public static void addInputFieldMatcher(Dialog<Map<String, Element>> dialog) {
 		dialog.setResultConverter((buttonType) -> {
-			Map<String, String> valueMap = new HashMap<>();
+			Map<String, Element> valueMap = new HashMap<>();
 			dialog.getDialogPane().getChildren().forEach(node -> {
 				if (node instanceof GridPane) {
 					GridPane grid = (GridPane) node;
 					grid.getChildren().forEach((child) -> {
-						if (child instanceof TextField) {
-							TextField field = (TextField) child;
-							if (field.getPromptText().length() >= 1) {
-								valueMap.put(field.getPromptText(), field.getText());
-							}
-						}
+						addNode(valueMap, child);
 					});
 				}
 			});
@@ -155,14 +151,14 @@ public class DialogUtils {
 		});
 	}
 	
-	private static GridPane buildGridPane() {
+	public static GridPane buildGridPane() {
 		GridPane gridPane = new GridPane();
 		gridPane.setHgap(ELEMENT_PADDING);
 		gridPane.setVgap(ELEMENT_PADDING);
 		return gridPane;
 	}
 	
-	private static ButtonType[] createButtonList(boolean cancelButton, ButtonType ...buttons) {
+	public static ButtonType[] createButtonList(boolean cancelButton, ButtonType ...buttons) {
 		ArrayList<ButtonType> buttonList = new ArrayList<>();
 		for (ButtonType button : buttons) {
 			buttonList.add(button);

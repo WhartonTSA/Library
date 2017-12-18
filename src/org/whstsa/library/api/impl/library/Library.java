@@ -56,6 +56,11 @@ public class Library implements ILibrary {
     }
 
     @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
     public JSONObject toJSON() {
         JSONObject object = new JSONObject();
 
