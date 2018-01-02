@@ -7,8 +7,10 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.layout.StackPane;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
+import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ILibrary;
+import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Table;
@@ -117,6 +119,20 @@ public class DatabaseManagementTables {
         StackPane personButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newPersonButton, editPersonButton, deletePersonButton);
 
         return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, personTable.getTable(), personButtonContainer);
+    }
+    public static Table memberManagerTable() {
+        Table<IMember> mainTable = new Table<>();
+        mainTable.addColumn("Member Name", "name", true, TableColumn.SortType.DESCENDING, 100);
+        ObservableReference<List<IMember>> observableReference = () -> ObjectDelegate.getLibraries().get(0).getMembers();
+        mainTable.setReference(observableReference);
+        return mainTable;
+    }
+    public static Table bookManagerTable() {
+        Table<IBook> mainTable = new Table<>();
+        mainTable.addColumn("Member Name", "name", true, TableColumn.SortType.DESCENDING, 100);
+        ObservableReference<List<IBook>> observableReference = () -> ObjectDelegate.getLibraries().get(0).getBooks();
+        mainTable.setReference(observableReference);
+        return mainTable;
     }
 
 }

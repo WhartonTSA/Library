@@ -7,10 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
@@ -58,6 +55,7 @@ public class GuiUtils {
     public static HBox createHBox(double padding, Node ...nodes) {
         HBox container = new HBox(nodes);
         container.setPadding(new Insets(padding, padding, padding, padding));
+        container.setAlignment(Pos.CENTER);
         return container;
     }
     public static HBox createHBox(Node ...nodes) {
@@ -67,6 +65,7 @@ public class GuiUtils {
     public static VBox createVBox(double padding, Node ...nodes) {
         VBox container = new VBox(nodes);
         container.setPadding(new Insets(padding, padding, padding, padding));
+        container.setAlignment(Pos.TOP_CENTER);
         return container;
     }
 
@@ -99,12 +98,27 @@ public class GuiUtils {
 		return new Scene(parent, 512, 512);
 	}
 
-	public static Button createButton(String title, ClickHandler clickHandler) {
+	public static ToggleGroup createToggleButtonGroup(String ...titles) {//Doesn't work, will probably make a new class for this
+	    ToggleGroup toggleGroup = new ToggleGroup();
+	    for (int i = 0; i < titles.length; i++) {
+	        createToggleButton(titles[i]).setToggleGroup(toggleGroup);
+        }
+	    return toggleGroup;
+    }
+
+    public static ToggleButton createToggleButton(String title) {
+	    return new ToggleButton(title);
+    }
+
+	public static Button createButton(String title, boolean nativeWidth, double width, ClickHandler clickHandler) {
 		LibraryDB.LOGGER.debug("Assembling button with title " + title + " (CLICK HANDLER: " + Logger.assertion(clickHandler != null) + ")");
 		Button button = new Button(title);
-		if (title.length() < 10) {
+		if (title.length() < 10 && width == 80.0 && !nativeWidth) {//If title is more than 10 characters or nativeWidth == true, default to the automatic button width. Otherwise, set width to 80
 		    button.setPrefWidth(80.0);
         }
+        else if (!nativeWidth){
+			button.setPrefWidth(width);
+		}
 		if (clickHandler != null) {
 			button.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
@@ -115,9 +129,17 @@ public class GuiUtils {
 		}
 		return button;
 	}
-  
+
+    public static Button createButton(String title, boolean nativeWidth, ClickHandler clickHandler) {
+        return createButton(title, nativeWidth, 80.0, clickHandler);
+    }
+
+	public static Button createButton(String title, ClickHandler clickHandler) {
+	    return createButton(title, false, clickHandler);
+    }
+
 	public static Button createButton(String title) {
-		return createButton(title, null);
+		return createButton(title,null);
 	}
 	
 	public static TextFieldElement createTextField(String prompt, boolean inline, String placeholder, String id) {
