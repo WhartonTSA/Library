@@ -130,6 +130,10 @@ public class GuiUtils {
 		return button;
 	}
 
+	public static Button createButton(String title, double width, ClickHandler clickHandler) {
+		return createButton(title, false, width, clickHandler);
+	}
+
     public static Button createButton(String title, boolean nativeWidth, ClickHandler clickHandler) {
         return createButton(title, nativeWidth, 80.0, clickHandler);
     }
