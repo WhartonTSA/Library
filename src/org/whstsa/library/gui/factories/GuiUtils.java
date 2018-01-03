@@ -16,6 +16,8 @@ import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
 
+import javax.swing.*;
+
 public class GuiUtils {
 	
 	public static final int COMPONENT_PADDING = 16;
@@ -178,15 +180,20 @@ public class GuiUtils {
 	    return createCheckBox(prompt, false);
     }
 
-	public static Label createLabel(String text, double size) {
+	public static Label createLabel(String text, double size, Pos pos) {
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);
 		Label label = new Label(text);
 		label.setFont(Font.font(size));
+		label.setAlignment(pos);
 		return label;
 	}
 
+	public static Label createLabel(String text, double size) {
+	    return createLabel(text, size, Pos.CENTER);
+	}
+
 	public static Label createLabel(String text) {
-	    return createLabel(text, 16);
+	    return createLabel(text, 16, Pos.CENTER);
     }
 	
 	public static Label createTitle(String title) {

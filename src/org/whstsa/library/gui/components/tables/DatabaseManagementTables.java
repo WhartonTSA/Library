@@ -20,6 +20,8 @@ import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.LibraryMetaDialogs;
 import org.whstsa.library.gui.dialogs.PersonMetaDialogs;
+import org.whstsa.library.gui.dialogs.MemberMetaDialogs;
+
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.util.ArrayUtils;
 
@@ -148,7 +150,15 @@ public class DatabaseManagementTables {
         HBox viewSwitch = GuiUtils.createHBox(2, viewMembers, viewBooks);
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
-        Button memberNew = GuiUtils.createButton("New", GuiUtils.defaultClickHandler());
+        Button memberNew = GuiUtils.createButton("New", event -> {
+            MemberMetaDialogs.createMember(person -> {
+                if (person == null) {
+                    return;
+                }
+                Loader.getLoader().loadPerson(person);
+                mainPersonTable.pollItems();
+            });
+        });
         Button memberList = GuiUtils.createButton("List", GuiUtils.defaultClickHandler());
         Button memberSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
         Button memberDelete = GuiUtils.createButton("Delete", GuiUtils.defaultClickHandler());
@@ -192,7 +202,7 @@ public class DatabaseManagementTables {
         mainTable.addColumn("First Name", "firstName", true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Last Name", "lastName", true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Teacher", "teacher", true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Fines", "fines", true, TableColumn.SortType.DESCENDING, 50);//TODO make method for this
+        mainTable.addColumn("Fines", "fines", true, TableColumn.SortType.DESCENDING, 25);//TODO make method for this
         ObservableReference<List<IPerson>> observableReference = () -> ObjectDelegate.getPeople();//TODO use function that gets members from library
         mainTable.setReference(observableReference);
         return mainTable;
@@ -202,7 +212,7 @@ public class DatabaseManagementTables {
         mainTable.addColumn("Title", "title", true, TableColumn.SortType.DESCENDING, 200);
         mainTable.addColumn("Author", "authorName", true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", "type", true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Copies", "copies", true, TableColumn.SortType.DESCENDING, 50);//TODO make method for this
+        mainTable.addColumn("Copies", "copies", true, TableColumn.SortType.DESCENDING, 25);//TODO make method for this
         ObservableReference<List<IBook>> observableReference = () -> ObjectDelegate.getLibraries().get(0).getBooks();
         mainTable.setReference(observableReference);
         return mainTable;
