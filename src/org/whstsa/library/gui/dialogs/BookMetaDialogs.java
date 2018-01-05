@@ -43,7 +43,7 @@ public class BookMetaDialogs {
             IBook book = new Book(title, author, genre);
             Loader.getLoader().loadBook(book);
             ObjectDelegate.getLibraries().get(0).addBook(book);//TODO change getLibraries().get(0) to getLibrary(UUID)
-        });
+        }, TITLE, AUTHOR, GENRE);
     }
 
     public static void deleteBook(IBook book, Callback<IPerson> callback) {//TODO Change to IMember

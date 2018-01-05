@@ -21,7 +21,7 @@ public class MemberMetaDialogs {
     private static final String FIRST_NAME = "First Name";
     private static final String LAST_NAME = "Last Name";
     private static final String TEACHER = "Teacher?";
-    private static final String CHECKOUT = "Checkout?";//Option to checkout books to new member
+    private static final String CHECKOUT = "Checkout books to new member?";//Option to checkout books to new member
 
     public static void createMember(Callback<IPerson> callback) {//TODO Change to IMember
         Dialog<Map<String, Element>> dialog = new DialogBuilder()

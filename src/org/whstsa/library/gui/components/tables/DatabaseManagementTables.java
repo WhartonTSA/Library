@@ -18,10 +18,7 @@ import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Table;
-import org.whstsa.library.gui.dialogs.LibraryMetaDialogs;
-import org.whstsa.library.gui.dialogs.PersonMetaDialogs;
-import org.whstsa.library.gui.dialogs.MemberMetaDialogs;
-import org.whstsa.library.gui.dialogs.BookMetaDialogs;
+import org.whstsa.library.gui.dialogs.*;
 
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.util.ArrayUtils;
@@ -155,21 +152,32 @@ public class DatabaseManagementTables {
 
         HBox viewSwitch = GuiUtils.createHBox(2, viewMembers, viewBooks);
 
-        Button checkout = GuiUtils.createButton("Checkout", GuiUtils.defaultClickHandler());
+        Button checkout = GuiUtils.createButton("Checkout", event -> {
+            CheckoutMetaDialogs.checkoutMember(checkoutVar -> {
+                mainMemberTable.pollItems();
+            });
+        });
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event -> {
-            MemberMetaDialogs.createMember(person -> {
-                if (person == null) {
+            MemberMetaDialogs.createMember(member -> {
+                if (member == null) {
                     return;
                 }
-                Loader.getLoader().loadPerson(person);
+                Loader.getLoader().loadPerson(member);
                 mainMemberTable.pollItems();
             });
         });
         Button memberList = GuiUtils.createButton("List", GuiUtils.defaultClickHandler());
         Button memberSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
-        Button memberDelete = GuiUtils.createButton("Delete", GuiUtils.defaultClickHandler());
+        Button memberDelete = GuiUtils.createButton("Delete", event -> {
+            MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
+                if (member == null) {
+                    return;
+                }
+                mainMemberTable.pollItems();
+            });
+        });
 
 
         Label booksLabel = GuiUtils.createLabel("Books", 16);
