@@ -11,17 +11,12 @@ public class LabelElement extends Label implements Element {
     private String id;
 
     public LabelElement(String id, String label) {
-        super();
+        super.setText(label);
         this.id = id;
-        this.label = label;
     }
 
     public Node getComputedElement() {
-        if (this.label == null) {
-            return this;
-        }
-        super.setText(label);
-        return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, this);
+        return this;
     }
 
     public String getID() {
