@@ -21,14 +21,15 @@ import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.LibraryMetaDialogs;
 import org.whstsa.library.gui.dialogs.PersonMetaDialogs;
 import org.whstsa.library.gui.dialogs.MemberMetaDialogs;
+import org.whstsa.library.gui.dialogs.BookMetaDialogs;
 
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.util.ArrayUtils;
 
+import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.whstsa.library.gui.api.LibraryManagerUtils.returnPeople;
+import java.util.function.Consumer;
 
 public class DatabaseManagementTables {
 
@@ -130,10 +131,15 @@ public class DatabaseManagementTables {
     }
 
     public static BorderPane libraryManagerTable() {
-        Table<IPerson> mainPersonTable = new Table<>();
+        Table<IPerson> mainMemberTable = new Table<>();
+        memberManagerTable(mainMemberTable);
+        TableView<IPerson> memberTableView = mainMemberTable.getTable();
+        memberTableView.setId("memberTable");
+
         Table<IBook> mainBookTable = new Table<>();
-        memberManagerTable(mainPersonTable);
         bookManagerTable(mainBookTable);
+        TableView<IBook> bookTableView = mainBookTable.getTable();
+        bookTableView.setId("bookTable");
 
         //Toggle Button Group
         ToggleGroup viewButtons = new ToggleGroup();
@@ -149,6 +155,8 @@ public class DatabaseManagementTables {
 
         HBox viewSwitch = GuiUtils.createHBox(2, viewMembers, viewBooks);
 
+        Button checkout = GuiUtils.createButton("Checkout", GuiUtils.defaultClickHandler());
+
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event -> {
             MemberMetaDialogs.createMember(person -> {
@@ -156,7 +164,7 @@ public class DatabaseManagementTables {
                     return;
                 }
                 Loader.getLoader().loadPerson(person);
-                mainPersonTable.pollItems();
+                mainMemberTable.pollItems();
             });
         });
         Button memberList = GuiUtils.createButton("List", GuiUtils.defaultClickHandler());
@@ -165,17 +173,25 @@ public class DatabaseManagementTables {
 
 
         Label booksLabel = GuiUtils.createLabel("Books", 16);
-        Button bookAdd = GuiUtils.createButton("Add", GuiUtils.defaultClickHandler());
+        Button bookAdd = GuiUtils.createButton("Add", event -> {
+            BookMetaDialogs.createBook(book -> {
+                if (book == null) {
+                return;
+                }
+                Loader.getLoader().loadBook(book);
+                mainBookTable.pollItems();
+            });
+        });
         Button bookList = GuiUtils.createButton("List", GuiUtils.defaultClickHandler());
         Button bookDelete = GuiUtils.createButton("Delete", GuiUtils.defaultClickHandler());
         Button bookSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
 
-        VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch, membersLabel, memberNew, memberList, memberSearch, memberDelete, booksLabel, bookAdd, bookList, bookDelete, bookSearch, settingsButton);
+        VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch, checkout, membersLabel, memberNew, memberList, memberSearch, memberDelete, booksLabel, bookAdd, bookList, bookDelete, bookSearch, settingsButton);
         buttonGroup.setSpacing(5.0);
 
-        BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, mainPersonTable.getTable(), buttonGroup);
+        BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, memberTableView, buttonGroup);
 
         viewButtons.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
@@ -185,16 +201,27 @@ public class DatabaseManagementTables {
                 else {
                     if ((boolean) viewButtons.getSelectedToggle().getUserData()) {
                         LibraryDB.LOGGER.debug("Swictching to Member table");
-                        mainContainer.setCenter(mainPersonTable.getTable());
+                        mainContainer.setCenter(memberTableView);
+
                     }
                     else {
                         LibraryDB.LOGGER.debug("Swictching to Book table");
-                        mainContainer.setCenter(mainBookTable.getTable());
+                        mainContainer.setCenter(bookTableView);
                     }
                 }
 
             }
         });
+
+        Consumer<Integer> switchView = (putAnyNumberHere) -> {
+            if (mainContainer.getCenter().equals(memberTableView)) {
+                mainContainer.setCenter(bookTableView);
+            }
+            else {
+                mainContainer.setCenter(memberTableView);
+            }
+        };
+
         return mainContainer;
     }
 
@@ -202,19 +229,28 @@ public class DatabaseManagementTables {
         mainTable.addColumn("First Name", "firstName", true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Last Name", "lastName", true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Teacher", "teacher", true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Fines", "fines", true, TableColumn.SortType.DESCENDING, 25);//TODO make method for this
-        ObservableReference<List<IPerson>> observableReference = () -> ObjectDelegate.getPeople();//TODO use function that gets members from library
+        mainTable.addColumn("Fines", "fines", true, TableColumn.SortType.DESCENDING, 25);//TODO Make method for this
+        mainTable.addColumn("Books", "books", true, TableColumn.SortType.DESCENDING, 25);
+        ObservableReference<List<IPerson>> observableReference = () -> ObjectDelegate.getPeople();//TODO Use function that gets members from library
         mainTable.setReference(observableReference);
+        mainTable.getTable().setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                LibraryDB.LOGGER.debug("Listing member's books");
+                MemberMetaDialogs.listBooks(t -> {}, mainTable.getSelected());
+            }
+        });
         return mainTable;
     }
 
     public static Table bookManagerTable(Table<IBook> mainTable) {
         mainTable.addColumn("Title", "title", true, TableColumn.SortType.DESCENDING, 200);
-        mainTable.addColumn("Author", "authorName", true, TableColumn.SortType.DESCENDING, 100);
+        mainTable.addColumn("Author", "authorName", true, TableColumn.SortType.DESCENDING, 100);//TODO This doesn't work for some reason
         mainTable.addColumn("Genre", "type", true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Copies", "copies", true, TableColumn.SortType.DESCENDING, 25);//TODO make method for this
+        mainTable.addColumn("Copies", "copies", true, TableColumn.SortType.DESCENDING, 25);//TODO Make method for this
         ObservableReference<List<IBook>> observableReference = () -> ObjectDelegate.getLibraries().get(0).getBooks();
         mainTable.setReference(observableReference);
+        TableColumn<IBook, IPerson> row = new TableColumn<>();
+
         return mainTable;
     }
 

@@ -1,5 +1,6 @@
 package org.whstsa.library.gui.factories;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,6 +13,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.gui.components.CheckBoxElement;
+import org.whstsa.library.gui.components.ChoiceBoxElement;
+import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
@@ -176,29 +179,37 @@ public class GuiUtils {
 	    return createCheckBox(prompt, selected, false);
     }
 
-    public static CheckBoxElement createCheckBox(String prompt) {
-	    return createCheckBox(prompt, false);
+    public static CheckBoxElement createCheckBox(String prompt) { return createCheckBox(prompt, false); }
+
+    public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel) {
+		return new ChoiceBoxElement(label, label, items, useLabel);
+	}
+
+    public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
+        return new ChoiceBoxElement("", "", items, false);
     }
 
-	public static Label createLabel(String text, double size, Pos pos) {
+
+
+	public static LabelElement createLabel(String text, double size, Pos pos) {//TODO add functionality for boolean inline
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);
-		Label label = new Label(text);
+		LabelElement label = new LabelElement(text, text);
 		label.setFont(Font.font(size));
 		label.setAlignment(pos);
 		return label;
 	}
 
-	public static Label createLabel(String text, double size) {
+	public static LabelElement createLabel(String text, double size) {
 	    return createLabel(text, size, Pos.CENTER);
 	}
 
-	public static Label createLabel(String text) {
+	public static LabelElement createLabel(String text) {
 	    return createLabel(text, 16, Pos.CENTER);
     }
 	
-	public static Label createTitle(String title) {
+	public static LabelElement createTitle(String title) {
 		LibraryDB.LOGGER.debug("Assembling title label with text " + title);
-		Label label = createLabel(title);
+		LabelElement label = createLabel(title);
 		label.setFont(TITLE_FONT);
 		return label;
 	}

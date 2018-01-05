@@ -1,6 +1,8 @@
 package org.whstsa.library.gui.factories;
 
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.Node;
@@ -64,6 +66,10 @@ public class DialogBuilder {
         return this.addAllElements(Arrays.asList(elements));
     }
 
+    public DialogBuilder addLabel(String text) {
+        return this.addElement(GuiUtils.createLabel(text));
+    }
+
     public DialogBuilder addTextField(String prompt, String placeholder, boolean inline) {
         return this.addElement(GuiUtils.createTextField(prompt, inline, placeholder));
     }
@@ -86,6 +92,14 @@ public class DialogBuilder {
 
     public DialogBuilder addCheckBox(String prompt) {
         return this.addCheckBox(prompt, false);
+    }
+
+    public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel) {
+        return this.addElement(GuiUtils.createChoiceBox(label, items, true));
+    }
+
+    public DialogBuilder addChoiceBox(ObservableList<String> items) {
+        return addChoiceBox("", items, false);
     }
 
     public DialogBuilder setIsCancellable(boolean cancellable) {
