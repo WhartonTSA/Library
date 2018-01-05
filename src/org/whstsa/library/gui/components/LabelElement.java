@@ -20,7 +20,7 @@ public class LabelElement extends Label implements Element {
         if (this.label == null) {
             return this;
         }
-        this.setText(label);
+        super.setText(label);
         return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, this);
     }
 
@@ -36,7 +36,7 @@ public class LabelElement extends Label implements Element {
         return null;
     }
 
-    public String getString() { return this.toString(); }
+    public String getString() { return super.getText(); }
 
     public boolean getBoolean() {
         return false;
