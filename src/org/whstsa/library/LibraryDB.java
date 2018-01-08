@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
+import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.InterfaceManager;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
@@ -43,7 +44,7 @@ public class LibraryDB extends Application {
         }
         this.loadJSON((arg0) -> {
             LOGGER.debug("JSON Loaded.");
-            this.interfaceManager.display(new GuiLibraryManager());
+            this.interfaceManager.display(new GuiLibraryManager(ObjectDelegate.getLibraries().get(0)));
         });
         // new CommandWatcher(System.in, System.out).start();
     }

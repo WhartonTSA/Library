@@ -8,9 +8,11 @@ public class GuiLibraryManager implements Gui {
 
     public final ILibrary library;
 
-    GuiLibraryManager(ILibrary lib) {
+    public GuiLibraryManager(ILibrary lib) {
         library = lib;
     }
+
+    public ILibrary getActiveLibrary() {
         return library;
     }
 
