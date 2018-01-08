@@ -154,7 +154,7 @@ public class DatabaseManagementTables {
 
         Button checkout = GuiUtils.createButton("Checkout", event -> {
             CheckoutMetaDialogs.checkoutMember(checkoutVar -> {
-                mainMemberTable.pollItems();
+                mainMemberTable.refresh();
             });
         });
 
@@ -191,7 +191,15 @@ public class DatabaseManagementTables {
             });
         });
         Button bookList = GuiUtils.createButton("List", GuiUtils.defaultClickHandler());
-        Button bookDelete = GuiUtils.createButton("Delete", GuiUtils.defaultClickHandler());
+        Button bookDelete = GuiUtils.createButton("Delete", event -> {
+            IBook selectedBook = mainBookTable.getSelected();
+            if (selectedBook == null) {
+                return;
+            }
+            BookMetaDialogs.deleteBook(selectedBook, book -> {
+                mainBookTable.pollItems();
+            });
+        });
         Button bookSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());

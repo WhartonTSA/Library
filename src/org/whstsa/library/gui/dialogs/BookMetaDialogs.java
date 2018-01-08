@@ -46,7 +46,7 @@ public class BookMetaDialogs {
         }, TITLE, AUTHOR, GENRE);
     }
 
-    public static void deleteBook(IBook book, Callback<IPerson> callback) {//TODO Change to IMember
+    public static void deleteBook(IBook book, Callback<IBook> callback) {
         Dialog dialog = new DialogBuilder()
                 .setTitle("Delete Member")
                 .addButton(ButtonType.YES, true, event -> {
