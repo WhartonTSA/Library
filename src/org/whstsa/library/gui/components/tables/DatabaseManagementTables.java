@@ -17,6 +17,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
 
@@ -30,7 +31,7 @@ import java.util.function.Consumer;
 
 public class DatabaseManagementTables {
 
-    public static StackPane libraryOverviewTable() {
+    public static StackPane libraryOverviewTable(LibraryDB libraryDB) {
         Table<ILibrary> libraryTable = new Table<>();
         libraryTable.addColumn("Library Name", "name", true, TableColumn.SortType.DESCENDING, 100);
         ObservableReference<List<ILibrary>> observableReference = () -> ObjectDelegate.getLibraries();
@@ -66,7 +67,13 @@ public class DatabaseManagementTables {
                 libraryTable.pollItems();
             });
         });
-        Button openLibraryButton = GuiUtils.createButton("Open Library");
+        Button openLibraryButton = GuiUtils.createButton("Open Library", (event) -> {
+            ILibrary selectedLibrary = libraryTable.getSelected();
+            if (selectedLibrary == null) {
+                return;
+            }
+            libraryDB.getInterfaceManager().display(new GuiLibraryManager(selectedLibrary));
+        });
 
         libraryTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             editLibraryButton.setDisable(newSelection == null);

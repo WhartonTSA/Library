@@ -1,12 +1,10 @@
 package org.whstsa.library.gui.api;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.ObjectDelegate;
-import org.whstsa.library.gui.components.Table;
 
 import java.util.ArrayList;
 import java.util.List;

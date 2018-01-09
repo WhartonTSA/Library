@@ -2,10 +2,12 @@ package org.whstsa.library.gui.dialogs;
 
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import org.whstsa.library.gui.InterfaceManager;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
+import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.gui.factories.DialogBuilder;
@@ -58,6 +60,9 @@ public class LibraryMetaDialogs {
                 .setIsCancellable(false)
                 .build()
                 .show();
+    }
+    public static void openLibrary(ILibrary library, Callback<ILibrary> callback) {
+
     }
 
 }

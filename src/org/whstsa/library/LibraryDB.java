@@ -44,13 +44,17 @@ public class LibraryDB extends Application {
         }
         this.loadJSON((arg0) -> {
             LOGGER.debug("JSON Loaded.");
-            this.interfaceManager.display(new GuiLibraryManager(ObjectDelegate.getLibraries().get(0)));
+            this.interfaceManager.display(new GuiMain(this));
         });
         // new CommandWatcher(System.in, System.out).start();
     }
 
     public Stage getStage() {
         return this.stage;
+    }
+
+    public InterfaceManager getInterfaceManager() {
+        return this.interfaceManager;
     }
 
     private void loadJSON(Callback<Object> callback) {

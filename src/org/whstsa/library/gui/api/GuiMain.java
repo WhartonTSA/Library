@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.StackPane;
+import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.InterfaceManager;
@@ -18,9 +19,15 @@ import java.util.List;
 
 public class GuiMain implements Gui {
 
+    private LibraryDB libraryDB;
+
+    public GuiMain(LibraryDB libraryDB) {
+        this.libraryDB = libraryDB;
+    }
+
     @Override
     public Scene draw() {
-        StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable();
+        StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB);
 
         StackPane personContainer = DatabaseManagementTables.personOverviewTable();
 
