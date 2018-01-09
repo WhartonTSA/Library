@@ -175,7 +175,7 @@ public class DatabaseManagementTables {
                 mainMemberTable.pollItems();
             });
         });
-        Button memberList = GuiUtils.createButton("List", GuiUtils.defaultClickHandler());
+        Button memberEdit = GuiUtils.createButton("Edit", GuiUtils.defaultClickHandler());
         Button memberSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
         Button memberDelete = GuiUtils.createButton("Delete", event -> {
             MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
@@ -197,7 +197,7 @@ public class DatabaseManagementTables {
                 mainBookTable.pollItems();
             });
         });
-        Button bookList = GuiUtils.createButton("List", GuiUtils.defaultClickHandler());
+        Button bookEdit = GuiUtils.createButton("Edit", GuiUtils.defaultClickHandler());
         Button bookDelete = GuiUtils.createButton("Delete", event -> {
             IBook selectedBook = mainBookTable.getSelected();
             if (selectedBook == null) {
@@ -211,7 +211,15 @@ public class DatabaseManagementTables {
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
 
-        VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch, checkout, membersLabel, memberNew, memberList, memberSearch, memberDelete, booksLabel, bookAdd, bookList, bookDelete, bookSearch, settingsButton);
+        mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            memberEdit.setDisable(newSelection == null);
+        });
+
+        mainBookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            bookEdit.setDisable(newSelection == null);
+        });
+
+        VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch, checkout, membersLabel, memberNew, memberEdit, memberSearch, memberDelete, booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton);
         buttonGroup.setSpacing(5.0);
 
         BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, memberTableView, buttonGroup);

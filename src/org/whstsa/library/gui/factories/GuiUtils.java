@@ -181,12 +181,12 @@ public class GuiUtils {
 
     public static CheckBoxElement createCheckBox(String prompt) { return createCheckBox(prompt, false); }
 
-    public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel) {
-		return new ChoiceBoxElement(label, label, items, useLabel);
+    public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, boolean editable) {
+		return new ChoiceBoxElement(label, label, items, useLabel, editable);
 	}
 
     public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
-        return new ChoiceBoxElement("", "", items, false);
+        return new ChoiceBoxElement("", "", items, false, false);
     }
 
 
