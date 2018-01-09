@@ -127,7 +127,7 @@ public class Person implements IPerson {
     @Override
     public IMember addMembership(IMember member) throws MemberMismatchException {
         if (member.getPerson() != this) {
-            throw new MemberMismatchException("Member failed to add to person " + this.getID() + " because they are assigned person " + member.getPerson().getID());
+            throw new MemberMismatchException("Member failed to addElement to person " + this.getID() + " because they are assigned person " + member.getPerson().getID());
         }
         this.memberships.put(member.getLibrary(), member);
         return member;
@@ -169,5 +169,25 @@ public class Person implements IPerson {
     @Override
     public void load() {
         Loader.getLoader().loadPerson(this);
+    }
+
+    @Override
+    public void setTeacher(boolean teacher) {
+        this.teacher = teacher;
+    }
+
+    @Override
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    @Override
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    @Override
+    public boolean isRemovable() {
+        return this.getBooks().size() == 0;
     }
 }
