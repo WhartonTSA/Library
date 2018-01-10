@@ -21,8 +21,8 @@ public class CheckoutMetaDialogs {
     public static void checkoutMember(Callback<IPerson> callback) {//TODO Add optional IMember
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Checkout")
-                .addChoiceBox(NAME, LibraryManagerUtils.getMemberNames(ObjectDelegate.getLibraries().get(0)), true)
-                .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(ObjectDelegate.getLibraries().get(0)), true)
+                .addChoiceBox(NAME, LibraryManagerUtils.getMemberNames(ObjectDelegate.getLibraries().get(0)), true, -1)
+                .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(ObjectDelegate.getLibraries().get(0)), true, -1)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String name = results.get(NAME).getString();

@@ -177,7 +177,15 @@ public class DatabaseManagementTables {
                 mainMemberTable.pollItems();
             });
         });
-        Button memberEdit = GuiUtils.createButton("Edit", GuiUtils.defaultClickHandler());
+        Button memberEdit = GuiUtils.createButton("Edit", event -> {
+            IPerson selectedMember = mainMemberTable.getSelected();
+            if (selectedMember == null) {
+                return;
+            }
+            MemberMetaDialogs.updateMember(selectedMember, member -> {
+                mainMemberTable.refresh();
+            });
+        });
         Button memberSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
         Button memberDelete = GuiUtils.createButton("Delete", event -> {
             MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
@@ -199,7 +207,15 @@ public class DatabaseManagementTables {
                 mainBookTable.pollItems();
             });
         });
-        Button bookEdit = GuiUtils.createButton("Edit", GuiUtils.defaultClickHandler());
+        Button bookEdit = GuiUtils.createButton("Edit", event -> {
+            IBook selectedBook = mainBookTable.getSelected();
+            if (selectedBook == null) {
+                return;
+            }
+            BookMetaDialogs.updateBook(selectedBook, book -> {
+                mainBookTable.refresh();
+            });
+        });
         Button bookDelete = GuiUtils.createButton("Delete", event -> {
             IBook selectedBook = mainBookTable.getSelected();
             if (selectedBook == null) {

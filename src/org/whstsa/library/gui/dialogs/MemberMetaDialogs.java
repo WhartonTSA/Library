@@ -43,6 +43,24 @@ public class MemberMetaDialogs {
         }, FIRST_NAME, LAST_NAME);
     }
 
+    public static void updateMember(IPerson member, Callback<IPerson> callback) {
+        Dialog<Map<String, Element>> dialog = new DialogBuilder()
+                .setTitle("Edit Member")
+                .addTextField(FIRST_NAME, member.getFirstName())
+                .addTextField(LAST_NAME, member.getLastName())
+                .addCheckBox(TEACHER, member.isTeacher())
+                .build();
+        DialogUtils.getDialogResults(dialog, (results) -> {
+            String firstName = results.get(FIRST_NAME).getString();
+            String lastName = results.get(LAST_NAME).getString();
+            boolean teacher = results.get(TEACHER).getBoolean();
+            member.setFirstName(firstName);
+            member.setLastName(lastName);
+            member.setTeacher(teacher);
+            callback.callback(member);
+        });
+    }
+
     public static void deleteMember(IPerson member, Callback<IPerson> callback) {//TODO Change to IMember
         Dialog dialog = new DialogBuilder()
                 .setTitle("Delete Member")

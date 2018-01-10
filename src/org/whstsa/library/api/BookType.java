@@ -45,6 +45,24 @@ public enum BookType {
         return type;
     }
 
+    public static int getGenreIndex(String genre) {
+        int index;
+        switch (genre) {
+            case ("Generic"): index = 0;  break;
+            case ("Fiction"): index = 1; break;
+            case ("Nonfiction"): index = 2; break;
+            case ("Science Fiction"): index = 3; break;
+            case ("Fantasy"): index = 4; break;
+            case ("Horror"): index = 5; break;
+            case ("Mystery"): index = 6; break;
+            case ("Biography"): index = 7; break;
+            case ("Children's"): index = 8; break;
+            case ("Graphic Novel"): index = 9; break;
+            default: index = -1;
+        }
+        return index;
+    }
+
     public static List<String> getGenres() {
         List<String> list = new ArrayList<>();
         for (BookType book : BookType.values()) {

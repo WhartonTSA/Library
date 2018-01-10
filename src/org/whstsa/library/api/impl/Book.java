@@ -61,6 +61,21 @@ public class Book implements IBook {
     }
 
     @Override
+    public void setType(BookType type) {
+        this.type = type;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public void setAuthor(String authorName) {
+        this.authorName = authorName;
+    }
+
+    @Override
     public void load() {
         Loader.getLoader().loadBook(this);
     }

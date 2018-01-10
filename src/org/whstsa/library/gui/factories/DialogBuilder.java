@@ -94,12 +94,12 @@ public class DialogBuilder {
         return this.addCheckBox(prompt, false);
     }
 
-    public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel) {
-        return this.addElement(GuiUtils.createChoiceBox(label, items, true));
+    public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
+        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected));
     }
 
     public DialogBuilder addChoiceBox(ObservableList<String> items) {
-        return addChoiceBox("", items, false);
+        return addChoiceBox("", items, false, -1);
     }
 
     public DialogBuilder setIsCancellable(boolean cancellable) {

@@ -33,7 +33,7 @@ public class BookMetaDialogs {
                 .setTitle("New Book")
                 .addTextField(TITLE)
                 .addTextField(AUTHOR)
-                .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true)
+                .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, -1)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String title = results.get(TITLE).getString();
@@ -44,6 +44,24 @@ public class BookMetaDialogs {
             Loader.getLoader().loadBook(book);
             ObjectDelegate.getLibraries().get(0).addBook(book);//TODO change getLibraries().get(0) to getLibrary(UUID)
         }, TITLE, AUTHOR, GENRE);
+    }
+
+    public static void updateBook(IBook book, Callback<IBook> callback) {
+        Dialog<Map<String, Element>> dialog = new DialogBuilder()
+                .setTitle("Update Person")
+                .addTextField(TITLE, book.getTitle())
+                .addTextField(AUTHOR, book.getAuthor())
+                .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, BookType.getGenreIndex(book.getType().getGenre()))
+                .build();
+        DialogUtils.getDialogResults(dialog, (results) -> {
+            String title = results.get(TITLE).getString();
+            String author = results.get(AUTHOR).getString();
+            BookType type = BookType.getGenre((String) results.get(GENRE).getResult());
+            book.setTitle(title);
+            book.setAuthor(author);
+            book.setType(type);
+            callback.callback(book);
+        });
     }
 
     public static void deleteBook(IBook book, Callback<IBook> callback) {

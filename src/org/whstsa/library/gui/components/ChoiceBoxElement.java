@@ -13,7 +13,7 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
     private Label label;
     private String id;
 
-    public ChoiceBoxElement(String id, String label, ObservableList<String> items, boolean useLabel) {
+    public ChoiceBoxElement(String id, String label, ObservableList<String> items, boolean useLabel, int selected) {
         super();
         this.id = id;
         if (useLabel) {
@@ -23,6 +23,9 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
             this.label = null;
         }
         this.setItems(items);
+        if (selected != -1) {
+            super.getSelectionModel().select(selected);
+        }
     }
 
     @Override
