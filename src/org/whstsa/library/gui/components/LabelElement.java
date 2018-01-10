@@ -31,7 +31,9 @@ public class LabelElement extends Label implements Element {
         return null;
     }
 
-    public String getString() { return super.getText(); }
+    public String getString() {
+        return super.getText();
+    }
 
     public boolean getBoolean() {
         return false;

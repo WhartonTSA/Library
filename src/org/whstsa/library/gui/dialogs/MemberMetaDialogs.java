@@ -43,10 +43,6 @@ public class MemberMetaDialogs {
         }, FIRST_NAME, LAST_NAME);
     }
 
-    public static void searchMember() {
-
-    }
-
     public static void deleteMember(IPerson member, Callback<IPerson> callback) {//TODO Change to IMember
         Dialog dialog = new DialogBuilder()
                 .setTitle("Delete Member")
@@ -73,6 +69,7 @@ public class MemberMetaDialogs {
                 })
                 .setIsCancellable(false)
                 .build();
+        dialog.show();
     }
 
 

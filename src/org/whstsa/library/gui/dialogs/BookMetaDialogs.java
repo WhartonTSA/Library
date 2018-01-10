@@ -64,6 +64,7 @@ public class BookMetaDialogs {
                 })
                 .setIsCancellable(false)
                 .build();
+        dialog.show();
     }
 
 

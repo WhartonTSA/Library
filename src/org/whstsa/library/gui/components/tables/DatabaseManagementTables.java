@@ -18,6 +18,8 @@ import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
+import org.whstsa.library.gui.api.LibraryManagerUtils;
+import org.whstsa.library.gui.components.SearchBarElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
 
@@ -223,6 +225,8 @@ public class DatabaseManagementTables {
         buttonGroup.setSpacing(5.0);
 
         BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, memberTableView, buttonGroup);
+
+        mainContainer.setTop(new SearchBarElement("memberSearch", "Member:", LibraryManagerUtils.getMemberNames(ObjectDelegate.getLibraries().get(0)), true));
 
         viewButtons.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {

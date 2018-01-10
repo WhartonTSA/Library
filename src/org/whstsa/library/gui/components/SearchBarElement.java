@@ -1,11 +1,12 @@
 package org.whstsa.library.gui.components;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.whstsa.library.gui.factories.GuiUtils;
-
-import java.awt.*;
 
 public class SearchBarElement extends HBox implements Element{
 
@@ -16,11 +17,13 @@ public class SearchBarElement extends HBox implements Element{
         super();
         this.id = id;
         if (useLabel) {
-            this.label = GuiUtils.createLabel(label);
+            this.label = GuiUtils.createLabel(label, 12);
         }
         else {
             this.label = null;
         }
+        super.getChildren().addAll(GuiUtils.createLabel(label), GuiUtils.createComboBox(items, true));
+        super.setPadding(new Insets(10, 10, 10, 10));
     }
 
     public Node getComputedElement() {
@@ -34,9 +37,7 @@ public class SearchBarElement extends HBox implements Element{
         return this.id;
     }
 
-    public Object getResult() {
-        return
-    }
+    public Object getResult() { return null; }
 
     @Override
     public String getString() {

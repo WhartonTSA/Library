@@ -115,7 +115,7 @@ public class GuiUtils {
 	    return new ToggleButton(title);
     }
 
-	public static Button createButton(String title, boolean nativeWidth, double width, ClickHandler clickHandler) {
+	public static Button createButton(String title, boolean nativeWidth, double width, Pos pos, ClickHandler clickHandler) {
 		LibraryDB.LOGGER.debug("Assembling button with title " + title + " (CLICK HANDLER: " + Logger.assertion(clickHandler != null) + ")");
 		Button button = new Button(title);
 		if (title.length() < 10 && width == 80.0 && !nativeWidth) {//If title is more than 10 characters or nativeWidth == true, default to the automatic button width. Otherwise, set width to 80
@@ -125,15 +125,17 @@ public class GuiUtils {
 			button.setPrefWidth(width);
 		}
 		if (clickHandler != null) {
-			button.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent e) {
-					clickHandler.onclick(button);
-				}
-			});
+			button.setOnAction(event -> clickHandler.onclick(button));
 		}
+		if (pos != null) {
+		    button.setAlignment(pos);
+        }
 		return button;
 	}
+
+    public static Button createButton(String title, boolean nativeWidth, double width, ClickHandler clickHandler) {
+        return createButton(title, false, width, null, clickHandler);
+    }
 
 	public static Button createButton(String title, double width, ClickHandler clickHandler) {
 		return createButton(title, false, width, clickHandler);
@@ -181,15 +183,19 @@ public class GuiUtils {
 
     public static CheckBoxElement createCheckBox(String prompt) { return createCheckBox(prompt, false); }
 
-    public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, boolean editable) {
-		return new ChoiceBoxElement(label, label, items, useLabel, editable);
+    public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel) {
+		return new ChoiceBoxElement(label, label, items, useLabel);
 	}
 
     public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
-        return new ChoiceBoxElement("", "", items, false, false);
+        return new ChoiceBoxElement("", "", items, false);
     }
 
-
+	public static ComboBox createComboBox(ObservableList<String> items, boolean editable) {
+		ComboBox comboBox = new ComboBox();
+		comboBox.editableProperty().setValue(editable);
+		return comboBox;
+	}
 
 	public static LabelElement createLabel(String text, double size, Pos pos) {//TODO add functionality for boolean inline
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);

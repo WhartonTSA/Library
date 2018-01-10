@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.gui.factories.GuiUtils;
 
-public class ChoiceBoxElement extends ChoboBox implements Element{
+public class ChoiceBoxElement extends ChoiceBox implements Element{
 
     private Label label;
     private String id;
