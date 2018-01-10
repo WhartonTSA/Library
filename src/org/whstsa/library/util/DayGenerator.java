@@ -1,11 +1,9 @@
 package org.whstsa.library.util;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.whstsa.library.Tester;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
@@ -17,7 +15,6 @@ import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 
 public class DayGenerator {
@@ -60,7 +57,7 @@ public class DayGenerator {
 			IBook book = new Book(bookName, authorName, bookType);
 			ILibrary library = randomLibrary();
 			library.addBook(book);
-			System.out.println(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthor(), library.getName()));
+			System.out.println(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthorName(), library.getName()));
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {

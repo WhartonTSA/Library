@@ -2,7 +2,11 @@
     "books": [],
     "libraries": [{
         "books": [],
-        "members": [],
+        "members": [{
+            "checkouts": {},
+            "personID": "57709fc1-f5a8-4db5-9583-aa499a77d805",
+            "uuid": "e0640583-3f35-4c6d-9e0c-f0be262c26a9"
+        }],
         "name": "test 123",
         "uuid": "b995f803-8e9f-4533-b72f-9ae783087449"
     }],

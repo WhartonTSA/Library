@@ -5,13 +5,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.Callback;
-import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.CannotDeregisterException;
 import org.whstsa.library.api.exceptions.InCirculationException;
 import org.whstsa.library.api.impl.Book;
-import org.whstsa.library.api.impl.Person;
-import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.LibraryManagerUtils;
@@ -50,7 +46,7 @@ public class BookMetaDialogs {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Update Person")
                 .addTextField(TITLE, book.getTitle())
-                .addTextField(AUTHOR, book.getAuthor())
+                .addTextField(AUTHOR, book.getAuthorName())
                 .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, BookType.getGenreIndex(book.getType().getGenre()))
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {

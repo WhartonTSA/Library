@@ -13,7 +13,7 @@ public class GuiLibraryManager implements Gui {
 
     public GuiLibraryManager(ILibrary lib) {
         library = lib;
-        window = DatabaseManagementTables.libraryManagerTable();
+        window = DatabaseManagementTables.libraryManagerTable(() -> this.library);
     }
 
     public ILibrary getActiveLibrary() {

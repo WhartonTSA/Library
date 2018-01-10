@@ -14,6 +14,7 @@ import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.scenes.IOFileSelection;
+import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
@@ -46,7 +47,7 @@ public class LibraryDB extends Application {
             LOGGER.debug("JSON Loaded.");
             this.interfaceManager.display(new GuiMain(this));
         });
-        // new CommandWatcher(System.in, System.out).start();
+        //new CommandWatcher(System.in, System.out).start();
     }
 
     public Stage getStage() {

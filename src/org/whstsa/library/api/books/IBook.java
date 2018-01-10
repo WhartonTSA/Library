@@ -26,12 +26,27 @@ public interface IBook extends Loadable, Serializable, Unique {
      *
      * @return the author of the book
      */
-    String getAuthor();
+    String getAuthorName();
 
+    /**
+     * Set the book genre
+     *
+     * @param type BookType
+     */
     void setType(BookType type);
 
+    /**
+     * Set the book title
+     *
+     * @param title String
+     */
     void setTitle(String title);
 
+    /**
+     * Set the book author
+     *
+     * @param authorName String
+     */
     void setAuthor(String authorName);
 
 }

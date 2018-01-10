@@ -1,10 +1,12 @@
 package org.whstsa.library.gui.components;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.library.ILibrary;
 
@@ -34,9 +36,9 @@ public class Table<T> {
         this.getTable().setItems(this.getItems());
     }
 
-    public void addColumn(String title, String property, boolean sortable, TableColumn.SortType sortType, Integer width) {
+    public void addColumn(String title, Callback<TableColumn.CellDataFeatures<T, String>, ObservableValue<String>> property, boolean sortable, TableColumn.SortType sortType, Integer width) {
         TableColumn<T, String> column = new TableColumn<>(title);
-        column.setCellValueFactory(new PropertyValueFactory<>(property));
+        column.setCellValueFactory(property);
         column.setSortable(sortable);
         column.setSortType(sortType);
         if (width != null) {
@@ -44,6 +46,10 @@ public class Table<T> {
             column.setMaxWidth( 1f * Integer.MAX_VALUE * width );
         }
         this.view.getColumns().add(column);
+    }
+
+    public void addColumn(String title, String property, boolean sortable, TableColumn.SortType sortType, Integer width) {
+        this.addColumn(title, new PropertyValueFactory<>(property), sortable, sortType, width);
     }
 
     public void addColumn(String title, String property, boolean sortable, TableColumn.SortType sortType) {

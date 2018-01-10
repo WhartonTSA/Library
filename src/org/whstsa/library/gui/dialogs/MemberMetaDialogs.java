@@ -43,35 +43,35 @@ public class MemberMetaDialogs {
         }, FIRST_NAME, LAST_NAME);
     }
 
-    public static void updateMember(IPerson member, Callback<IPerson> callback) {
+    public static void updateMember(IMember member, Callback<IMember> callback) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Edit Member")
-                .addTextField(FIRST_NAME, member.getFirstName())
-                .addTextField(LAST_NAME, member.getLastName())
-                .addCheckBox(TEACHER, member.isTeacher())
+                .addTextField(FIRST_NAME, member.getPerson().getFirstName())
+                .addTextField(LAST_NAME, member.getPerson().getLastName())
+                .addCheckBox(TEACHER, member.getPerson().isTeacher())
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String firstName = results.get(FIRST_NAME).getString();
             String lastName = results.get(LAST_NAME).getString();
             boolean teacher = results.get(TEACHER).getBoolean();
-            member.setFirstName(firstName);
-            member.setLastName(lastName);
-            member.setTeacher(teacher);
+            member.getPerson().setFirstName(firstName);
+            member.getPerson().setLastName(lastName);
+            member.getPerson().setTeacher(teacher);
             callback.callback(member);
         });
     }
 
-    public static void deleteMember(IPerson member, Callback<IPerson> callback) {//TODO Change to IMember
+    public static void deleteMember(IMember member, Callback<IMember> callback) {//TODO Change to IMember
         Dialog dialog = new DialogBuilder()
                 .setTitle("Delete Member")
                 .addButton(ButtonType.YES, true, event -> {
-                    if (!member.isRemovable()) {
+                    if (!member.getPerson().isRemovable()) {
                         DialogUtils.createDialog("Person Still Active", member.getName() + " is ineligible to be withdrawn because they have books checked out.", null, Alert.AlertType.ERROR).showAndWait();
                         callback.callback(null);
                         return;
                     }
                     try {
-                        member.getMemberships().stream().map(person -> person.getLibrary()).forEach(library -> {
+                        member.getPerson().getMemberships().stream().map(person -> person.getLibrary()).forEach(library -> {
                             library.removeMember(member);
                         });
                     } catch (CannotDeregisterException ex) {
@@ -91,7 +91,7 @@ public class MemberMetaDialogs {
     }
 
 
-        public static void listBooks(Callback<IPerson> callback, IPerson member) {
+        public static void listBooks(Callback<IMember> callback, IMember member) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle(member.getName() + "'s books")
                 .addLabel("Book 1")
