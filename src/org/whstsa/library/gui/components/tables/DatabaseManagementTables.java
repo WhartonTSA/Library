@@ -256,7 +256,9 @@ public class DatabaseManagementTables {
             bookEdit.setDisable(newSelection == null);
         });
 
-        VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch, checkout, membersLabel, memberNew, memberEdit, memberSearch, memberDelete, booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton);
+        VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch,
+                GuiUtils.createSeparator(), membersLabel, checkout, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
+                booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton);
         buttonGroup.setSpacing(5.0);
 
         //BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, memberTableView, buttonGroup);
@@ -317,6 +319,7 @@ public class DatabaseManagementTables {
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
         mainTable.addColumn("Copies", (cellData) -> new ReadOnlyStringWrapper("1"), true, TableColumn.SortType.DESCENDING, 25);
+        mainTable.addColumn("Checked out", (cellData) -> new ReadOnlyStringWrapper(/*libraryReference.poll().getCheckouts().get(cellData.getValue())*/""), true, TableColumn.SortType.DESCENDING, 30);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         return mainTable;

@@ -108,6 +108,10 @@ public class GuiUtils {
         container.setTop(new SearchBarElement(label, label, items, container));
     }
 
+    public static Separator createSeparator() {
+		return new Separator();
+	}
+
 	public static ToggleGroup createToggleButtonGroup(String ...titles) {//Doesn't work, will probably make a new class for this
 	    ToggleGroup toggleGroup = new ToggleGroup();
 	    for (int i = 0; i < titles.length; i++) {
@@ -176,8 +180,8 @@ public class GuiUtils {
 		return createTextField(prompt, false);
 	}
 
-	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline, CheckBoxClickHandler clickHandler) {
-        CheckBoxElement checkBoxElement = new CheckBoxElement(prompt, prompt, inline);
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline, boolean disabled, CheckBoxClickHandler clickHandler) {
+        CheckBoxElement checkBoxElement = new CheckBoxElement(prompt, prompt, inline, disabled);
         checkBoxElement.setSelected(selected);
         if (clickHandler != null) {
         	checkBoxElement.setOnAction(event -> clickHandler.onclick(checkBoxElement));
@@ -186,7 +190,7 @@ public class GuiUtils {
     }
 
 	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline) {
-		return createCheckBox(prompt, selected, inline, null);
+		return createCheckBox(prompt, selected, inline, false, null);
 	}
 
 	public static CheckBoxElement createCheckBox(String prompt, boolean selected) {

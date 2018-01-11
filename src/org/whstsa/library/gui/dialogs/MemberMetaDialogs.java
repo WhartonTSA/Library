@@ -45,6 +45,7 @@ public class MemberMetaDialogs {
             Loader.getLoader().loadPerson(person);
             callback.callback(person);
             person.addMembership(libraryReference.poll());
+            libraryReference.poll().addMember(person);
             if (checkout) {
                 CheckoutMetaDialogs.checkoutMember(member -> {}, LibraryManagerUtils.getMemberFromLibrary(person, libraryReference.poll()), libraryReference);
             }

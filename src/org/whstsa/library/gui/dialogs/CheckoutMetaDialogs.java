@@ -1,5 +1,7 @@
 package org.whstsa.library.gui.dialogs;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
@@ -27,10 +29,23 @@ public class CheckoutMetaDialogs {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Checkout")
                 .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)
+                .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event -> {
+                        member.getCheckouts().forEach(checkout -> {
+                            try {
+                                checkout.payFine();
+                            } catch (NotEnoughMoneyException ex) {
+                                DialogUtils.createDialog("Couldn't pay fine. Member does not have enough money.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
+                            }
+                        });
+                })
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
-            libraryReference.poll().reserveBook(member, book);//TODO Add try/catch
+            try {
+                libraryReference.poll().reserveBook(member, book);//TODO Add try/catch
+            } catch (Exception ex) {
+                DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
+            }
 
         });
         callback.callback(member);

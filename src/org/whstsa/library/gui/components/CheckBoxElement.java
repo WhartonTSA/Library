@@ -11,11 +11,12 @@ public class CheckBoxElement extends CheckBox implements Element {
     private String id;
     private boolean inline;
 
-    public CheckBoxElement(String id, String label, boolean inline) {
+    public CheckBoxElement(String id, String label, boolean inline, boolean disabled) {
         super();
         this.id = id;
         this.label = GuiUtils.createLabel(label);
         this.inline = inline;
+        super.setDisable(disabled);
     }
 
     @Override

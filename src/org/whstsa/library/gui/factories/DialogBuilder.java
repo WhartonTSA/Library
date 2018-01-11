@@ -84,12 +84,12 @@ public class DialogBuilder {
         return this.addTextField(prompt, null);
     }
 
-    public DialogBuilder addCheckBox(String prompt, boolean selected, boolean inline, CheckBoxClickHandler clickHandler) {
-        return this.addElement(GuiUtils.createCheckBox(prompt, selected, inline, clickHandler));
+    public DialogBuilder addCheckBox(String prompt, boolean selected, boolean inline, boolean disabled, CheckBoxClickHandler clickHandler) {
+        return this.addElement(GuiUtils.createCheckBox(prompt, selected, inline, disabled, clickHandler));
     }
 
     public DialogBuilder addCheckBox(String prompt, boolean selected, boolean inline) {
-        return this.addCheckBox(prompt, selected, inline, null);
+        return this.addCheckBox(prompt, selected, inline, false, null);
     }
 
     public DialogBuilder addCheckBox(String prompt, boolean selected) {
