@@ -24,32 +24,26 @@ public class MemberMetaDialogs {
     private static final String FIRST_NAME = "First Name";
     private static final String LAST_NAME = "Last Name";
     private static final String TEACHER = "Teacher?";
-    private static final String CHECKOUT = "Checkout";//Option to checkout books to new member
     private static final String EXISTING = "Choose existing person";
 
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
-                .addChoiceBox("Person:", LibraryManagerUtils.getPeopleNames(), true, -1)
+                //.addChoiceBox("Person:", LibraryManagerUtils.getPeopleNames(), true, -1)
                 .addTextField(FIRST_NAME)
                 .addTextField(LAST_NAME)
                 .addCheckBox(TEACHER)
-                .addCheckBox(CHECKOUT)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String firstName = results.get(FIRST_NAME).getString();
             String lastName = results.get(LAST_NAME).getString();
             boolean teacher = results.get(TEACHER).getBoolean();
-            boolean checkout = results.get(CHECKOUT).getBoolean();
             IPerson person = new Person(firstName, lastName, teacher);
             Loader.getLoader().loadPerson(person);
             callback.callback(person);
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
-            if (checkout) {
-                CheckoutMetaDialogs.checkoutMember(member -> {}, LibraryManagerUtils.getMemberFromLibrary(person, libraryReference.poll()), libraryReference);
-            }
-        }, FIRST_NAME, LAST_NAME);
+        }, FIRST_NAME, LAST_NAME, TEACHER);
     }
 
     public static void updateMember(IMember member, Callback<IMember> callback) {

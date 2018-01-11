@@ -14,6 +14,7 @@ import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.impl.library.Library;
+import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
@@ -189,7 +190,7 @@ public class DatabaseManagementTables {
                     return;
                 }
                 Loader.getLoader().loadPerson(member);
-                mainMemberTable.pollItems();
+                mainMemberTable.refresh();
             }, libraryReference);
         });
         Button memberEdit = GuiUtils.createButton("Edit", event -> {
@@ -247,6 +248,10 @@ public class DatabaseManagementTables {
         });
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
+        Button refreshButton = GuiUtils.createButton("Refresh", event -> {
+            mainBookTable.refresh();
+            mainMemberTable.refresh();
+        });
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             memberEdit.setDisable(newSelection == null);
@@ -258,10 +263,10 @@ public class DatabaseManagementTables {
 
         VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch,
                 GuiUtils.createSeparator(), membersLabel, checkout, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
-                booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton);
+                booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton,
+                GuiUtils.createSeparator(), refreshButton);
         buttonGroup.setSpacing(5.0);
 
-        //BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, memberTableView, buttonGroup);
         mainContainer.setLeft(buttonGroup);
         mainContainer.setCenter(memberTableView);
 
@@ -319,7 +324,12 @@ public class DatabaseManagementTables {
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
         mainTable.addColumn("Copies", (cellData) -> new ReadOnlyStringWrapper("1"), true, TableColumn.SortType.DESCENDING, 25);
-        mainTable.addColumn("Checked out", (cellData) -> new ReadOnlyStringWrapper(/*libraryReference.poll().getCheckouts().get(cellData.getValue())*/""), true, TableColumn.SortType.DESCENDING, 30);
+        mainTable.addColumn("Checked out", (cellData) -> {
+            ILibrary library = libraryReference.poll();
+            List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
+            boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
+            return new ReadOnlyStringWrapper(isCheckedOut ? "True" : "False");
+        }, true, TableColumn.SortType.DESCENDING, 30);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         return mainTable;

@@ -55,6 +55,14 @@ public class LibraryManagerUtils {
         return null;
     }
 
+    public static ObservableList<String> getBookTitlesFromMember(IMember member) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < member.getBooks().size(); i++) {
+            list.add(member.getBooks().get(i).getTitle());
+        }
+        return toObservableList(list);
+    }
+
     public static ObservableList<String> getBookTitles(ObservableReference<ILibrary> libraryReference) {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < libraryReference.poll().getBooks().size(); i++) {
