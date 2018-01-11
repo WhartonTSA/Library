@@ -13,6 +13,8 @@ import javafx.scene.layout.GridPane;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
 import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.util.CheckBoxClickHandler;
+import org.whstsa.library.util.ClickHandler;
 
 import java.util.*;
 
@@ -82,8 +84,12 @@ public class DialogBuilder {
         return this.addTextField(prompt, null);
     }
 
+    public DialogBuilder addCheckBox(String prompt, boolean selected, boolean inline, CheckBoxClickHandler clickHandler) {
+        return this.addElement(GuiUtils.createCheckBox(prompt, selected, inline, clickHandler));
+    }
+
     public DialogBuilder addCheckBox(String prompt, boolean selected, boolean inline) {
-        return this.addElement(GuiUtils.createCheckBox(prompt, selected, inline));
+        return this.addCheckBox(prompt, selected, inline, null);
     }
 
     public DialogBuilder addCheckBox(String prompt, boolean selected) {

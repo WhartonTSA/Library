@@ -12,10 +12,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
-import org.whstsa.library.gui.components.CheckBoxElement;
-import org.whstsa.library.gui.components.ChoiceBoxElement;
-import org.whstsa.library.gui.components.LabelElement;
-import org.whstsa.library.gui.components.TextFieldElement;
+import org.whstsa.library.api.ObservableReference;
+import org.whstsa.library.api.library.ILibrary;
+import org.whstsa.library.gui.api.LibraryManagerUtils;
+import org.whstsa.library.gui.components.*;
+import org.whstsa.library.util.CheckBoxClickHandler;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
 
@@ -103,6 +104,10 @@ public class GuiUtils {
 		return new Scene(parent, 512, 512);
 	}
 
+	public static void createSearchBar(String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference) {
+        container.setTop(new SearchBarElement(label, label, items, container));
+    }
+
 	public static ToggleGroup createToggleButtonGroup(String ...titles) {//Doesn't work, will probably make a new class for this
 	    ToggleGroup toggleGroup = new ToggleGroup();
 	    for (int i = 0; i < titles.length; i++) {
@@ -171,11 +176,18 @@ public class GuiUtils {
 		return createTextField(prompt, false);
 	}
 
-	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline) {
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline, CheckBoxClickHandler clickHandler) {
         CheckBoxElement checkBoxElement = new CheckBoxElement(prompt, prompt, inline);
         checkBoxElement.setSelected(selected);
+        if (clickHandler != null) {
+        	checkBoxElement.setOnAction(event -> clickHandler.onclick(checkBoxElement));
+		}
         return checkBoxElement;
     }
+
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline) {
+		return createCheckBox(prompt, selected, inline, null);
+	}
 
 	public static CheckBoxElement createCheckBox(String prompt, boolean selected) {
 	    return createCheckBox(prompt, selected, false);

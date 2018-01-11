@@ -5,9 +5,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.Callback;
+import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.InCirculationException;
 import org.whstsa.library.api.impl.Book;
+import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.LibraryManagerUtils;
@@ -24,7 +26,7 @@ public class BookMetaDialogs {
     private static final String GENRE = "Genre";
 
 
-    public static void createBook(Callback<IBook> callback) {
+    public static void createBook(Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("New Book")
                 .addTextField(TITLE)
@@ -38,7 +40,7 @@ public class BookMetaDialogs {
             BookType genre = BookType.getGenre(type);
             IBook book = new Book(title, author, genre);
             Loader.getLoader().loadBook(book);
-            ObjectDelegate.getLibraries().get(0).addBook(book);//TODO change getLibraries().get(0) to getLibrary(UUID)
+            libraryReference.poll().addBook(book);
         }, TITLE, AUTHOR, GENRE);
     }
 

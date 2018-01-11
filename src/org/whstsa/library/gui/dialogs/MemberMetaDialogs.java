@@ -5,11 +5,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
+import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
 import org.whstsa.library.api.impl.Person;
+import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.api.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
@@ -22,10 +25,12 @@ public class MemberMetaDialogs {
     private static final String LAST_NAME = "Last Name";
     private static final String TEACHER = "Teacher?";
     private static final String CHECKOUT = "Checkout";//Option to checkout books to new member
+    private static final String EXISTING = "Choose existing person";
 
-    public static void createMember(Callback<IPerson> callback) {//TODO Change to IMember
+    public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("New Member")
+                .setTitle("Add Member")
+                .addChoiceBox("Person:", LibraryManagerUtils.getPeopleNames(), true, -1)
                 .addTextField(FIRST_NAME)
                 .addTextField(LAST_NAME)
                 .addCheckBox(TEACHER)
@@ -39,7 +44,10 @@ public class MemberMetaDialogs {
             IPerson person = new Person(firstName, lastName, teacher);
             Loader.getLoader().loadPerson(person);
             callback.callback(person);
-            person.addMembership(ObjectDelegate.getLibraries().get(0));//TODO change getLibraries().get(0) to getLibrary(UUID)
+            person.addMembership(libraryReference.poll());
+            if (checkout) {
+                CheckoutMetaDialogs.checkoutMember(member -> {}, LibraryManagerUtils.getMemberFromLibrary(person, libraryReference.poll()), libraryReference);
+            }
         }, FIRST_NAME, LAST_NAME);
     }
 
@@ -63,7 +71,7 @@ public class MemberMetaDialogs {
 
     public static void deleteMember(IMember member, Callback<IMember> callback) {//TODO Change to IMember
         Dialog dialog = new DialogBuilder()
-                .setTitle("Delete Member")
+                .setTitle("Remove Member")
                 .addButton(ButtonType.YES, true, event -> {
                     if (!member.getPerson().isRemovable()) {
                         DialogUtils.createDialog("Person Still Active", member.getName() + " is ineligible to be withdrawn because they have books checked out.", null, Alert.AlertType.ERROR).showAndWait();

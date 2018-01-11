@@ -36,7 +36,7 @@ public class DatabaseManagementTables {
 
     public static StackPane libraryOverviewTable(LibraryDB libraryDB) {
         Table<ILibrary> libraryTable = new Table<>();
-        libraryTable.addColumn("Library Name", "name", true, TableColumn.SortType.DESCENDING, 100);
+        libraryTable.addColumn("Library Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 100);
         ObservableReference<List<ILibrary>> observableReference = () -> ObjectDelegate.getLibraries();
         libraryTable.setReference(observableReference);
 
@@ -89,8 +89,8 @@ public class DatabaseManagementTables {
 
     public static StackPane personOverviewTable() {
         Table<IPerson> personTable = new Table<>();
-        personTable.addColumn("First Name", "firstName", true, TableColumn.SortType.DESCENDING, 50);
-        personTable.addColumn("Last Name", "lastName", true, TableColumn.SortType.DESCENDING, 50);
+        personTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getFirstName()), true, TableColumn.SortType.DESCENDING, 50);
+        personTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getLastName()), true, TableColumn.SortType.DESCENDING, 50);
         ObservableReference<List<IPerson>> observableReference = () -> ObjectDelegate.getPeople();
         personTable.setReference(observableReference);
 
@@ -138,13 +138,26 @@ public class DatabaseManagementTables {
     }
 
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference) {
+        /*
+        * Reminders for extra features
+        *
+        * TODO ability to edit member's wallets
+        * TODO checkout dialog will check if member has enough money to pay for fine
+        * TODO add member dialog will give user the option to create member from existing person
+        * TODO fix formatting in dialogs and search bar
+        * TODO add functionality to listbooks command
+        * TODO add method for getting copies of books
+        *
+        */
+        BorderPane mainContainer = new BorderPane();
+
         Table<IMember> mainMemberTable = new Table<>();
         memberManagerTable(mainMemberTable, libraryReference);
         TableView<IMember> memberTableView = mainMemberTable.getTable();
         memberTableView.setId("memberTable");
 
         Table<IBook> mainBookTable = new Table<>();
-        bookManagerTable(mainBookTable);
+        bookManagerTable(mainBookTable, libraryReference);
         TableView<IBook> bookTableView = mainBookTable.getTable();
         bookTableView.setId("bookTable");
 
@@ -163,9 +176,10 @@ public class DatabaseManagementTables {
         HBox viewSwitch = GuiUtils.createHBox(2, viewMembers, viewBooks);
 
         Button checkout = GuiUtils.createButton("Checkout", event -> {
-            CheckoutMetaDialogs.checkoutMember(checkoutVar -> {
+            IMember selectedMember = mainMemberTable.getSelected();
+            CheckoutMetaDialogs.checkoutMember(member -> {
                 mainMemberTable.refresh();
-            });
+            }, selectedMember, libraryReference);
         });
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
@@ -176,7 +190,7 @@ public class DatabaseManagementTables {
                 }
                 Loader.getLoader().loadPerson(member);
                 mainMemberTable.pollItems();
-            });
+            }, libraryReference);
         });
         Button memberEdit = GuiUtils.createButton("Edit", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
@@ -187,8 +201,10 @@ public class DatabaseManagementTables {
                 mainMemberTable.refresh();
             });
         });
-        Button memberSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
-        Button memberDelete = GuiUtils.createButton("Delete", event -> {
+        Button memberSearch = GuiUtils.createButton("Search", event -> {
+            GuiUtils.createSearchBar("Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference);
+        });
+        Button memberDelete = GuiUtils.createButton("Remove", event -> {
             MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
                 if (member == null) {
                     return;
@@ -206,7 +222,7 @@ public class DatabaseManagementTables {
                 }
                 Loader.getLoader().loadBook(book);
                 mainBookTable.pollItems();
-            });
+            }, libraryReference);
         });
         Button bookEdit = GuiUtils.createButton("Edit", event -> {
             IBook selectedBook = mainBookTable.getSelected();
@@ -226,7 +242,9 @@ public class DatabaseManagementTables {
                 mainBookTable.pollItems();
             });
         });
-        Button bookSearch = GuiUtils.createButton("Search", GuiUtils.defaultClickHandler());
+        Button bookSearch = GuiUtils.createButton("Search", event -> {
+            GuiUtils.createSearchBar("Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference);
+        });
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
 
@@ -241,9 +259,9 @@ public class DatabaseManagementTables {
         VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch, checkout, membersLabel, memberNew, memberEdit, memberSearch, memberDelete, booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton);
         buttonGroup.setSpacing(5.0);
 
-        BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, memberTableView, buttonGroup);
-
-        mainContainer.setTop(new SearchBarElement("memberSearch", "Member:", LibraryManagerUtils.getMemberNames(ObjectDelegate.getLibraries().get(0)), true));
+        //BorderPane mainContainer = GuiUtils.createBorderPane(GuiUtils.Direction.LEFTHAND, memberTableView, buttonGroup);
+        mainContainer.setLeft(buttonGroup);
+        mainContainer.setCenter(memberTableView);
 
         viewButtons.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
             public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
@@ -278,12 +296,12 @@ public class DatabaseManagementTables {
     }
 
     public static Table<IMember> memberManagerTable(Table<IMember> mainTable, ObservableReference<ILibrary> libraryReference) {
-        mainTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getFirstName() + ""), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getLastName() + ""), true, TableColumn.SortType.DESCENDING, 100);
+        mainTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getFirstName()), true, TableColumn.SortType.DESCENDING, 100);
+        mainTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getLastName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Teacher", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().isTeacher() + ""), true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Fines", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getFine() + ""), true, TableColumn.SortType.DESCENDING, 25);//TODO Make method for this
-        mainTable.addColumn("Books", "books", true, TableColumn.SortType.DESCENDING, 25);
-        ObservableReference<List<IMember>> observableReference = () -> libraryReference.poll().getMembers();//TODO Use function that gets members from library
+        mainTable.addColumn("Fines", (cellData) -> new ReadOnlyStringWrapper("$" + cellData.getValue().getFine()), true, TableColumn.SortType.DESCENDING, 25);
+        mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBooks().size() + ""), true, TableColumn.SortType.DESCENDING, 25);
+        ObservableReference<List<IMember>> observableReference = () -> libraryReference.poll().getMembers();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
@@ -294,15 +312,13 @@ public class DatabaseManagementTables {
         return mainTable;
     }
 
-    public static Table<IBook> bookManagerTable(Table<IBook> mainTable) {
-        mainTable.addColumn("Title", "title", true, TableColumn.SortType.DESCENDING, 200);
-        mainTable.addColumn("Author", "AuthorName", true, TableColumn.SortType.DESCENDING, 100);//TODO This doesn't work for some reason
-        mainTable.addColumn("Genre", "type", true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Copies", "copies", true, TableColumn.SortType.DESCENDING, 25);//TODO Make method for this
-        ObservableReference<List<IBook>> observableReference = () -> ObjectDelegate.getLibraries().get(0).getBooks();
+    public static Table<IBook> bookManagerTable(Table<IBook> mainTable, ObservableReference<ILibrary> libraryReference) {
+        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
+        mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
+        mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
+        mainTable.addColumn("Copies", (cellData) -> new ReadOnlyStringWrapper("1"), true, TableColumn.SortType.DESCENDING, 25);
+        ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
-        TableColumn<IBook, IPerson> row = new TableColumn<>();
-
         return mainTable;
     }
 

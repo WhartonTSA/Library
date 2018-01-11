@@ -2,6 +2,7 @@ package org.whstsa.library;
 
 import javafx.application.Application;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +19,8 @@ import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -34,6 +37,7 @@ public class LibraryDB extends Application {
 
     public void start(Stage stage) {
         this.stage = stage;
+        stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
         this.stage.setResizable(true);
         this.interfaceManager = new InterfaceManager(this);
         this.jsonFileBrowser = new IOFileSelection(this, "json");

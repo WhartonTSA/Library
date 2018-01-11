@@ -4,33 +4,40 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import org.whstsa.library.gui.factories.GuiUtils;
 
 public class SearchBarElement extends HBox implements Element{
 
-    private LabelElement label;
+    private LabelElement labelElement;
     private String id;
 
-    public SearchBarElement(String id, String label, ObservableList<String> items, boolean useLabel) {
+    public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane container) {
         super();
         this.id = id;
-        if (useLabel) {
-            this.label = GuiUtils.createLabel(label, 12);
-        }
-        else {
-            this.label = null;
-        }
-        super.getChildren().addAll(GuiUtils.createLabel(label), GuiUtils.createComboBox(items, true));
+        this.labelElement = GuiUtils.createLabel(label, 12);
+
+        Button exitButton = GuiUtils.createButton("X", false, 10, event -> container.setTop(null));
+        StackPane stackPane = new StackPane(exitButton);
+        stackPane.setAlignment(Pos.CENTER_RIGHT);
+        ComboBox comboBox = GuiUtils.createComboBox(items, true);
+        super.getChildren().addAll(this.labelElement, comboBox, stackPane);
         super.setPadding(new Insets(10, 10, 10, 10));
+        super.setMargin(exitButton, new Insets(0, 5, 0, 0));
+        super.setMargin(comboBox, new Insets(0, 0, 0, 0));
+        super.setAlignment(Pos.CENTER_LEFT);
     }
 
     public Node getComputedElement() {
-        if (this.label == null) {
+        if (this.labelElement == null) {
             return this;
         }
-        return GuiUtils.createHBox(10, this.label, this);
+        return GuiUtils.createHBox(10, this);
     }
 
     public String getID() {
@@ -41,7 +48,7 @@ public class SearchBarElement extends HBox implements Element{
 
     @Override
     public String getString() {
-        return this.label.toString();
+        return this.labelElement.toString();
     };
 
     @Override
