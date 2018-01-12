@@ -3,13 +3,18 @@ package org.whstsa.library.gui.dialogs;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import org.json.JSONObject;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.exceptions.CheckedInException;
+import org.whstsa.library.api.exceptions.MemberMismatchException;
 import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.impl.library.Checkout;
+import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
@@ -19,7 +24,10 @@ import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CheckoutMetaDialogs {
 
@@ -43,6 +51,8 @@ public class CheckoutMetaDialogs {
                     member.getCheckouts().forEach(checkout -> {
                         checkout.getFine();
                     });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
             IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
@@ -61,7 +71,7 @@ public class CheckoutMetaDialogs {
                 .setTitle("Check In")
                 .addChoiceBox(RETURN, LibraryManagerUtils.getBookTitlesFromMember(member), true, -1)
                 .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event -> {
-                    member.getCheckouts().forEach(checkout -> {
+                    member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(checkout -> {
                         try {
                             checkout.payFine();
                         } catch (NotEnoughMoneyException ex) {
@@ -73,7 +83,19 @@ public class CheckoutMetaDialogs {
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {
                 IBook returnBook = LibraryManagerUtils.getBookFromTitle((String) results.get(RETURN).getResult(), libraryReference.poll());
-                member.getCheckout(returnBook).
+                List<ICheckout> checkouts = new ArrayList<>();
+                libraryReference.poll().getCheckouts().values().forEach(checkouts::addAll);
+                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getID().toString().equals(checkout)).collect(Collectors.toList());
+                if (matches.size() == 0) {
+                    DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
+                    return;
+                }
+                ICheckout checkout = matches.get(0);
+                try {
+                    checkout.getOwner().checkIn(checkout);
+                } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
+                    DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
+                }
             }
 
         });

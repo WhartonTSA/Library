@@ -37,6 +37,14 @@ public class LibraryManagerUtils {
         return toObservableList(list);
     }
 
+    public static ObservableList<String>  getBookTitlesFromList(ObservableList<IBook> books) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < books.size(); i++) {
+            list.add(books.get(i).getTitle());
+        }
+        return toObservableList(list);
+    }
+
     public static IMember getMemberFromLibrary(IPerson person, ILibrary library) {
         for (int i = 0; i < library.getMembers().size(); i++) {
             if (library.getMembers().get(i).getPerson().equals(person)) {

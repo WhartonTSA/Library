@@ -6,12 +6,22 @@ import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import org.whstsa.library.api.BookType;
+import org.whstsa.library.api.IPerson;
+import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.library.ICheckout;
+import org.whstsa.library.gui.api.LibraryManagerUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class ChoiceBoxElement extends ChoiceBox implements Element{
 
     private Label label;
     private String id;
+    private ObservableList<ICheckout> checkoutList;
 
     public ChoiceBoxElement(String id, String label, ObservableList<String> items, boolean useLabel, int selected) {
         super();
@@ -23,6 +33,22 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
             this.label = null;
         }
         this.setItems(items);
+        if (selected != -1) {
+            super.getSelectionModel().select(selected);
+        }
+    }
+
+    public ChoiceBoxElement(String id, String label, Map<IBook, ICheckout> items, boolean useLabel, int selected) {
+        super();
+        this.id = id;
+        if (useLabel) {
+            this.label = GuiUtils.createLabel(label);
+        }
+        else {
+            this.label = null;
+        }
+        List setList = new ArrayList(items.keySet());
+        this.setItems(LibraryManagerUtils.getBookTitlesFromList(FXCollections.observableList(setList)));
         if (selected != -1) {
             super.getSelectionModel().select(selected);
         }

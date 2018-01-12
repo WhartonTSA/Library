@@ -3,6 +3,7 @@ package org.whstsa.library.gui.dialogs;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.layout.GridPane;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
@@ -16,6 +17,7 @@ import org.whstsa.library.gui.api.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
+import org.whstsa.library.gui.factories.GuiUtils;
 
 import java.util.Map;
 
@@ -64,7 +66,7 @@ public class MemberMetaDialogs {
         });
     }
 
-    public static void deleteMember(IMember member, Callback<IMember> callback) {//TODO Change to IMember
+    public static void deleteMember(IMember member, Callback<IMember> callback) {
         Dialog dialog = new DialogBuilder()
                 .setTitle("Remove Member")
                 .addButton(ButtonType.YES, true, event -> {
@@ -97,10 +99,11 @@ public class MemberMetaDialogs {
         public static void listBooks(Callback<IMember> callback, IMember member) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle(member.getName() + "'s books")
-                .addLabel("Book 1")
-                .addLabel("Book 2")
-                .addLabel("Book 3")
                 .build();
+            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
+            for (int i = 0; i < member.getBooks().size(); i++) {
+                dialogPane.add(GuiUtils.createLabel(member.getBooks().get(i).getTitle()), 0, i);
+            }
         DialogUtils.getDialogResults(dialog, (results) -> {});
     }
 }

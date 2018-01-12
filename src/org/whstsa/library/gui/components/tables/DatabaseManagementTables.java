@@ -183,6 +183,13 @@ public class DatabaseManagementTables {
             }, selectedMember, libraryReference);
         });
 
+        Button checkin = GuiUtils.createButton("Checkin", event -> {
+            IMember selectedMember = mainMemberTable.getSelected();
+            CheckoutMetaDialogs.checkinMember(member -> {
+                mainMemberTable.refresh();
+            }, selectedMember, libraryReference);
+        });
+
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event -> {
             MemberMetaDialogs.createMember(member -> {
@@ -262,7 +269,7 @@ public class DatabaseManagementTables {
         });
 
         VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch,
-                GuiUtils.createSeparator(), membersLabel, checkout, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
+                GuiUtils.createSeparator(), membersLabel, checkout, checkin, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
                 booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton,
                 GuiUtils.createSeparator(), refreshButton);
         buttonGroup.setSpacing(5.0);
