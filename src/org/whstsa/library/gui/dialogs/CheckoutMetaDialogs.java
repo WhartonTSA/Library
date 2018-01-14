@@ -69,7 +69,7 @@ public class CheckoutMetaDialogs {
     public static void checkinMember(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Check In")
-                .addChoiceBox(RETURN, LibraryManagerUtils.getBookTitlesFromMember(member), true, -1)
+                .addChoiceBox(RETURN, member.getCheckoutMap(), true, -1)
                 .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event -> {
                     member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(checkout -> {
                         try {
@@ -85,7 +85,7 @@ public class CheckoutMetaDialogs {
                 IBook returnBook = LibraryManagerUtils.getBookFromTitle((String) results.get(RETURN).getResult(), libraryReference.poll());
                 List<ICheckout> checkouts = new ArrayList<>();
                 libraryReference.poll().getCheckouts().values().forEach(checkouts::addAll);
-                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getID().toString().equals(checkout)).collect(Collectors.toList());
+                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getID().toString().equals(checkout)).collect(Collectors.toList());//TODO checkout getter
                 if (matches.size() == 0) {
                     DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
                     return;

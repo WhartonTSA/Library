@@ -12,6 +12,8 @@ import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
+import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.util.CheckBoxClickHandler;
 import org.whstsa.library.util.ClickHandler;
@@ -105,6 +107,10 @@ public class DialogBuilder {
     }
 
     public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
+        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected));
+    }
+
+    public DialogBuilder addChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
         return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected));
     }
 

@@ -13,6 +13,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.ObservableReference;
+import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.gui.api.LibraryManagerUtils;
 import org.whstsa.library.gui.components.*;
@@ -21,6 +23,8 @@ import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
 
 import javax.swing.*;
+import java.util.List;
+import java.util.Map;
 
 public class GuiUtils {
 	
@@ -199,7 +203,11 @@ public class GuiUtils {
 
     public static CheckBoxElement createCheckBox(String prompt) { return createCheckBox(prompt, false); }
 
-    public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
+	public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
+		return new ChoiceBoxElement(label, label, items, useLabel, selected);
+	}
+
+	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
 		return new ChoiceBoxElement(label, label, items, useLabel, selected);
 	}
 

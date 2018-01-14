@@ -140,14 +140,17 @@ public class DatabaseManagementTables {
 
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference) {
         /*
-        * Reminders for extra features
+        * Reminders for extra features and fixes
         *
         * TODO ability to edit member's wallets
-        * TODO checkout dialog will check if member has enough money to pay for fine
+        * TODO more realistic money and balance system
         * TODO add member dialog will give user the option to create member from existing person
         * TODO fix formatting in dialogs and search bar
-        * TODO add functionality to listbooks command
         * TODO add method for getting copies of books
+        * TODO functionality for checkin dialog
+        * TODO due date column
+        * TODO better book selection in checkout and checkin dialogs (allow multiple book returns and checkouts in one dialog)
+        * TODO fix table selection
         *
         */
         BorderPane mainContainer = new BorderPane();
@@ -330,13 +333,18 @@ public class DatabaseManagementTables {
         mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Copies", (cellData) -> new ReadOnlyStringWrapper("1"), true, TableColumn.SortType.DESCENDING, 25);
         mainTable.addColumn("Checked out", (cellData) -> {
             ILibrary library = libraryReference.poll();
             List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
             return new ReadOnlyStringWrapper(isCheckedOut ? "True" : "False");
         }, true, TableColumn.SortType.DESCENDING, 30);
+        /*mainTable.addColumn("Due Date", (cellData) -> {TODO due date column
+            ILibrary library = libraryReference.poll();
+            List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
+            boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
+            return new ReadOnlyStringWrapper(isCheckedOut ? "Some day")
+        }, true, TableColumn.SortType.DESCENDING, 25);*/
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         return mainTable;

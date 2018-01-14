@@ -22,6 +22,8 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
     private Label label;
     private String id;
     private ObservableList<ICheckout> checkoutList;
+    private Map<IBook, List<ICheckout>> items;
+    private boolean map;
 
     public ChoiceBoxElement(String id, String label, ObservableList<String> items, boolean useLabel, int selected) {
         super();
@@ -32,13 +34,14 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
         else {
             this.label = null;
         }
+        this.map = false;
         this.setItems(items);
         if (selected != -1) {
             super.getSelectionModel().select(selected);
         }
     }
 
-    public ChoiceBoxElement(String id, String label, Map<IBook, ICheckout> items, boolean useLabel, int selected) {
+    public ChoiceBoxElement(String id, String label, Map<IBook, List<ICheckout>> items, boolean useLabel, int selected) {
         super();
         this.id = id;
         if (useLabel) {
@@ -47,7 +50,9 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
         else {
             this.label = null;
         }
-        List setList = new ArrayList(items.keySet());
+        this.items = items;
+        this.map = true;
+        List<IBook> setList = new ArrayList<>(items.keySet());
         this.setItems(LibraryManagerUtils.getBookTitlesFromList(FXCollections.observableList(setList)));
         if (selected != -1) {
             super.getSelectionModel().select(selected);
@@ -69,13 +74,13 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
 
     @Override
     public Object getResult() {
-        return this.getSelectionModel().getSelectedItem();
+        return !map ? this.getSelectionModel().getSelectedItem() : items.get(this.getSelectionModel().getSelectedItem()).get(0);//TODO checkout getter
     }
 
     @Override
     public String getString() {
         return this.label.toString();
-    };
+    }
 
     @Override
     public boolean getBoolean() {
