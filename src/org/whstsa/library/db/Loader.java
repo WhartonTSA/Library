@@ -316,7 +316,7 @@ public class Loader {
                 if (book == null) {
                     return;
                 }
-                library.setQuantity(book , libraryObject.getInt(id));
+                library.setQuantity(book.getID() , libraryObject.getInt(id));
             });
 
             Tester.print("Loaded library object");

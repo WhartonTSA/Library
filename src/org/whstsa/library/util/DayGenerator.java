@@ -47,33 +47,33 @@ public class DayGenerator {
 			}
 		});
 		while (chance(4)) {
-			//LOGGER.debug("a");
+			LOGGER.debug("a");
 			generateMember(randomLibrary());
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(50) && !deregisterPendingPeople.contains(member)) {
-				//LOGGER.debug("b");
+				LOGGER.debug("b");
 				try {
 					member.getLibrary().removeMember(member);
 					LOGGER.debug(String.format("%s has been deregistered ", member.getName()));
 				} catch (CannotDeregisterException ex) {
-					LOGGER.debug(String.format("Couldn't deregister %s: %s deregistering as soon as possible", member.getName(), ex.getMessage()));
+					LOGGER.debug(String.format("Couldn't deregister %s: %s Deregistering as soon as possible", member.getName(), ex.getMessage()));
 					deregisterPendingPeople.add(member.getID());
 				}
 			}
 		});
 		while (chance(4)) {
-			//LOGGER.debug("c");
+			LOGGER.debug("c");
 			generateBook();
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
-				//LOGGER.debug("d");
+				LOGGER.debug("d");
 				if (member.getBooks().size() != 0 && (RANDOM.nextBoolean() || deregisterPendingPeople.contains(member.getID()))) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
 						member.checkIn(checkout);
-						LOGGER.debug(member.getName() + " returned " + checkout.getBook().getTitle());
+						LOGGER.debug(member.getName() + " returned " + checkout.getBook().getTitle() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
 						member.removeBook(checkout.getBook());
 					} catch (CheckedInException e) {
 						LOGGER.debug(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
@@ -89,14 +89,16 @@ public class DayGenerator {
 						randomBookIndex -= 1;
 					}
 					IBook book = bookDB.get(randomBookIndex);
+					//LOGGER.debug(book.getID().toString());
+					//LOGGER.debug("" + library.getQuantity(book.getID()));
 					if (book != null) {
 						try {
 							library.reserveBook(member, book);
+							LOGGER.debug(member.getName() + " took " + book.getTitle() + " (" + library.getQuantity(book.getID()) + ")");
 						}
 						catch (OutOfStockException e) {
 							LOGGER.debug(e.getMessage());
 						}
-						LOGGER.debug(member.getName() + " took " + book.getTitle());
 					}
 				}
 				else {
@@ -107,14 +109,14 @@ public class DayGenerator {
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			IPerson person = member.getPerson();
 			if (chance(10) || (member.getFine() != 0.0 && chance(5))) {
-				//LOGGER.debug("e");
-				double randomAmountAdded = RANDOM.nextInt(10) * 1.0 + RANDOM.nextInt(3) * 0.25;
+				LOGGER.debug("e");
+				double randomAmountAdded = RANDOM.nextInt(9) * 1.0 + RANDOM.nextInt(3) * 0.25 + 1.0;
 				person.addMoney(randomAmountAdded);
 				LOGGER.debug(person.getName() + " has $" + person.getWallet() + " in their wallet");
 			}
 		});
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
-			//LOGGER.debug("f");
+			LOGGER.debug("f");
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
 				double fine = checkout.getFine();

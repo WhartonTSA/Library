@@ -107,19 +107,26 @@ public interface ILibrary extends IBookContainer, Loadable {
     Map<IBook, List<ICheckout>> getCheckouts();
 
     /**
+     * Returns the variable bookQuantity
+     *
+     * @return the variable bookQuantity
+     */
+    Map<UUID , Integer> getBookQuantity();
+
+    /**
      * Returns the quantity for a certain book
      *
-     * @param book
+     * @param id
      * @return quantity
      */
-    int getQuantity(IBook book);
+    int getQuantity(UUID id);
 
     /**
      * Sets quantity to book by specified integer
      *
-     * @param book
+     * @param id
      * @param amount
      */
-    void setQuantity(IBook book, int amount);
+    void setQuantity(UUID id, int amount);
 
 }

@@ -22,7 +22,7 @@ public class Library implements ILibrary {
 
     private List<IBook> books;
     private List<IMember> members;
-    private Map<IBook, Integer> bookQuantity;
+    private Map<UUID, Integer> bookQuantity;
 
     private String name;
 
@@ -78,7 +78,7 @@ public class Library implements ILibrary {
         object.put("name", this.name);
 
         JSONObject quantities = new JSONObject();
-        this.bookQuantity.forEach((book, quantity) -> quantities.put(book.getID().toString(), quantity));
+        this.bookQuantity.forEach((id, quantity) -> quantities.put(id.toString(), quantity));
         object.put("quantities", quantities);
 
         return object;
@@ -90,6 +90,7 @@ public class Library implements ILibrary {
             return;
         }
         this.books.add(book);
+        this.setQuantity(book.getID(), 5);
     }
 
     @Override
@@ -108,6 +109,7 @@ public class Library implements ILibrary {
         if (book != null) {
             if (!this.books.contains(book)) {
                 this.books.add(book);
+                this.setQuantity(id ,5);
             }
         }
     }
@@ -143,14 +145,15 @@ public class Library implements ILibrary {
 
     @Override
     public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException, OutOfStockException {
-        boolean hasCheckouts = this.getCheckouts().get(book) != null;
-        boolean noBooksLeft = hasCheckouts ? this.getCheckouts().get(book).size() == this.bookQuantity.get(book) : false;
-        Logger.DEFAULT_LOGGER.debug((this.bookQuantity == null) + "");
-        if (this.bookQuantity.get(book) == 0 || noBooksLeft) {
+        if (!this.bookQuantity.containsKey(book.getID())) {
+            this.bookQuantity.put(book.getID(), 5);
+        }
+        if (this.bookQuantity.get(book.getID()) == null || this.bookQuantity.get(book.getID()) == 0) {
             throw new OutOfStockException(book , this);
         }
         ICheckout checkout = new Checkout(member, book);
         member.checkout(checkout);
+        this.bookQuantity.put(book.getID(), bookQuantity.get(book.getID()) - 1);
         return checkout;
     }
 
@@ -268,12 +271,14 @@ public class Library implements ILibrary {
         return bookListMap;
     }
 
-    public int getQuantity(IBook book) {
-        return this.bookQuantity.get(book);
+    public Map<UUID, Integer> getBookQuantity() { return bookQuantity; }
+
+    public int getQuantity(UUID id) {
+        return this.bookQuantity.get(id);
     }
 
-    public void setQuantity(IBook book, int amount) {
-        this.bookQuantity.put(book, amount);
+    public void setQuantity(UUID id, int amount) {
+        this.bookQuantity.put(id, amount);
     }
 
 }
