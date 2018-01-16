@@ -74,7 +74,8 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
 
     @Override
     public Object getResult() {
-        return !map ? this.getSelectionModel().getSelectedItem() : items.get(this.getSelectionModel().getSelectedItem()).get(0);//TODO checkout getter
+        //return !map ? this.getSelectionModel().getSelectedItem() : items.get(this.getSelectionModel().getSelectedItem());//TODO checkout getter
+        return this.getSelectionModel().getSelectedItem();
     }
 
     @Override

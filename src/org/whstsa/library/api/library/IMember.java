@@ -57,6 +57,14 @@ public interface IMember extends IBookHolder, Serializable, Unique {
     List<ICheckout> getCheckouts();
 
     /**
+     * Returns a combined list of checkouts this member has
+     *
+     * @param notReturned only not-returned checkouts
+     * @return the combined list of checkouts
+     */
+    List<ICheckout> getCheckouts(boolean notReturned);
+
+    /**
      * Returns a map that maps books to their list of checkouts
      *
      * @return the book-checkout map

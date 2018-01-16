@@ -82,10 +82,10 @@ public class CheckoutMetaDialogs {
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {
+
                 IBook returnBook = LibraryManagerUtils.getBookFromTitle((String) results.get(RETURN).getResult(), libraryReference.poll());
-                List<ICheckout> checkouts = new ArrayList<>();
-                libraryReference.poll().getCheckouts().values().forEach(checkouts::addAll);
-                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getID().toString().equals(checkout)).collect(Collectors.toList());//TODO checkout getter
+                List<ICheckout> checkouts = member.getCheckouts(true);
+                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(returnBook)).collect(Collectors.toList());//TODO checkout getter
                 if (matches.size() == 0) {
                     DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
                     return;
@@ -93,6 +93,7 @@ public class CheckoutMetaDialogs {
                 ICheckout checkout = matches.get(0);
                 try {
                     checkout.getOwner().checkIn(checkout);
+                    System.out.println("Test");
                 } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
