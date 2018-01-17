@@ -41,6 +41,7 @@ public class BookMetaDialogs {
             IBook book = new Book(title, author, genre);
             Loader.getLoader().loadBook(book);
             libraryReference.poll().addBook(book);
+            callback.callback(book);
         }, TITLE, AUTHOR, GENRE);
     }
 
