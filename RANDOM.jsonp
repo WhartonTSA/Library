@@ -42,37 +42,8 @@
         "members": [
           '{{repeat(10, 10)}}',
           function(tags, index) {
-            var bookIDs = [
-              "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
-              "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
-              "04eed14b-1ff4-4603-906b-b0b85e5c9847",
-              "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
-              "ca5f1528-0e48-4c35-82f2-7df945794c8d",
-              "5f3e0439-8379-440b-ac87-4287f1a3a29c",
-              "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
-              "5b20ef9a-4f77-46b2-8095-bae588d8b184",
-              "3376db12-ea01-44e4-ac03-104027203287",
-              "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
-            ];
-            var checkoutID = function() {
-              return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-              });
-            };
-            var checkoutObject = {};
-            for (var i = 0; i < checkoutIDs.length; i++) {
-              var bookID = bookIDs[i];
-              checkoutObject[bookID] = ['{{repeat(0,3)}}', {
-                "uuid": checkoutID(),
-                "dueDate": "2018-{{integer(1,11)}}-{{integer(2,15)}}'T'{{integer(1,11)}}:{{integer(1,59}}:{{integer(1,59)}}.SSSX",
-                "returned": "{{bool()}}",
-                "bookID": bookID
-              }];
-            }
-            checkoutObject[index] = ['{{repeat(0,3)}}'];
             return {
-              "checkouts": checkoutObject,
+              "checkouts": {},
               "personID": [
                 "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
                 "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
@@ -100,7 +71,7 @@
             };
           }
         ],
-        "name": "test 123",
+      "name": "{{company()}} Library",
         "uuid": function () {
           return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -112,7 +83,7 @@
       "firstName": "{{firstName()}}",
       "lastName": "{{surname()}}",
       "teacher": "{{bool()}}",
-      "wallet": "{{integer(0,100}}",
+      "wallet": "{{integer(0,100)}}",
       "uuid": function (tags, index) {
         return [
           "c7bf7e0a-f9cf-47fc-b499-a3c0a3f8489e",
