@@ -20,7 +20,14 @@ import java.util.UUID;
 public class PopulatePeopleCommand implements ICommand {
     @Override
     public JSONObject handle(String[] args, ICommandSender commandSender) {
-        int totalPeopleAdded = Integer.parseInt(args[0]);
+        int totalPeopleAdded;
+        try {
+            totalPeopleAdded = Integer.parseInt(args[0]);
+        }
+        catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            return null;
+        }
         ILibrary libraryBeingPopulated = ObjectDelegate.getLibrary(UUID.fromString(args[1]));
         for (int person = 0; person < totalPeopleAdded; person++) {
             DayGenerator.generateMember(libraryBeingPopulated);

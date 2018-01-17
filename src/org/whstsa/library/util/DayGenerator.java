@@ -43,7 +43,7 @@ public class DayGenerator {
 				LOGGER.debug(String.format("%s has finally been deregistered ", member.getName()));
 				deregisterPendingPeople.remove(member.getID());
 			} catch (CannotDeregisterException ex) {
-				//LOGGER.debug(String.format("Couldn't deregister %s yet: %s ", member.getName(), ex.getMessage()));
+				//LOGGER.debug(String.format("Couldn't deregister %s yet: %s ", member.getName(), ex.getMessage())); (Commented out because don't want debug screen to be bombarded with couldn't deregister yet)
 			}
 		});
 		while (chance(4)) {
