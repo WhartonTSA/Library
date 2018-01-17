@@ -1,30 +1,27 @@
 package org.whstsa.library.gui.dialogs;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import org.json.JSONObject;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import org.whstsa.library.api.Callback;
-import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CheckedInException;
 import org.whstsa.library.api.exceptions.MemberMismatchException;
 import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
 import org.whstsa.library.api.exceptions.OutstandingFinesException;
-import org.whstsa.library.api.impl.Person;
-import org.whstsa.library.api.impl.library.Checkout;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.db.Loader;
-import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
+import org.whstsa.library.gui.factories.GuiUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,6 +38,12 @@ public class CheckoutMetaDialogs {
                 .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)
                 .addCheckBox(PAYFINE, false, true, member.getFine() <= 0)
                 .build();
+        if (member.getFine() > 0) {
+            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
+            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12, Pos.CENTER_RIGHT);
+            fineLabel.setTextFill(Color.RED);
+            dialogPane.add(fineLabel, 1, 1);
+        }
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (member.getFine() > 0) {
                 if (!results.get(PAYFINE).getBoolean()) {
@@ -48,9 +51,7 @@ public class CheckoutMetaDialogs {
                     return;
                 }
                 try {
-                    member.getCheckouts().forEach(checkout -> {
-                        checkout.getFine();
-                    });
+                    member.getCheckouts().forEach(checkout -> checkout.getFine());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -80,6 +81,12 @@ public class CheckoutMetaDialogs {
                     });
                 })
                 .build();
+        if (member.getFine() > 0) {
+            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
+            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12, Pos.CENTER_RIGHT);
+            fineLabel.setTextFill(Color.RED);
+            dialogPane.add(fineLabel, 1, 1);
+        }
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {
 

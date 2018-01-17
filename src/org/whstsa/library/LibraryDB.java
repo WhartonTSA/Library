@@ -9,9 +9,7 @@ import org.json.JSONObject;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
-import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.InterfaceManager;
-import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.scenes.IOFileSelection;
@@ -19,8 +17,6 @@ import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
