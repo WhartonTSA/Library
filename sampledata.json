@@ -1,16 +1,818 @@
 {
-    "books": [],
-    "libraries": [{
-        "books": [],
-        "members": [],
-        "name": "test 123",
-        "uuid": "b995f803-8e9f-4533-b72f-9ae783087449"
-    }],
-    "people": [{
-        "firstName": "Eric",
-        "lastName": "Rabil",
-        "teacher": false,
-        "wallet": 0,
-        "uuid": "57709fc1-f5a8-4db5-9583-aa499a77d805"
-    }]
+  "books": [
+    {
+      "title": "Connecticut",
+      "authorName": "Dillard Weber",
+      "bookType": "HORROR",
+      "uuid": "af2f854f-42e8-4e0b-840c-f42e8ba517bc"
+    },
+    {
+      "title": "Nevada",
+      "authorName": "Mullins Monroe",
+      "bookType": "HORROR",
+      "uuid": "6b6a0734-6f28-41dd-8668-1e0a7d79e485"
+    },
+    {
+      "title": "Florida",
+      "authorName": "Drake Thompson",
+      "bookType": "GENERIC",
+      "uuid": "04eed14b-1ff4-4603-906b-b0b85e5c9847"
+    },
+    {
+      "title": "Wyoming",
+      "authorName": "Bishop Fischer",
+      "bookType": "HORROR",
+      "uuid": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2"
+    },
+    {
+      "title": "Oregon",
+      "authorName": "Morse Bradshaw",
+      "bookType": "HORROR",
+      "uuid": "ca5f1528-0e48-4c35-82f2-7df945794c8d"
+    },
+    {
+      "title": "Guam",
+      "authorName": "Chavez Odonnell",
+      "bookType": "HORROR",
+      "uuid": "5f3e0439-8379-440b-ac87-4287f1a3a29c"
+    },
+    {
+      "title": "Tennessee",
+      "authorName": "Klein Larsen",
+      "bookType": "GENERIC",
+      "uuid": "f6fd9656-9603-49a4-bfc7-57e14b9b6445"
+    },
+    {
+      "title": "Hawaii",
+      "authorName": "Le Porter",
+      "bookType": "GENERIC",
+      "uuid": "5b20ef9a-4f77-46b2-8095-bae588d8b184"
+    },
+    {
+      "title": "Oklahoma",
+      "authorName": "Gloria Clay",
+      "bookType": "FICTION",
+      "uuid": "3376db12-ea01-44e4-ac03-104027203287"
+    },
+    {
+      "title": "Palau",
+      "authorName": "Amalia Sutton",
+      "bookType": "HORROR",
+      "uuid": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+    }
+  ],
+  "libraries": [
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Fuelworks Library",
+      "uuid": "1840be6f-4bf9-4ed2-8662-26feeb7a6bfc"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Exosis Library",
+      "uuid": "2d678d09-7baf-46b3-b132-f7453725011a"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Amtas Library",
+      "uuid": "5e35d8f0-557c-47bd-855b-9049d5963718"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Crustatia Library",
+      "uuid": "1314b3c1-bafa-4219-b9e4-2daea560b947"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Supremia Library",
+      "uuid": "6eb2086d-571f-466f-ae11-a57c63cb4edf"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Magnafone Library",
+      "uuid": "366aca67-495c-4eee-9825-cd4bc2922e11"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Calcu Library",
+      "uuid": "22ec063d-8908-410f-898d-2356bb836709"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Unia Library",
+      "uuid": "b12e6561-a076-4d00-b61c-514066694645"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Boilcat Library",
+      "uuid": "6400ec7a-fe52-4c42-900a-193d9fcbfd25"
+    },
+    {
+      "books": [
+        "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+        "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+        "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+        "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+        "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+        "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+        "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+        "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+        "3376db12-ea01-44e4-ac03-104027203287",
+        "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+      ],
+      "members": [
+        {
+          "checkouts": {},
+          "personID": "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+          "uuid": "29539f93-d951-4c1c-8f6f-2e47fa5f5db9"
+        },
+        {
+          "checkouts": {},
+          "personID": "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+          "uuid": "82fd6d62-0111-4c24-b001-1851fd21912f"
+        },
+        {
+          "checkouts": {},
+          "personID": "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+          "uuid": "effea559-70fa-490e-a904-3ec6d3e66c10"
+        },
+        {
+          "checkouts": {},
+          "personID": "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+          "uuid": "770f7000-4c4e-4fab-86b2-2421fe2b7e98"
+        },
+        {
+          "checkouts": {},
+          "personID": "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+          "uuid": "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5"
+        },
+        {
+          "checkouts": {},
+          "personID": "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+          "uuid": "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d"
+        },
+        {
+          "checkouts": {},
+          "personID": "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+          "uuid": "0063ee9c-c6c1-4296-8589-e4dd4589243f"
+        },
+        {
+          "checkouts": {},
+          "personID": "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+          "uuid": "2f5365c3-3828-4f1e-aa66-8c36fede05d3"
+        },
+        {
+          "checkouts": {},
+          "personID": "3376db12-ea01-44e4-ac03-104027203287",
+          "uuid": "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e"
+        },
+        {
+          "checkouts": {},
+          "personID": "6f58ba92-42e4-449e-a3be-9ae5d84d05f1",
+          "uuid": "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+        }
+      ],
+      "name": "Unisure Library",
+      "uuid": "67e3396b-6e8a-41d2-83f6-a04a60205b66"
+    }
+  ],
+  "people": [
+    {
+      "firstName": "Carlson",
+      "lastName": "Hayden",
+      "teacher": true,
+      "wallet": 46,
+      "uuid": "c7bf7e0a-f9cf-47fc-b499-a3c0a3f8489e"
+    },
+    {
+      "firstName": "Madge",
+      "lastName": "Chang",
+      "teacher": false,
+      "wallet": 25,
+      "uuid": "9ec20676-859a-48db-b608-aace48480603"
+    },
+    {
+      "firstName": "Valenzuela",
+      "lastName": "Jefferson",
+      "teacher": true,
+      "wallet": 76,
+      "uuid": "ff846f87-3efc-44de-9666-eb94b720f886"
+    },
+    {
+      "firstName": "Kristy",
+      "lastName": "Clemons",
+      "teacher": true,
+      "wallet": 19,
+      "uuid": "741909a0-e38b-42ab-baff-b80b14816c3d"
+    },
+    {
+      "firstName": "Alba",
+      "lastName": "Stevens",
+      "teacher": false,
+      "wallet": 14,
+      "uuid": "166b12e5-3109-4b3c-a287-2b1b42958ef6"
+    },
+    {
+      "firstName": "Rich",
+      "lastName": "Ayers",
+      "teacher": false,
+      "wallet": 34,
+      "uuid": "4891daf6-23eb-467a-9e66-3e3574c59117"
+    },
+    {
+      "firstName": "May",
+      "lastName": "Riddle",
+      "teacher": false,
+      "wallet": 27,
+      "uuid": "da59247c-0a62-40d3-9a4c-e89c1ee11d9a"
+    },
+    {
+      "firstName": "Berry",
+      "lastName": "Talley",
+      "teacher": false,
+      "wallet": 56,
+      "uuid": "f5c57fad-0a55-4adc-b708-cd47ca510ce2"
+    },
+    {
+      "firstName": "Kerry",
+      "lastName": "Blair",
+      "teacher": false,
+      "wallet": 30,
+      "uuid": "83b5de64-02b9-43c6-98b4-bf7fb233a2ea"
+    },
+    {
+      "firstName": "Donna",
+      "lastName": "Kane",
+      "teacher": false,
+      "wallet": 26,
+      "uuid": "a4b49125-5eae-4d19-a38f-7c91ca44c638"
+    }
+  ]
 }
