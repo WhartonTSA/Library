@@ -1,0 +1,131 @@
+{
+    "books": [
+      '{{repeat(10, 10)}}',
+      {
+        "title": "{{state()}}",
+        "authorName": "{{firstName()}} {{surname()}}",
+        "bookType": "{{random('HORROR', 'FICTION', 'NONFICTION', 'GENERIC')}}",
+        "uuid": function (tags, index) {
+          return [
+            "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+            "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+            "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+            "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+            "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+            "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+            "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+            "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+            "3376db12-ea01-44e4-ac03-104027203287",
+            "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+          ][index];
+        }
+      }
+    ],
+    "libraries": ['{{repeat(10, 10)}}', {
+        "books": [
+          '{{repeat(10, 10)}}',
+          function(tags, index) {
+            return [
+              "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+              "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+              "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+              "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+              "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+              "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+              "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+              "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+              "3376db12-ea01-44e4-ac03-104027203287",
+              "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+            ][index];
+          }
+        ],
+        "members": [
+          '{{repeat(10, 10)}}',
+          function(tags, index) {
+            var bookIDs = [
+              "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+              "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+              "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+              "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+              "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+              "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+              "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+              "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+              "3376db12-ea01-44e4-ac03-104027203287",
+              "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+            ];
+            var checkoutID = function() {
+              return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+              });
+            };
+            var checkoutObject = {};
+            for (var i = 0; i < checkoutIDs.length; i++) {
+              var bookID = bookIDs[i];
+              checkoutObject[bookID] = ['{{repeat(0,3)}}', {
+                "uuid": checkoutID(),
+                "dueDate": "2018-{{integer(1,11)}}-{{integer(2,15)}}'T'{{integer(1,11)}}:{{integer(1,59}}:{{integer(1,59)}}.SSSX",
+                "returned": "{{bool()}}",
+                "bookID": bookID
+              }];
+            }
+            checkoutObject[index] = ['{{repeat(0,3)}}'];
+            return {
+              "checkouts": checkoutObject,
+              "personID": [
+                "af2f854f-42e8-4e0b-840c-f42e8ba517bc",
+                "6b6a0734-6f28-41dd-8668-1e0a7d79e485",
+                "04eed14b-1ff4-4603-906b-b0b85e5c9847",
+                "aa97ff25-b950-48f5-8d0e-1be7f9b8a9d2",
+                "ca5f1528-0e48-4c35-82f2-7df945794c8d",
+                "5f3e0439-8379-440b-ac87-4287f1a3a29c",
+                "f6fd9656-9603-49a4-bfc7-57e14b9b6445",
+                "5b20ef9a-4f77-46b2-8095-bae588d8b184",
+                "3376db12-ea01-44e4-ac03-104027203287",
+                "6f58ba92-42e4-449e-a3be-9ae5d84d05f1"
+              ][index],
+              "uuid": [
+                "29539f93-d951-4c1c-8f6f-2e47fa5f5db9",
+                "82fd6d62-0111-4c24-b001-1851fd21912f",
+                "effea559-70fa-490e-a904-3ec6d3e66c10",
+                "770f7000-4c4e-4fab-86b2-2421fe2b7e98",
+                "c03b8e7e-fe9d-4f19-8a64-3fa24aae98e5",
+                "8ff3a8ec-2ff5-4d8d-a215-753549ce9d5d",
+                "0063ee9c-c6c1-4296-8589-e4dd4589243f",
+                "2f5365c3-3828-4f1e-aa66-8c36fede05d3",
+                "bf016c49-9cb3-4cfa-8c3e-2be11ac9077e",
+                "7fba72b5-af14-469b-83e5-f6af7f281fe9"
+              ][index]
+            };
+          }
+        ],
+        "name": "test 123",
+        "uuid": function () {
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+        }
+    }],
+    "people": ['{{repeat(10, 10)}}', {
+      "firstName": "{{firstName()}}",
+      "lastName": "{{surname()}}",
+      "teacher": "{{bool()}}",
+      "wallet": "{{integer(0,100}}",
+      "uuid": function (tags, index) {
+        return [
+          "c7bf7e0a-f9cf-47fc-b499-a3c0a3f8489e",
+          "9ec20676-859a-48db-b608-aace48480603",
+          "ff846f87-3efc-44de-9666-eb94b720f886",
+          "741909a0-e38b-42ab-baff-b80b14816c3d",
+          "166b12e5-3109-4b3c-a287-2b1b42958ef6",
+          "4891daf6-23eb-467a-9e66-3e3574c59117",
+          "da59247c-0a62-40d3-9a4c-e89c1ee11d9a",
+          "f5c57fad-0a55-4adc-b708-cd47ca510ce2",
+          "83b5de64-02b9-43c6-98b4-bf7fb233a2ea",
+          "a4b49125-5eae-4d19-a38f-7c91ca44c638"
+        ][index];
+      }
+    }]
+}
