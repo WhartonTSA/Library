@@ -35,7 +35,7 @@ public class OutstandingFinesException extends CannotDeregisterException {
     }
 
     public enum Actions {
-        DEREGISTER, REMOVE_BOOK("remove book from"), CHECK_IN("check back in a book for ");
+        DEREGISTER, REMOVE_BOOK("remove book from"), CHECK_IN("check back in a book for");
 
         private String message;
 

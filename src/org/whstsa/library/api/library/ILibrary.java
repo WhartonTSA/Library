@@ -26,7 +26,7 @@ public interface ILibrary extends IBookContainer, Loadable {
 
     /**
      * Creates a member object and adds them to this library
-     *s
+     *
      * @param person the person joining the library
      * @return the member object
      */

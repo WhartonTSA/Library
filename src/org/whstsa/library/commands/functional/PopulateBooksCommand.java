@@ -17,12 +17,18 @@ import java.util.UUID;
 public class PopulateBooksCommand implements ICommand {
     @Override
     public JSONObject handle(String[] args, ICommandSender commandSender) {
-        int totalBooksAdded = Integer.parseInt(args[0]);
-        ILibrary libraryBeingPopulated = ObjectDelegate.getLibrary(UUID.fromString(args[1]));
+        int totalBooksAdded;
+        try {
+            totalBooksAdded = Integer.parseInt(args[0]);
+        }
+        catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            return null;
+        }
         for (int person = 0; person < totalBooksAdded; person++) {
             DayGenerator.generateBook();
         }
-        commandSender.sendMessage("Successfully added " + totalBooksAdded + " books to " + libraryBeingPopulated.getName());
+        commandSender.sendMessage("Successfully added " + totalBooksAdded + " books to random libraries.");
         return null;
     }
 
@@ -30,7 +36,6 @@ public class PopulateBooksCommand implements ICommand {
     public List<String> getArgs() {
         List<String> args = new ArrayList<>();
         args.add("# of books");
-        args.add("library uuid");
         return args;
     }
 
