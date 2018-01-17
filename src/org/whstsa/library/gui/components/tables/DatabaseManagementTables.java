@@ -139,20 +139,7 @@ public class DatabaseManagementTables {
     }
 
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference) {
-        /*
-        * Reminders for extra features and fixes
-        *
-        * TODO ability to edit member's wallets
-        * TODO more realistic money and balance system
-        * TODO add member dialog will give user the option to create member from existing person
-        * TODO fix formatting in dialogs and search bar
-        * TODO add method for getting copies of books
-        * TODO functionality for checkin dialog
-        * TODO due date column
-        * TODO better book selection in checkout and checkin dialogs (allow multiple book returns and checkouts in one dialog)
-        * TODO fix table selection
-        *
-        */
+
         BorderPane mainContainer = new BorderPane();
 
         Table<IMember> mainMemberTable = new Table<>();
