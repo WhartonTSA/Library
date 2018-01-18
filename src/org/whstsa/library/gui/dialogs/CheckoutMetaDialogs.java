@@ -1,10 +1,14 @@
 package org.whstsa.library.gui.dialogs;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
@@ -22,6 +26,7 @@ import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,7 +37,32 @@ public class CheckoutMetaDialogs {
     private static final String RETURN = "Return Books";
     private static final String PAYFINE = "Pay Fine";
 
-    public static void checkoutMember(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
+    public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, TableView bookTable, ObservableReference<ILibrary> libraryReference) {
+        Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
+        TextFlow checkoutText = new TextFlow();
+
+        Text text1 = new Text("Checking out ");
+
+        Text text2 = new Text(0 + "");
+        text2.setFill(Color.BLUE);
+        text2.setStyle("-fx-font-weight: bold;");
+
+        Text text3 = new Text(" books to ");
+
+        Text text4 = new Text(member.getName());
+        text4.setFill(Color.GREEN);
+
+        checkoutText.getChildren().addAll(text1, text2, text3, text4);
+
+        ToolBar toolBar = new ToolBar();
+        toolBar.getItems().addAll(checkoutButton, checkoutText);
+        mainContainer.setTop(toolBar);
+        toolBar.setStyle("-fx-base: #99ccff;");
+        TableView mainTable = (TableView) mainContainer.getCenter();
+        mainTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+
+
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Checking out " + member.getName() + ".")
                 .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)

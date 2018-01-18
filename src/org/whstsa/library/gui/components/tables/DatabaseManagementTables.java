@@ -179,10 +179,10 @@ public class DatabaseManagementTables {
             CheckoutMetaDialogs.checkoutMember(member -> {
                 mainMemberTable.refresh();
                 mainBookTable.refresh();
-            }, selectedMember, libraryReference);
+            }, selectedMember, mainContainer, mainBookTable.getTable(), libraryReference);
         });
         checkout.setDisable(true);
-        checkout.setStyle("-fx-base: #99ccff");
+        checkout.setStyle("-fx-base: #99ccff;");
 
         Button checkin = GuiUtils.createButton("Checkin", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
