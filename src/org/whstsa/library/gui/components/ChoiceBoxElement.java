@@ -80,7 +80,8 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
 
     @Override
     public String getString() {
-        return this.label.toString();
+        Object result = this.getResult();
+        return result == null ? null : result.toString();
     }
 
     @Override
