@@ -47,7 +47,7 @@ public class DatabaseManagementTables {
                     return;
                 }
                 Loader.getLoader().loadLibrary(library);
-                libraryTable.pollItems();
+                libraryTable.refresh();
             });
         });
 
@@ -68,7 +68,7 @@ public class DatabaseManagementTables {
                 return;
             }
             LibraryMetaDialogs.deleteLibrary(selectedLibrary, (library) -> {
-                libraryTable.pollItems();
+                libraryTable.refresh();
             });
         });
         Button openLibraryButton = GuiUtils.createButton("Open Library", true, (event) -> {
@@ -101,7 +101,7 @@ public class DatabaseManagementTables {
                     return;
                 }
                 Loader.getLoader().loadPerson(person);
-                personTable.pollItems();
+                personTable.refresh();
             });
         });
 
@@ -122,7 +122,7 @@ public class DatabaseManagementTables {
                 return;
             }
             PersonMetaDialogs.deletePerson(selectedPerson, person -> {
-                personTable.pollItems();
+                personTable.refresh();
             });
         });
         deletePersonButton.setDisable(true);
@@ -207,7 +207,7 @@ public class DatabaseManagementTables {
                 if (member == null) {
                     return;
                 }
-                mainMemberTable.pollItems();
+                mainMemberTable.refresh();
             });
         });
 
@@ -219,7 +219,7 @@ public class DatabaseManagementTables {
                 return;
                 }
                 Loader.getLoader().loadBook(book);
-                mainBookTable.pollItems();
+                mainBookTable.refresh();
             }, libraryReference);
         });
         Button bookEdit = GuiUtils.createButton("Edit", event -> {
@@ -237,7 +237,7 @@ public class DatabaseManagementTables {
                 return;
             }
             BookMetaDialogs.deleteBook(selectedBook, book -> {
-                mainBookTable.pollItems();
+                mainBookTable.refresh();
             });
         });
         Button bookSearch = GuiUtils.createButton("Search", event -> {

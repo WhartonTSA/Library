@@ -68,10 +68,6 @@ public class Table<T> {
         return this.getTable().getSelectionModel().getSelectedItem();
     }
 
-    public void pollItems() {
-        this.view.setItems(this.getItems());
-    }
-
     public void refresh() {
         this.pollItems();
         this.view.getColumns().get(0).setVisible(false);
@@ -80,6 +76,10 @@ public class Table<T> {
 
     public ObservableList<T> getItems() {
         return FXCollections.observableList(observableReference.poll());
+    }
+
+    private void pollItems() {
+        this.view.setItems(this.getItems());
     }
 
 }

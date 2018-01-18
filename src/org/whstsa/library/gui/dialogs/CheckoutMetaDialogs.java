@@ -59,12 +59,11 @@ public class CheckoutMetaDialogs {
             IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
             try {
                 libraryReference.poll().reserveBook(member, book);
+                callback.callback(member);
             } catch (Exception ex) {
                 DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
             }
-
         });
-        callback.callback(member);
     }
 
     public static void checkinMember(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
@@ -89,7 +88,6 @@ public class CheckoutMetaDialogs {
         }
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {
-
                 IBook returnBook = LibraryManagerUtils.getBookFromTitle((String) results.get(RETURN).getResult(), libraryReference.poll());
                 List<ICheckout> checkouts = member.getCheckouts(true);
                 List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(returnBook)).collect(Collectors.toList());//TODO checkout getter
@@ -100,14 +98,13 @@ public class CheckoutMetaDialogs {
                 ICheckout checkout = matches.get(0);
                 try {
                     checkout.getOwner().checkIn(checkout);
-                    System.out.println("Test");
+                    callback.callback(member);
                 } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             }
 
         });
-        callback.callback(member);
     }
 
 }
