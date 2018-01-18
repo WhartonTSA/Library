@@ -232,7 +232,6 @@ public class Tester {
         for (IMember member : library.getMembers()) {
             IBook book = library.getBooks().get(RANDOM.nextInt(library.getBooks().size()));
             try {
-
                 library.reserveBook(member, book);
             } catch (OutOfStockException ex) {
                 System.out.format("Failed: %s", ex.getMessage());

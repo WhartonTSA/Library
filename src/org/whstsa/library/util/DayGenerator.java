@@ -6,11 +6,14 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.whstsa.library.Tester;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.*;
+import org.whstsa.library.api.exceptions.CannotDeregisterException;
+import org.whstsa.library.api.exceptions.CheckedInException;
+import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
+import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.library.ICheckout;
@@ -47,12 +50,10 @@ public class DayGenerator {
 			}
 		});
 		while (chance(4)) {
-			LOGGER.debug("a");
 			generateMember(randomLibrary());
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(50) && !deregisterPendingPeople.contains(member)) {
-				LOGGER.debug("b");
 				try {
 					member.getLibrary().removeMember(member);
 					LOGGER.debug(String.format("%s has been deregistered ", member.getName()));
@@ -63,12 +64,10 @@ public class DayGenerator {
 			}
 		});
 		while (chance(4)) {
-			LOGGER.debug("c");
 			generateBook();
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
-				LOGGER.debug("d");
 				if (member.getBooks().size() != 0 && (RANDOM.nextBoolean() || deregisterPendingPeople.contains(member.getID()))) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
@@ -89,8 +88,6 @@ public class DayGenerator {
 						randomBookIndex -= 1;
 					}
 					IBook book = bookDB.get(randomBookIndex);
-					//LOGGER.debug(book.getID().toString());
-					//LOGGER.debug("" + library.getQuantity(book.getID()));
 					if (book != null) {
 						try {
 							library.reserveBook(member, book);
@@ -109,14 +106,12 @@ public class DayGenerator {
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			IPerson person = member.getPerson();
 			if (chance(10) || (member.getFine() != 0.0 && chance(5))) {
-				LOGGER.debug("e");
 				double randomAmountAdded = RANDOM.nextInt(9) * 1.0 + RANDOM.nextInt(3) * 0.25 + 1.0;
 				person.addMoney(randomAmountAdded);
 				LOGGER.debug(person.getName() + " has $" + person.getWallet() + " in their wallet");
 			}
 		});
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
-			LOGGER.debug("f");
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
 				double fine = checkout.getFine();
