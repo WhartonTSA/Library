@@ -36,7 +36,7 @@ public class BookMetaDialogs {
         DialogUtils.getDialogResults(dialog, (results) -> {
             String title = results.get(TITLE).getString();
             String author = results.get(AUTHOR).getString();
-            String type = results.get(GENRE).getResult().toString();
+            String type = results.get(GENRE).getString();
             BookType genre = BookType.getGenre(type);
             IBook book = new Book(title, author, genre);
             Loader.getLoader().loadBook(book);
