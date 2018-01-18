@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
+import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.library.ILibrary;
 
@@ -70,11 +71,15 @@ public class Table<T> {
 
     public void refresh() {
         this.pollItems();
-        this.view.getColumns().get(0).setVisible(false);
-        this.view.getColumns().get(0).setVisible(true);
+        TableColumn<T, ?> tableColumn = this.view.getColumns().get(0);
+        tableColumn.setVisible(false);
+        tableColumn.setVisible(true);
     }
 
     public ObservableList<T> getItems() {
+        if (this.observableReference == null) {
+            return FXCollections.observableArrayList();
+        }
         return FXCollections.observableList(observableReference.poll());
     }
 

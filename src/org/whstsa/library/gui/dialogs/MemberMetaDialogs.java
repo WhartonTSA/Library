@@ -42,9 +42,9 @@ public class MemberMetaDialogs {
             boolean teacher = results.get(TEACHER).getBoolean();
             IPerson person = new Person(firstName, lastName, teacher);
             Loader.getLoader().loadPerson(person);
-            callback.callback(person);
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
+            callback.callback(person);
         }, FIRST_NAME, LAST_NAME, TEACHER);
     }
 
