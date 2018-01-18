@@ -34,7 +34,7 @@ public class CheckoutMetaDialogs {
 
     public static void checkoutMember(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Checkout")
+                .setTitle("Checking out " + member.getName() + ".")
                 .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)
                 .addCheckBox(PAYFINE, false, true, member.getFine() <= 0)
                 .build();
@@ -68,7 +68,7 @@ public class CheckoutMetaDialogs {
 
     public static void checkinMember(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Check In")
+                .setTitle("Checking in " + member.getName() + ".")
                 .addChoiceBox(RETURN, member.getCheckoutMap(), true, -1)
                 .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event -> {
                     member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(checkout -> {

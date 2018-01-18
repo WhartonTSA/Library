@@ -20,6 +20,7 @@ import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
+import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.api.LibraryManagerUtils;
 import org.whstsa.library.gui.components.SearchBarElement;
 import org.whstsa.library.gui.components.Table;
@@ -40,6 +41,8 @@ public class DatabaseManagementTables {
         libraryTable.addColumn("Library Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 100);
         ObservableReference<List<ILibrary>> observableReference = () -> ObjectDelegate.getLibraries();
         libraryTable.setReference(observableReference);
+
+
 
         Button newLibraryButton = GuiUtils.createButton("New Library", (event) -> {
             LibraryMetaDialogs.createLibrary((library) -> {
@@ -76,11 +79,12 @@ public class DatabaseManagementTables {
             if (selectedLibrary == null) {
                 return;
             }
-            libraryDB.getInterfaceManager().display(new GuiLibraryManager(selectedLibrary));
+            libraryDB.getInterfaceManager().display(new GuiLibraryManager(selectedLibrary, libraryDB));
         });
 
         libraryTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             editLibraryButton.setDisable(newSelection == null);
+            openLibraryButton.setDisable(newSelection == null);
         });
 
         StackPane libraryButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newLibraryButton, editLibraryButton, deleteLibraryButton, openLibraryButton);
@@ -138,7 +142,7 @@ public class DatabaseManagementTables {
         return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, personTable.getTable(), personButtonContainer);
     }
 
-    public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference) {
+    public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference, LibraryDB libraryDB) {
 
         BorderPane mainContainer = new BorderPane();
 
@@ -151,6 +155,10 @@ public class DatabaseManagementTables {
         bookManagerTable(mainBookTable, libraryReference);
         TableView<IBook> bookTableView = mainBookTable.getTable();
         bookTableView.setId("bookTable");
+
+        Button back = GuiUtils.createButton("Back to Main Menu", event -> {
+            libraryDB.getInterfaceManager().display(new GuiMain(libraryDB));
+        });
 
         //Toggle Button Group
         ToggleGroup viewButtons = new ToggleGroup();
@@ -170,8 +178,11 @@ public class DatabaseManagementTables {
             IMember selectedMember = mainMemberTable.getSelected();
             CheckoutMetaDialogs.checkoutMember(member -> {
                 mainMemberTable.refresh();
+                mainBookTable.refresh();
             }, selectedMember, libraryReference);
         });
+        checkout.setDisable(true);
+        checkout.setStyle("-fx-base: #99ccff");
 
         Button checkin = GuiUtils.createButton("Checkin", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
@@ -179,6 +190,8 @@ public class DatabaseManagementTables {
                 mainMemberTable.refresh();
             }, selectedMember, libraryReference);
         });
+        checkin.setDisable(true);
+        checkin.setStyle("-fx-base: #99ccff;");
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event -> {
@@ -199,6 +212,7 @@ public class DatabaseManagementTables {
                 mainMemberTable.refresh();
             });
         });
+        memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event -> {
             GuiUtils.createSearchBar("Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference);
         });
@@ -210,6 +224,7 @@ public class DatabaseManagementTables {
                 mainMemberTable.refresh();
             });
         });
+        memberDelete.setDisable(true);
 
 
         Label booksLabel = GuiUtils.createLabel("Books", 16);
@@ -231,6 +246,7 @@ public class DatabaseManagementTables {
                 mainBookTable.refresh();
             });
         });
+        bookEdit.setDisable(true);
         Button bookDelete = GuiUtils.createButton("Delete", event -> {
             IBook selectedBook = mainBookTable.getSelected();
             if (selectedBook == null) {
@@ -240,6 +256,7 @@ public class DatabaseManagementTables {
                 mainBookTable.refresh();
             });
         });
+        bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event -> {
             GuiUtils.createSearchBar("Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference);
         });
@@ -258,7 +275,19 @@ public class DatabaseManagementTables {
             bookEdit.setDisable(newSelection == null);
         });
 
-        VBox buttonGroup = GuiUtils.createVBox(15, viewSwitch,
+        mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            checkout.setDisable(newSelection == null);
+            checkin.setDisable(newSelection == null);
+            memberEdit.setDisable(newSelection == null);
+            memberDelete.setDisable(newSelection == null);
+        });
+
+        mainBookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            bookEdit.setDisable(newSelection == null);
+            bookDelete.setDisable(newSelection == null);
+        });
+
+        VBox buttonGroup = GuiUtils.createVBox(15, back, viewSwitch,
                 GuiUtils.createSeparator(), membersLabel, checkout, checkin, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
                 booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton,
                 GuiUtils.createSeparator(), refreshButton);
@@ -326,11 +355,11 @@ public class DatabaseManagementTables {
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
             return new ReadOnlyStringWrapper(isCheckedOut ? "True" : "False");
         }, true, TableColumn.SortType.DESCENDING, 30);
-        /*mainTable.addColumn("Due Date", (cellData) -> {TODO due date column
+        /*mainTable.addColumn("Due Date", (cellData) -> {
             ILibrary library = libraryReference.poll();
             List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
-            return new ReadOnlyStringWrapper(isCheckedOut ? "Some day")
+            return new ReadOnlyStringWrapper(isCheckedOut ? "Some day" : "Not checked out");
         }, true, TableColumn.SortType.DESCENDING, 25);*/
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
