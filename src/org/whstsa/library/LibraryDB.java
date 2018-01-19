@@ -47,8 +47,7 @@ public class LibraryDB extends Application {
             LOGGER.debug("JSON Loaded.");
             this.interfaceManager.display(new GuiMain());
         });
-
-        new CommandWatcher(System.in, System.out).start();
+        //new CommandWatcher(System.in, System.out).start();
     }
 
     public Stage getStage() {
