@@ -310,6 +310,15 @@ public class Loader {
 
             library.impl_setMembers(memberList);
 
+            libraryObject.getJSONObject("quantities").keySet().forEach(id -> {
+                UUID bookID = UUID.fromString(id);
+                IBook book = this.bookMap.get(bookID);
+                if (book == null) {
+                    return;
+                }
+                library.setQuantity(book.getID() , libraryObject.getInt(id));
+            });
+
             Tester.print("Loaded library object");
             Tester.print(library);
 

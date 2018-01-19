@@ -17,12 +17,11 @@ public class GuiNewLibrary implements Gui {
         Button cancelButton = GuiUtils.createButton("Cancel", GuiUtils.defaultClickHandler());
         cancelButton.addEventHandler(ActionEvent.ACTION, event -> GuiUtils.defaultCloseOperation(event));
 
-        InputGroup newLibraryTextField = GuiUtils.createInputGroup("New Library Text Field", true);
-
-        StackPane inputContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, newLibraryTextField.getNode());
+        //StackPane inputContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, newLibraryTextField.getNode());
         StackPane buttonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, createButton, cancelButton);
-        StackPane mainContainer = GuiUtils.createTitledSplitPane("Create a new Library", GuiUtils.Orientation.HORIZONTAL, inputContainer, buttonContainer);
-        return new Scene(mainContainer, 500, 200);
+      //  StackPane mainContainer = GuiUtils.createTitledSplitPane("Create a new Library", GuiUtils.Orientation.HORIZONTAL, inputContainer, buttonContainer);
+    //    return new Scene(mainContainer, 500, 200);
+        return null;
     }
     @Override
     public String getUUID() {

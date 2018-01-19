@@ -14,6 +14,7 @@ import org.whstsa.library.gui.api.GuiMainFXML;
 import org.whstsa.library.gui.api.GuiNewLibrary;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.scenes.IOFileSelection;
+import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
@@ -44,9 +45,9 @@ public class LibraryDB extends Application {
         }
         this.loadJSON((arg0) -> {
             LOGGER.debug("JSON Loaded.");
-            this.interfaceManager.display(new GuiNewLibrary());//Temporary for testing
+            this.interfaceManager.display(new GuiMain());
         });
-        // new CommandWatcher(System.in, System.out).start();
+        //new CommandWatcher(System.in, System.out).start();
     }
 
     public Stage getStage() {
@@ -55,6 +56,7 @@ public class LibraryDB extends Application {
 
     private void loadJSON(Callback<Object> callback) {
         LOGGER.debug("Splashing JSON GUI");
+        /*testing library based on "start" date World.setToDefaultDate();*/
         File rawJSON = this.jsonFileBrowser.getFile();
         try {
             FILE_DELEGATE = new IOFileDelegate(rawJSON);
