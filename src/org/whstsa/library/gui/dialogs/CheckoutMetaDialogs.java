@@ -182,6 +182,7 @@ public class CheckoutMetaDialogs {
                 ICheckout checkout = matches.get(0);
                 try {
                     checkout.getOwner().checkIn(checkout);
+                    member.removeBook(checkout.getBook());
                     callback.callback(member);
                 } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
