@@ -47,8 +47,8 @@ public class CheckoutMetaDialogs {
     private static final String PAYFINE = "Pay Fine";
 
     public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, TableView bookTable, ObservableReference<ILibrary> libraryReference) {
-        Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
 
+        Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
 
         TextFlow checkoutText = new TextFlow();
 
@@ -90,6 +90,30 @@ public class CheckoutMetaDialogs {
         bookTable.setEditable(true);
 
         mainContainer.setCenter(bookTable);
+
+        /*checkoutButton.setOnMouseClicked(event -> {
+            for (int i = 0; i < i; i++) {
+                if (member.getFine() > 0) {
+                    if (!results.get(PAYFINE).getBoolean()) {
+                        DialogUtils.createDialog("Couldn't pay fine. Member does not have enough money.", null, null, Alert.AlertType.ERROR).show();
+                        return;
+                    }
+                    try {
+                        member.getCheckouts().forEach(checkout -> checkout.getFine());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
+                try {
+                    libraryReference.poll().reserveBook(member, book);
+                    callback.callback(member);
+                } catch (Exception ex) {
+                    DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
+                }
+                mainContainer.setTop(null);
+            }
+        });*/
 
 
 
