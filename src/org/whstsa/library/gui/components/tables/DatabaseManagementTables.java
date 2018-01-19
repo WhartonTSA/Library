@@ -81,6 +81,7 @@ public class DatabaseManagementTables {
             }
             libraryDB.getInterfaceManager().display(new GuiLibraryManager(selectedLibrary, libraryDB));
         });
+        openLibraryButton.setDisable(true);
 
         libraryTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             editLibraryButton.setDisable(newSelection == null);
@@ -156,7 +157,7 @@ public class DatabaseManagementTables {
         TableView<IBook> bookTableView = mainBookTable.getTable();
         bookTableView.setId("bookTable");
 
-        Button back = GuiUtils.createButton("Back to Main Menu", event -> {
+        Button back = GuiUtils.createButton("Back to Main Menu", true, event -> {
             libraryDB.getInterfaceManager().display(new GuiMain(libraryDB));
         });
 
