@@ -61,8 +61,5 @@ public class LibraryMetaDialogs {
                 .build()
                 .show();
     }
-    public static void openLibrary(ILibrary library, Callback<ILibrary> callback) {
-
-    }
 
 }

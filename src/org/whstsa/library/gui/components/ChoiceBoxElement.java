@@ -28,12 +28,7 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
     public ChoiceBoxElement(String id, String label, ObservableList<String> items, boolean useLabel, int selected) {
         super();
         this.id = id;
-        if (useLabel) {
-            this.label = GuiUtils.createLabel(label);
-        }
-        else {
-            this.label = null;
-        }
+        this.label = useLabel ? GuiUtils.createLabel(label) : null;
         this.map = false;
         this.setItems(items);
         if (selected != -1) {
@@ -44,12 +39,7 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
     public ChoiceBoxElement(String id, String label, Map<IBook, List<ICheckout>> items, boolean useLabel, int selected) {
         super();
         this.id = id;
-        if (useLabel) {
-            this.label = GuiUtils.createLabel(label);
-        }
-        else {
-            this.label = null;
-        }
+        this.label = useLabel ? GuiUtils.createLabel(label) : null;
         this.items = items;
         this.map = true;
         List<IBook> setList = new ArrayList<>(items.keySet());
@@ -74,7 +64,6 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
 
     @Override
     public Object getResult() {
-        //return !map ? this.getSelectionModel().getSelectedItem() : items.get(this.getSelectionModel().getSelectedItem());//TODO checkout getter
         return this.getSelectionModel().getSelectedItem();
     }
 

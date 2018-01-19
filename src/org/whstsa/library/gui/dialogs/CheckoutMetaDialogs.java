@@ -88,14 +88,17 @@ public class CheckoutMetaDialogs {
         bookTable.getColumns().add(selectionColumn);
 
         bookTable.setEditable(true);
+        bookTable.getSelectionModel().selectionModeProperty().addListener(event -> {
+
+        });
 
         mainContainer.setCenter(bookTable);
 
-        /*checkoutButton.setOnMouseClicked(event -> {
+        checkoutButton.setOnMouseClicked(event -> {
             List<Integer> selectedRows = LibraryManagerUtils.fromObservableListInt(bookTable.getSelectionModel().getSelectedIndices());
             for (int i = 0; i < i; i++) {
                 if (member.getFine() > 0) {
-                    if (!results.get(PAYFINE).getBoolean()) {
+                    if (false) {
                         DialogUtils.createDialog("Couldn't pay fine. Member does not have enough money.", null, null, Alert.AlertType.ERROR).show();
                         return;
                     }
@@ -105,7 +108,7 @@ public class CheckoutMetaDialogs {
                         ex.printStackTrace();
                     }
                 }
-                IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
+                IBook book = LibraryManagerUtils.getBookFromTitle("what", libraryReference.poll());
                 try {
                     libraryReference.poll().reserveBook(member, book);
                     callback.callback(member);
@@ -114,7 +117,7 @@ public class CheckoutMetaDialogs {
                 }
                 mainContainer.setTop(null);
             }
-        });*/
+        });
 
 
 

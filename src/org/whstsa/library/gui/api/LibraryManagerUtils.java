@@ -22,11 +22,10 @@ public class LibraryManagerUtils {
     }
 
     public static ObservableList<String>  getMemberNames(ObservableReference<ILibrary> libraryReference) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < libraryReference.poll().getMembers().size(); i++) {
-            list.add(libraryReference.poll().getMembers().get(i).getName());
-        }
-        return toObservableList(list);
+        List<String> members = new ArrayList<>();
+        libraryReference.poll().getMembers().forEach(member -> members.add(member.getName()));
+
+        return toObservableList(members);
     }
 
     public static ObservableList<String>  getPeopleNames() {
