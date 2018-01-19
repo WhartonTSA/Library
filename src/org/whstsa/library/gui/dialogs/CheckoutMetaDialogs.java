@@ -1,12 +1,21 @@
 package org.whstsa.library.gui.dialogs;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.whstsa.library.api.Callback;
@@ -39,27 +48,48 @@ public class CheckoutMetaDialogs {
 
     public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, TableView bookTable, ObservableReference<ILibrary> libraryReference) {
         Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
+
+
         TextFlow checkoutText = new TextFlow();
 
         Text text1 = new Text("Checking out ");
+        text1.setFill(new Color(.1, .1, .1, 1.0));
+        text1.setFont(Font.font(14));
 
-        Text text2 = new Text(0 + "");
-        text2.setFill(Color.BLUE);
+        Text text2 = new Text("0");
+        text2.setFont(Font.font(14));
         text2.setStyle("-fx-font-weight: bold;");
 
         Text text3 = new Text(" books to ");
+        text1.setFill(new Color(.1, .1, .1, 1.0));
+        text3.setFont(Font.font(14));
 
         Text text4 = new Text(member.getName());
-        text4.setFill(Color.GREEN);
+        text4.setFont(Font.font(14));
 
         checkoutText.getChildren().addAll(text1, text2, text3, text4);
 
         ToolBar toolBar = new ToolBar();
         toolBar.getItems().addAll(checkoutButton, checkoutText);
         mainContainer.setTop(toolBar);
-        toolBar.setStyle("-fx-base: #99ccff;");
-        TableView mainTable = (TableView) mainContainer.getCenter();
-        mainTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        toolBar.setStyle("-fx-base: #ade6ff;");
+        checkoutButton.setStyle("fx-base: #dddddd;");
+        bookTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        TableColumn<IBook, Boolean> selectionColumn = new TableColumn<>( "Loaded" );
+
+        selectionColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectionColumn));
+        selectionColumn.setCellValueFactory(event -> {
+            System.out.println("Event");
+            return new ReadOnlyObjectWrapper<>(true);
+        });
+        selectionColumn.setEditable(true);
+        selectionColumn.setMinWidth(60);
+        bookTable.getColumns().add(selectionColumn);
+
+        bookTable.setEditable(true);
+
+        mainContainer.setCenter(bookTable);
 
 
 
