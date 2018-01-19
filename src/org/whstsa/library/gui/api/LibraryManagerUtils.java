@@ -83,4 +83,12 @@ public class LibraryManagerUtils {
         return FXCollections.observableList(list);
     }
 
+    public static List<Integer> fromObservableListInt(ObservableList<Integer> list) {
+        List<Integer> newList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            newList.add(list.get(i));
+        }
+        return newList;
+    }
+
 }

@@ -92,6 +92,7 @@ public class CheckoutMetaDialogs {
         mainContainer.setCenter(bookTable);
 
         /*checkoutButton.setOnMouseClicked(event -> {
+            List<Integer> selectedRows = LibraryManagerUtils.fromObservableListInt(bookTable.getSelectionModel().getSelectedIndices());
             for (int i = 0; i < i; i++) {
                 if (member.getFine() > 0) {
                     if (!results.get(PAYFINE).getBoolean()) {
