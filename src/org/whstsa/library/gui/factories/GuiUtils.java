@@ -23,6 +23,7 @@ import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -62,11 +63,16 @@ public class GuiUtils {
 		return root;
 	}
 
-    public static HBox createHBox(double padding, Node ...nodes) {
+    public static HBox createHBox(double padding, String css, Node ...nodes) {
         HBox container = new HBox(nodes);
         container.setPadding(new Insets(padding, padding, padding, padding));
         container.setAlignment(Pos.CENTER);
+        container.setStyle(css);
         return container;
+    }
+
+    public static HBox createHBox(double padding, Node ...nodes) {
+	    return createHBox(5.0, "", nodes);
     }
     public static HBox createHBox(Node ...nodes) {
         return createHBox(5.0, nodes);
@@ -106,6 +112,14 @@ public class GuiUtils {
 
 	public static Scene createScene(Parent parent) {
 		return new Scene(parent, 512, 512);
+	}
+
+    public static TextFlowElement createTextFlow(String id, double size, String css, List<String> fields) {
+        return new TextFlowElement(id, size, css, fields);
+    }
+
+	public static TextFlowElement createTextFlow(String id, double size, String css, String ...fields) {
+		return new TextFlowElement(id, size, css, Arrays.asList(fields));
 	}
 
 	public static void createSearchBar(String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference) {

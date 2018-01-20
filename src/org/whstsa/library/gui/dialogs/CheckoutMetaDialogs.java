@@ -50,46 +50,34 @@ public class CheckoutMetaDialogs {
 
         Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
 
-        TextFlow checkoutText = new TextFlow();
-
-        Text text1 = new Text("Checking out ");
-        text1.setFill(new Color(.1, .1, .1, 1.0));
-        text1.setFont(Font.font(14));
-
-        Text text2 = new Text("0");
-        text2.setFont(Font.font(14));
-        text2.setStyle("-fx-font-weight: bold;");
-
-        Text text3 = new Text(" books to ");
-        text1.setFill(new Color(.1, .1, .1, 1.0));
-        text3.setFont(Font.font(14));
-
-        Text text4 = new Text(member.getName());
-        text4.setFont(Font.font(14));
-
-        checkoutText.getChildren().addAll(text1, text2, text3, text4);
-
         ToolBar toolBar = new ToolBar();
-        toolBar.getItems().addAll(checkoutButton, checkoutText);
+        toolBar.getItems().addAll(checkoutButton, GuiUtils.createTextFlow("checkout", 14, "-fx-base: #000000;",
+                "Checking out ",
+                "0",
+                " books to ",
+                member.getName() + "."));
         mainContainer.setTop(toolBar);
-        toolBar.setStyle("-fx-base: #ade6ff;");
+        toolBar.setStyle("-fx-base: #d1e3ff;");
         checkoutButton.setStyle("fx-base: #dddddd;");
         bookTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        TableColumn<IBook, Boolean> selectionColumn = new TableColumn<>( "Loaded" );
-
-        selectionColumn.setCellFactory(CheckBoxTableCell.forTableColumn(selectionColumn));
-        selectionColumn.setCellValueFactory(event -> {
+        /*TableColumn<IBook, Boolean> selectionColumn = new TableColumn<>( "Loaded" );
+        selectionColumn.setCellFactory(CheckBoxTableCell.forTableColumn(call -> {
             System.out.println("Event");
-            return new ReadOnlyObjectWrapper<>(true);
-        });
+            return new ReadOnlyObjectWrapper<>(false);
+        }));
         selectionColumn.setEditable(true);
         selectionColumn.setMinWidth(60);
         bookTable.getColumns().add(selectionColumn);
 
-        bookTable.setEditable(true);
-        bookTable.getSelectionModel().selectionModeProperty().addListener(event -> {
+        bookTable.setEditable(true);*/
 
+        bookTable.getSelectionModel().selectionModeProperty().addListener((obs, oldSelection, newSelection) -> {
+            toolBar.getItems().set(1, GuiUtils.createTextFlow("checkout", 14, "-fx-base: #000000;",
+                    "Checking out ",
+                    bookTable.getSelectionModel().getSelectedIndices().size() + "",
+                    " books to ",
+                    member.getName() + "."));
         });
 
         mainContainer.setCenter(bookTable);
@@ -115,10 +103,10 @@ public class CheckoutMetaDialogs {
                 } catch (Exception ex) {
                     DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
-                mainContainer.setTop(null);
             }
+            mainContainer.setTop(null);
+            bookTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         });
-
 
 
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
@@ -195,5 +183,4 @@ public class CheckoutMetaDialogs {
 
         });
     }
-
 }
