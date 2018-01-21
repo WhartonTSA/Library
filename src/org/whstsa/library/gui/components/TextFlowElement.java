@@ -1,6 +1,7 @@
 package org.whstsa.library.gui.components;
 
 import javafx.scene.Node;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -19,9 +20,11 @@ public class TextFlowElement extends TextFlow implements Element {
         this.id = id;
         this.size = size;
         this.fields = fields;
+        this.css = css;
 
         this.fields.forEach(field -> super.getChildren().add(new Text(field)));
-        super.setStyle(css);
+        super.setStyle(this.css);
+        super.getChildren().forEach(node -> ((Text) node).setFont(Font.font(size)));
     }
 
     @Override

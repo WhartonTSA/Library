@@ -180,7 +180,7 @@ public class DatabaseManagementTables {
             CheckoutMetaDialogs.checkoutMember(member -> {
                 mainMemberTable.refresh();
                 mainBookTable.refresh();
-            }, selectedMember, mainContainer, mainBookTable.getTable(), libraryReference);
+            }, selectedMember, mainContainer, mainBookTable, libraryReference);
         });
         checkout.setDisable(true);
         checkout.setStyle("-fx-base: #99ccff;");
