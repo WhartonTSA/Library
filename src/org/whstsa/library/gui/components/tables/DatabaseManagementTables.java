@@ -3,34 +3,23 @@ package org.whstsa.library.gui.components.tables;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.impl.library.Library;
-import org.whstsa.library.api.library.ICheckout;
-import org.whstsa.library.api.library.ILibrary;
-import org.whstsa.library.api.library.IMember;
+import org.whstsa.library.api.library.*;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.api.LibraryManagerUtils;
-import org.whstsa.library.gui.components.SearchBarElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
 
 import org.whstsa.library.gui.factories.GuiUtils;
-import org.whstsa.library.util.ArrayUtils;
 
-import java.beans.EventHandler;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -59,9 +48,9 @@ public class DatabaseManagementTables {
             if (selectedLibrary == null) {
                 return;
             }
-            LibraryMetaDialogs.updateLibrary(selectedLibrary, (library) -> {
-                libraryTable.refresh();
-            });
+            LibraryMetaDialogs.updateLibrary(selectedLibrary, (library) ->
+                    libraryTable.refresh()
+            );
         });
         editLibraryButton.setDisable(true);
 
@@ -70,9 +59,9 @@ public class DatabaseManagementTables {
             if (selectedLibrary == null) {
                 return;
             }
-            LibraryMetaDialogs.deleteLibrary(selectedLibrary, (library) -> {
-                libraryTable.refresh();
-            });
+            LibraryMetaDialogs.deleteLibrary(selectedLibrary, (library) ->
+                libraryTable.refresh()
+            );
         });
         Button openLibraryButton = GuiUtils.createButton("Open Library", true, (event) -> {
             ILibrary selectedLibrary = libraryTable.getSelected();
@@ -100,24 +89,24 @@ public class DatabaseManagementTables {
         ObservableReference<List<IPerson>> observableReference = () -> ObjectDelegate.getPeople();
         personTable.setReference(observableReference);
 
-        Button newPersonButton = GuiUtils.createButton("New Person", event -> {
+        Button newPersonButton = GuiUtils.createButton("New Person", event ->
             PersonMetaDialogs.createPerson(person -> {
                 if (person == null) {
                     return;
                 }
                 Loader.getLoader().loadPerson(person);
                 personTable.refresh();
-            });
-        });
+            })
+        );
 
         Button editPersonButton = GuiUtils.createButton("Edit Person", event -> {
             IPerson selectedPerson = personTable.getSelected();
             if (selectedPerson == null) {
                 return;
             }
-            PersonMetaDialogs.updatePerson(selectedPerson, person -> {
-                personTable.refresh();
-            });
+            PersonMetaDialogs.updatePerson(selectedPerson, person ->
+                personTable.refresh()
+            );
         });
         editPersonButton.setDisable(true);
 
@@ -126,9 +115,9 @@ public class DatabaseManagementTables {
             if (selectedPerson == null) {
                 return;
             }
-            PersonMetaDialogs.deletePerson(selectedPerson, person -> {
-                personTable.refresh();
-            });
+            PersonMetaDialogs.deletePerson(selectedPerson, person ->
+                personTable.refresh()
+            );
         });
         deletePersonButton.setDisable(true);
 
@@ -157,9 +146,9 @@ public class DatabaseManagementTables {
         TableView<IBook> bookTableView = mainBookTable.getTable();
         bookTableView.setId("bookTable");
 
-        Button back = GuiUtils.createButton("Back to Main Menu", true, event -> {
-            libraryDB.getInterfaceManager().display(new GuiMain(libraryDB));
-        });
+        Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
+            libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
+        );
 
         //Toggle Button Group
         ToggleGroup viewButtons = new ToggleGroup();
@@ -183,69 +172,70 @@ public class DatabaseManagementTables {
             }, selectedMember, mainContainer, mainBookTable, libraryReference);
         });
         checkout.setDisable(true);
-        checkout.setStyle("-fx-base: #99ccff;");
+        checkout.setStyle("-fx-base:#5f9ea0;");
 
-        Button checkin = GuiUtils.createButton("Checkin", event -> {
+        Button checkin = GuiUtils.createButton("Return", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
             CheckoutMetaDialogs.checkinMember(member -> {
                 mainMemberTable.refresh();
+                mainBookTable.refresh();
             }, selectedMember, libraryReference);
         });
         checkin.setDisable(true);
-        checkin.setStyle("-fx-base: #99ccff;");
+        checkin.setStyle("-fx-base: #5f9ea0;");
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
-        Button memberNew = GuiUtils.createButton("New", event -> {
+        Button memberNew = GuiUtils.createButton("New", event ->
             MemberMetaDialogs.createMember(member -> {
                 if (member == null) {
                     return;
                 }
                 Loader.getLoader().loadPerson(member);
                 mainMemberTable.refresh();
-            }, libraryReference);
-        });
+            }, libraryReference)
+        );
         Button memberEdit = GuiUtils.createButton("Edit", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
             if (selectedMember == null) {
                 return;
             }
-            MemberMetaDialogs.updateMember(selectedMember, member -> {
-                mainMemberTable.refresh();
-            });
+            MemberMetaDialogs.updateMember(selectedMember, member ->
+                mainMemberTable.refresh()
+            );
         });
         memberEdit.setDisable(true);
-        Button memberSearch = GuiUtils.createButton("Search", event -> {
-            GuiUtils.createSearchBar("Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference);
-        });
-        Button memberDelete = GuiUtils.createButton("Remove", event -> {
+        Button memberSearch = GuiUtils.createButton("Search", event ->
+            GuiUtils.createSearchBar("Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference)
+        );
+        Button memberDelete = GuiUtils.createButton("Remove", event ->
             MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
                 if (member == null) {
                     return;
                 }
                 mainMemberTable.refresh();
-            });
-        });
+            })
+        );
         memberDelete.setDisable(true);
 
 
         Label booksLabel = GuiUtils.createLabel("Books", 16);
-        Button bookAdd = GuiUtils.createButton("Add", event -> {
+        Button bookAdd = GuiUtils.createButton("Add", event ->
             BookMetaDialogs.createBook(book -> {
                 if (book == null) {
                 return;
                 }
                 Loader.getLoader().loadBook(book);
                 mainBookTable.refresh();
-            }, libraryReference);
-        });
+            }, libraryReference)
+        );
         Button bookEdit = GuiUtils.createButton("Edit", event -> {
             IBook selectedBook = mainBookTable.getSelected();
             if (selectedBook == null) {
                 return;
             }
-            BookMetaDialogs.updateBook(selectedBook, book -> {
-                mainBookTable.refresh();
-            });
+            BookMetaDialogs.updateBook(selectedBook, book ->
+                mainBookTable.refresh()
+            );
         });
         bookEdit.setDisable(true);
         Button bookDelete = GuiUtils.createButton("Delete", event -> {
@@ -253,14 +243,14 @@ public class DatabaseManagementTables {
             if (selectedBook == null) {
                 return;
             }
-            BookMetaDialogs.deleteBook(selectedBook, book -> {
-                mainBookTable.refresh();
-            });
+            BookMetaDialogs.deleteBook(selectedBook, book ->
+                mainBookTable.refresh()
+            );
         });
         bookDelete.setDisable(true);
-        Button bookSearch = GuiUtils.createButton("Search", event -> {
-            GuiUtils.createSearchBar("Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference);
-        });
+        Button bookSearch = GuiUtils.createButton("Search", event ->
+            GuiUtils.createSearchBar("Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference)
+        );
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
         Button refreshButton = GuiUtils.createButton("Refresh", event -> {
@@ -268,13 +258,13 @@ public class DatabaseManagementTables {
             mainMemberTable.refresh();
         });
 
-        mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            memberEdit.setDisable(newSelection == null);
-        });
+        mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+            memberEdit.setDisable(newSelection == null)
+        );
 
-        mainBookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            bookEdit.setDisable(newSelection == null);
-        });
+        mainBookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
+            bookEdit.setDisable(newSelection == null)
+        );
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             checkout.setDisable(newSelection == null);
@@ -329,7 +319,7 @@ public class DatabaseManagementTables {
         return mainContainer;
     }
 
-    public static Table<IMember> memberManagerTable(Table<IMember> mainTable, ObservableReference<ILibrary> libraryReference) {
+    private static void memberManagerTable(Table<IMember> mainTable, ObservableReference<ILibrary> libraryReference) {
         mainTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getFirstName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getLastName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Teacher", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().isTeacher() + ""), true, TableColumn.SortType.DESCENDING, 50);
@@ -343,10 +333,9 @@ public class DatabaseManagementTables {
                 MemberMetaDialogs.listBooks(t -> {}, mainTable.getSelected());
             }
         });
-        return mainTable;
     }
 
-    public static Table<IBook> bookManagerTable(Table<IBook> mainTable, ObservableReference<ILibrary> libraryReference) {
+    private static void bookManagerTable(Table<IBook> mainTable, ObservableReference<ILibrary> libraryReference) {
         mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
@@ -364,7 +353,12 @@ public class DatabaseManagementTables {
         }, true, TableColumn.SortType.DESCENDING, 25);*/
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
-        return mainTable;
+        mainTable.getTable().setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && mainTable.getSelected() != null) {
+                LibraryDB.LOGGER.debug("Listing member's books");
+                BookMetaDialogs.listCopies(t -> {}, mainTable.getSelected(), libraryReference);
+            }
+        });
     }
 
 }

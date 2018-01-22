@@ -101,8 +101,13 @@ public class MemberMetaDialogs {
                 .setTitle(member.getName() + "'s books")
                 .build();
             GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            for (int i = 0; i < member.getBooks().size(); i++) {
-                dialogPane.add(GuiUtils.createLabel(member.getBooks().get(i).getTitle()), 0, i);
+            if (member.getBooks().size() > 0) {
+                for (int i = 0; i < member.getBooks().size(); i++) {
+                    dialogPane.add(GuiUtils.createLabel(member.getBooks().get(i).getTitle()), 0, i);
+                }
+            }
+            else {
+                dialogPane.add(GuiUtils.createLabel(member.getName() + " has no checked-out books."), 0, 0);
             }
         DialogUtils.getDialogResults(dialog, (results) -> {});
     }

@@ -3,7 +3,8 @@ package org.whstsa.library.util;
 public enum BookStatus {
     AVAILABLE ("Available"),
     CHECKED_OUT ("Checked Out"),
-    RESERVED ("Reserved");
+    RESERVED ("Reserved"),
+    UNAVAILABLE ("Unavailable");
 
     public final String status;
 

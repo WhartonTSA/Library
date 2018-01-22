@@ -8,7 +8,7 @@ public class BookStatusRow {
     private BookStatus status;
     private String ownerName;
 
-    BookStatusRow(int copy, BookStatus status, String ownerName) {
+    public BookStatusRow(int copy, BookStatus status, String ownerName) {
         this.copy = copy;
         this.status = status;
         this.ownerName = ownerName;

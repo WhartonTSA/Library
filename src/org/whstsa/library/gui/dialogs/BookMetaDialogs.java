@@ -1,9 +1,12 @@
 package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.Callback;
@@ -22,7 +25,9 @@ import org.whstsa.library.gui.components.tables.BookStatusRow;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
+import org.whstsa.library.util.BookStatus;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -93,24 +98,55 @@ public class BookMetaDialogs {
 
     public static void listCopies(Callback<IBook> callback, IBook book, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("There are " + " copies of \"" + book.getTitle() + "\"")//TODO Add getQuantity
+                .setTitle("Copies")
+                .addLabel("There are " + libraryReference.poll().getBooks().size() * 4 + " copies of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
                 .build();
+
+        Table<BookStatusRow> copiesTable =  new Table<>();
+        copiesTable = copiesManagerTable(copiesTable, libraryReference);
+
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        VBox bookBox = GuiUtils.createVBox(5, null);
-        for (int i = 0; i < libraryReference.poll().getBooks().size(); i++) {//TODO replace with getQuantity
-            TableView table = new TableView();//TODO Use CSS to change the background color of the HBox when the book is checked out/reserved/available
-        }
+        dialogPane.addRow(1, copiesTable.getTable());
+
         DialogUtils.getDialogResults(dialog, (results) -> {
         });
 
     }
 
-    public static Table<BookStatusRow> memberManagerTable(Table<BookStatusRow> mainTable, ObservableReference<ILibrary> libraryReference) {
-        mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Teacher", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 50);
-        ObservableReference<List<IMember>> observableReference = () -> libraryReference.poll().getMembers();//TODO change to getBookMap.filter.blahblahblah I just need the books
-        //mainTable.setReference(observableReference);
+    public static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, ObservableReference<ILibrary> libraryReference) {
+        mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 25);
+        mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
+        mainTable.addColumn("Owner Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 100);
+
+        List<BookStatusRow> tableItems = FXCollections.observableArrayList();
+        for (int i = 1, step = 0; step < libraryReference.poll().getBooks().size(); i+=4, step++) {//TODO change to getBookMap.filter.blahblahblah I just need the books
+            tableItems.add(new BookStatusRow(i, BookStatus.AVAILABLE, "Nobody"));
+            tableItems.add(new BookStatusRow(i + 1, BookStatus.CHECKED_OUT, "Somebody"));
+            tableItems.add(new BookStatusRow(i + 2, BookStatus.RESERVED, "Somebody"));
+            tableItems.add(new BookStatusRow(i + 3, BookStatus.UNAVAILABLE, "Who Knows"));
+        }
+        ObservableReference<List<BookStatusRow>> observableReference = () -> tableItems;
+        mainTable.setReference(observableReference);
+
+        mainTable.getTable().setRowFactory(row -> new TableRow<BookStatusRow>() {
+            @Override
+            public void updateItem(BookStatusRow item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setStyle("");
+                }
+                else {
+                    switch (item.getStatus()) {
+                        case AVAILABLE: setStyle("-fx-background-color: #95edaf;"); break;
+                        case CHECKED_OUT: setStyle("-fx-background-color: #ebff89;"); break;
+                        case RESERVED: setStyle("-fx-background-color: #ffba75;"); break;
+                        case UNAVAILABLE: setStyle("-fx-background-color: #ff7575;"); break;
+                    }
+                }
+            }
+        });
+
         return mainTable;
     }
 

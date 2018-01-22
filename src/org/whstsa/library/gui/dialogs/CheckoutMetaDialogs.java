@@ -108,22 +108,24 @@ public class CheckoutMetaDialogs {
 
         checkoutButton.setOnMouseClicked(event -> {
             ObservableList<IBook> selectedBooks = bookTable.getTable().getSelectionModel().getSelectedItems();
-            for (int i = 0; i < selectedBooks.size(); i++) {
-                if (member.getFine() > 0) {
-                    try {
-                        member.getCheckouts().forEach(checkout -> checkout.getFine());
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                }
-                IBook book = selectedBooks.get(i);
+            if (member.getFine() > 0) {
                 try {
-                    libraryReference.poll().reserveBook(member, book);
-                    callback.callback(member);
+                    member.getCheckouts().forEach(checkout -> checkout.getFine());
                 } catch (Exception ex) {
                     DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             }
+            selectedBooks.forEach(book -> System.out.println(book.getTitle()));
+            selectedBooks.forEach(book -> {//TODO this loop appears to only execute once, but the code above lists all selected books
+                try {
+                    libraryReference.poll().reserveBook(member, book);
+                    System.out.println("Checking out " + book.getTitle() + " to " + member.getName() + ".");
+                    callback.callback(member);
+                } catch (Exception ex) {
+                    DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
+                }
+            });
+            bookTable.refresh();
             mainContainer.setTop(null);
             bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         });
