@@ -115,16 +115,15 @@ public class CheckoutMetaDialogs {
                     DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             }
-            selectedBooks.forEach(book -> System.out.println(book.getTitle()));
-            selectedBooks.forEach(book -> {//TODO this loop appears to only execute once, but the code above lists all selected books
+            selectedBooks.forEach(book -> {
                 try {
                     libraryReference.poll().reserveBook(member, book);
                     System.out.println("Checking out " + book.getTitle() + " to " + member.getName() + ".");
-                    callback.callback(member);
                 } catch (Exception ex) {
                     DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             });
+            callback.callback(member);
             bookTable.refresh();
             mainContainer.setTop(null);
             bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
