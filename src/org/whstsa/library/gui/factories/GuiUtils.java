@@ -122,8 +122,8 @@ public class GuiUtils {
 		return new TextFlowElement(id, size, css, Arrays.asList(fields));
 	}
 
-	public static void createSearchBar(String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference) {
-        container.setTop(new SearchBarElement(label, label, items, container));
+	public static void createSearchBar(String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<?> table) {
+        container.setTop(new SearchBarElement(label, label, items, container, table));
     }
 
     public static Separator createSeparator() {

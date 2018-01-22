@@ -1,5 +1,7 @@
 package org.whstsa.library.gui.components;
 
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,7 +19,7 @@ public class SearchBarElement extends HBox implements Element{
     private LabelElement labelElement;
     private String id;
 
-    public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane container) {
+    public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane container, Table<?> table) {
         super();
         this.id = id;
         this.labelElement = GuiUtils.createLabel(label, 12);
@@ -31,6 +33,27 @@ public class SearchBarElement extends HBox implements Element{
         super.setMargin(exitButton, new Insets(0, 5, 0, 0));
         super.setMargin(comboBox, new Insets(0, 0, 0, 0));
         super.setAlignment(Pos.CENTER_LEFT);
+
+        ObservableList data =  table.getItems();
+        comboBox.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (oldValue != null && (newValue.length() < oldValue.length())) {
+                table.setItems(data);
+            }
+            String value = newValue.toLowerCase();
+            ObservableList<?> subentries = FXCollections.observableArrayList();
+
+            long count = table.getTable().getColumns().stream().count();
+            for (int i = 0; i < table.getItems().size(); i++) {
+                for (int j = 0; j < count; j++) {
+                    String entry = "" + table.getTable().getColumns().get(j).getCellData(i);
+                    if (entry.toLowerCase().contains(value)) {
+                        subentries.add(table.getTable().getItems().get(i));
+                        break;
+                    }
+                }
+            }
+            table.getTable().setItems(subentries);
+        });
     }
 
     public Node getComputedElement() {

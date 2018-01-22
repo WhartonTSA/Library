@@ -206,7 +206,7 @@ public class DatabaseManagementTables {
         });
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
-            GuiUtils.createSearchBar("Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference)
+            GuiUtils.createSearchBar("Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable)
         );
         Button memberDelete = GuiUtils.createButton("Remove", event ->
             MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
@@ -250,7 +250,7 @@ public class DatabaseManagementTables {
         });
         bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event ->
-            GuiUtils.createSearchBar("Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference)
+            GuiUtils.createSearchBar("Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
         );
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
