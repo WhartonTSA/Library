@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
+import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
 import org.whstsa.library.api.books.IBook;
@@ -18,6 +19,7 @@ import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.util.CheckBoxClickHandler;
 import org.whstsa.library.util.ClickHandler;
 
+import javax.swing.*;
 import java.util.*;
 
 public class DialogBuilder {
@@ -166,6 +168,11 @@ public class DialogBuilder {
     public Dialog<Map<String, Element>> build() {
         Dialog<Map<String, Element>> dialog = new Dialog<>();
         dialog.setTitle(this.title);
+
+        final Node cancelNode = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        if (cancelNode != null && cancelNode instanceof Button) {
+            cancelNode.addEventFilter(ActionEvent.ACTION, event -> dialog.close());
+        }
 
         dialog.getDialogPane().getButtonTypes().addAll(this.getButtonList());
 
