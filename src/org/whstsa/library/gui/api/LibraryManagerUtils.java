@@ -43,7 +43,7 @@ public class LibraryManagerUtils {
         return names;
     }
 
-    public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {
+    public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the
         List<IPerson> people = ObjectDelegate.getPeople().stream().filter(
                 person -> person.getMemberships().stream().filter(
                         member -> member.getLibrary().equals(libraryReference.poll())).collect(Collectors.toList()).size() < 1).collect(Collectors.toList());
