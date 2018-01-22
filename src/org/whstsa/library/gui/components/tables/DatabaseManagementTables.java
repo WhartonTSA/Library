@@ -88,6 +88,7 @@ public class DatabaseManagementTables {
         personTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getLastName()), true, TableColumn.SortType.DESCENDING, 50);
         ObservableReference<List<IPerson>> observableReference = () -> ObjectDelegate.getPeople();
         personTable.setReference(observableReference);
+        personTable.getTable().setOnMouseEntered(event -> personTable.refresh());
 
         Button newPersonButton = GuiUtils.createButton("New Person", event ->
             PersonMetaDialogs.createPerson(person -> {
@@ -257,14 +258,6 @@ public class DatabaseManagementTables {
             mainBookTable.refresh();
             mainMemberTable.refresh();
         });
-
-        mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-            memberEdit.setDisable(newSelection == null)
-        );
-
-        mainBookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-            bookEdit.setDisable(newSelection == null)
-        );
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             checkout.setDisable(newSelection == null);

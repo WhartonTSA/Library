@@ -31,7 +31,7 @@ public class MemberMetaDialogs {
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
-                //.addChoiceBox("Person:", LibraryManagerUtils.getPeopleNames(), true, -1)
+                .addChoiceBox("Person:", , true, -1)
                 .addTextField(FIRST_NAME)
                 .addTextField(LAST_NAME)
                 .addCheckBox(TEACHER)

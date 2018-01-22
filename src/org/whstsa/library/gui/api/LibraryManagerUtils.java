@@ -11,6 +11,7 @@ import org.whstsa.library.db.ObjectDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LibraryManagerUtils {
 
@@ -34,6 +35,19 @@ public class LibraryManagerUtils {
             list.add(ObjectDelegate.getPeople().get(i).getName());
         }
         return toObservableList(list);
+    }
+
+    public static List<String> getNamesFromPeople(List<IPerson> people) {
+        List<String> names = new ArrayList<>();
+        people.forEach(person -> names.add(person.getName()));
+        return names;
+    }
+
+    public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {
+        List<IPerson> people = ObjectDelegate.getPeople().stream().filter(
+                person -> person.getMemberships().stream().filter(
+                        member -> member.getLibrary().equals(libraryReference.poll())).collect(Collectors.toList()).size() < 1).collect(Collectors.toList());
+        return getNamesFromPeople(people);
     }
 
     public static ObservableList<String>  getBookTitlesFromList(ObservableList<IBook> books) {
