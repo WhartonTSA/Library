@@ -18,6 +18,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.util.CheckBoxClickHandler;
 import org.whstsa.library.util.ClickHandler;
+import org.whstsa.library.util.Logger;
 
 import javax.swing.*;
 import java.util.*;
@@ -169,12 +170,12 @@ public class DialogBuilder {
         Dialog<Map<String, Element>> dialog = new Dialog<>();
         dialog.setTitle(this.title);
 
+        dialog.getDialogPane().getButtonTypes().addAll(this.getButtonList());
+
         final Node cancelNode = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-        if (cancelNode != null && cancelNode instanceof Button) {
+        if (cancelNode != null) {
             cancelNode.addEventFilter(ActionEvent.ACTION, event -> dialog.close());
         }
-
-        dialog.getDialogPane().getButtonTypes().addAll(this.getButtonList());
 
         GridPane grid = this.gridPaneOperator.mutate(DialogUtils.buildGridPane(), this.elementList);
 
