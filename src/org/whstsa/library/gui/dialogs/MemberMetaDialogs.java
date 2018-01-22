@@ -1,5 +1,6 @@
 package org.whstsa.library.gui.dialogs;
 
+import com.oracle.xmlns.internal.webservices.jaxws_databinding.ExistingAnnotationsType;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -26,26 +27,27 @@ public class MemberMetaDialogs {
     private static final String FIRST_NAME = "First Name";
     private static final String LAST_NAME = "Last Name";
     private static final String TEACHER = "Teacher?";
-    private static final String EXISTING = "Choose existing person";
+    private static final String EXISTING = "Person:";
 
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
-                .addChoiceBox("Person:", , true, -1)
-                .addTextField(FIRST_NAME)
-                .addTextField(LAST_NAME)
-                .addCheckBox(TEACHER)
+                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference)), true, -1)
+                //.addTextField(FIRST_NAME)
+                //.addTextField(LAST_NAME)
+                //.addCheckBox(TEACHER)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
-            String firstName = results.get(FIRST_NAME).getString();
-            String lastName = results.get(LAST_NAME).getString();
-            boolean teacher = results.get(TEACHER).getBoolean();
-            IPerson person = new Person(firstName, lastName, teacher);
+            //String firstName = results.get(FIRST_NAME).getString();
+            //String lastName = results.get(LAST_NAME).getString();
+            //boolean teacher = results.get(TEACHER).getBoolean();
+            //IPerson person = new Person(firstName, lastName, teacher);
+            IPerson person = (IPerson) results.get(EXISTING).getResult();
             Loader.getLoader().loadPerson(person);
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
             callback.callback(person);
-        }, FIRST_NAME, LAST_NAME, TEACHER);
+        }, EXISTING);
     }
 
     public static void updateMember(IMember member, Callback<IMember> callback) {
