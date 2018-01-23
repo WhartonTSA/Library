@@ -2,12 +2,8 @@ package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.ObservableReference;
@@ -15,19 +11,16 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.InCirculationException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.library.ILibrary;
-import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
-import org.whstsa.library.gui.api.LibraryManagerUtils;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.components.tables.BookStatusRow;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
-import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.util.BookStatus;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

@@ -5,15 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import org.whstsa.library.api.BookType;
-import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ICheckout;
-import org.whstsa.library.gui.api.LibraryManagerUtils;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

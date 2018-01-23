@@ -2,7 +2,6 @@ package org.whstsa.library.gui.factories;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,13 +15,12 @@ import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
-import org.whstsa.library.gui.api.LibraryManagerUtils;
+import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.components.*;
 import org.whstsa.library.util.CheckBoxClickHandler;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -122,8 +120,12 @@ public class GuiUtils {
 		return new TextFlowElement(id, size, css, Arrays.asList(fields));
 	}
 
-	public static void createSearchBar(String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<?> table) {
-        container.setTop(new SearchBarElement(label, label, items, container, table));
+	public static void createSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IBook> table) {
+        container.setTop(new SearchBarElement(id, label, items, container, table));
+    }
+
+    public static void createSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IMember> table, String whatever) {
+        container.setTop(new SearchBarElement(id, label, items, container, table, whatever));
     }
 
     public static Separator createSeparator() {

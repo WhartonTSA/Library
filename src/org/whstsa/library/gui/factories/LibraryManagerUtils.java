@@ -1,4 +1,4 @@
-package org.whstsa.library.gui.api;
+package org.whstsa.library.gui.factories;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -98,6 +98,14 @@ public class LibraryManagerUtils {
 
     public static List<Integer> fromObservableListInt(ObservableList<Integer> list) {
         List<Integer> newList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            newList.add(list.get(i));
+        }
+        return newList;
+    }
+
+    public static List<IBook> fromObservableListIBook(ObservableList<IBook> list) {
+        List<IBook> newList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             newList.add(list.get(i));
         }

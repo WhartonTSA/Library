@@ -1,8 +1,6 @@
 package org.whstsa.library.gui.components.tables;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import org.whstsa.library.LibraryDB;
@@ -14,34 +12,34 @@ import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
-import org.whstsa.library.gui.api.LibraryManagerUtils;
+import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
 
 import org.whstsa.library.gui.factories.GuiUtils;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class DatabaseManagementTables {
 
     public static StackPane libraryOverviewTable(LibraryDB libraryDB) {
         Table<ILibrary> libraryTable = new Table<>();
         libraryTable.addColumn("Library Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 100);
-        ObservableReference<List<ILibrary>> observableReference = () -> ObjectDelegate.getLibraries();
+        ObservableReference<List<ILibrary>> observableReference = ObjectDelegate::getLibraries;
         libraryTable.setReference(observableReference);
 
 
 
-        Button newLibraryButton = GuiUtils.createButton("New Library", (event) -> {
+        Button newLibraryButton = GuiUtils.createButton("New Library", (event) ->
             LibraryMetaDialogs.createLibrary((library) -> {
                 if (library == null) {
                     return;
                 }
                 Loader.getLoader().loadLibrary(library);
                 libraryTable.refresh();
-            });
-        });
+            })
+        );
 
         Button editLibraryButton = GuiUtils.createButton("Edit Library", (event) -> {
             ILibrary selectedLibrary = libraryTable.getSelected();
@@ -86,7 +84,7 @@ public class DatabaseManagementTables {
         Table<IPerson> personTable = new Table<>();
         personTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getFirstName()), true, TableColumn.SortType.DESCENDING, 50);
         personTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getLastName()), true, TableColumn.SortType.DESCENDING, 50);
-        ObservableReference<List<IPerson>> observableReference = () -> ObjectDelegate.getPeople();
+        ObservableReference<List<IPerson>> observableReference = ObjectDelegate::getPeople;
         personTable.setReference(observableReference);
         personTable.getTable().setOnMouseEntered(event -> personTable.refresh());
 
@@ -170,20 +168,21 @@ public class DatabaseManagementTables {
             CheckoutMetaDialogs.checkoutMember(member -> {
                 mainMemberTable.refresh();
                 mainBookTable.refresh();
+                viewBooks.setDisable(true);
             }, selectedMember, mainContainer, mainBookTable, libraryReference);
         });
         checkout.setDisable(true);
-        checkout.setStyle("-fx-base:#5f9ea0;");
+        checkout.setStyle("-fx-base:#91c4e2;");
 
         Button checkin = GuiUtils.createButton("Return", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
             CheckoutMetaDialogs.checkinMember(member -> {
                 mainMemberTable.refresh();
                 mainBookTable.refresh();
-            }, selectedMember, libraryReference);
+            }, selectedMember, mainContainer, mainBookTable, viewBooks, viewMembers, libraryReference);
         });
         checkin.setDisable(true);
-        checkin.setStyle("-fx-base: #5f9ea0;");
+        checkin.setStyle("-fx-base: #91c4e2;");
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event ->
@@ -206,7 +205,7 @@ public class DatabaseManagementTables {
         });
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
-            GuiUtils.createSearchBar("Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable)
+            GuiUtils.createSearchBar("memberSearch", "Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable, "antidisestablishmentarianism")
         );
         Button memberDelete = GuiUtils.createButton("Remove", event ->
             MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
@@ -250,13 +249,15 @@ public class DatabaseManagementTables {
         });
         bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event ->
-            GuiUtils.createSearchBar("Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
+            GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
         );
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
-        Button refreshButton = GuiUtils.createButton("Refresh", event -> {
+        Button refreshButton = GuiUtils.createButton("Refresh (debug)", event -> {
             mainBookTable.refresh();
             mainMemberTable.refresh();
+            viewBooks.setDisable(false);
+            viewMembers.setDisable(false);
         });
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -279,35 +280,23 @@ public class DatabaseManagementTables {
 
         mainContainer.setLeft(buttonGroup);
         mainContainer.setCenter(memberTableView);
+        viewButtons.selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
+            if (new_toggle != null) {
+                if ((boolean) viewButtons.getSelectedToggle().getUserData()) {
+                    LibraryDB.LOGGER.debug("Switching to Member table");
+                    mainContainer.setCenter(memberTableView);
+                    viewMembers.setDisable(true);
+                    viewBooks.setDisable(false);
 
-        viewButtons.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
-            public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle new_toggle) {
-                if (new_toggle == null) {
-                    return;
                 }
                 else {
-                    if ((boolean) viewButtons.getSelectedToggle().getUserData()) {
-                        LibraryDB.LOGGER.debug("Swictching to Member table");
-                        mainContainer.setCenter(memberTableView);
-
-                    }
-                    else {
-                        LibraryDB.LOGGER.debug("Swictching to Book table");
-                        mainContainer.setCenter(bookTableView);
-                    }
+                    LibraryDB.LOGGER.debug("Switching to Book table");
+                    mainContainer.setCenter(bookTableView);
+                    viewMembers.setDisable(false);
+                    viewBooks.setDisable(true);
                 }
-
             }
         });
-
-        Consumer<Integer> switchView = (putAnyNumberHere) -> {
-            if (mainContainer.getCenter().equals(memberTableView)) {
-                mainContainer.setCenter(bookTableView);
-            }
-            else {
-                mainContainer.setCenter(memberTableView);
-            }
-        };
 
         return mainContainer;
     }

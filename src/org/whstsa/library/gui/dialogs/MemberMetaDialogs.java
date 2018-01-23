@@ -1,6 +1,5 @@
 package org.whstsa.library.gui.dialogs;
 
-import com.oracle.xmlns.internal.webservices.jaxws_databinding.ExistingAnnotationsType;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -9,12 +8,10 @@ import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
-import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
-import org.whstsa.library.db.ObjectDelegate;
-import org.whstsa.library.gui.api.LibraryManagerUtils;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
