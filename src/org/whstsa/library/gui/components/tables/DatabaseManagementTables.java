@@ -12,7 +12,6 @@ import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
-import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
