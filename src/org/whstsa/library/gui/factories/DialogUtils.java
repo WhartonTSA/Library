@@ -37,7 +37,7 @@ public class DialogUtils {
 		alert.setContentText(body);
 		final Node cancelNode = alert.getDialogPane().lookupButton(ButtonType.CANCEL);
 		if (cancelNode != null && cancelNode instanceof Button) {
-			cancelNode.addEventFilter(ActionEvent.ACTION, event -> alert.close());
+			cancelNode.addEventFilter(ActionEvent.ACTION, event -> alert.getDialogPane().getScene().getWindow().hide());
 		}
 		if (onClose != null) {
 			alert.setOnCloseRequest(new EventHandler<DialogEvent>() {
