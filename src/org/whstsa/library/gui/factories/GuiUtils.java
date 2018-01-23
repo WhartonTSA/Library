@@ -132,14 +132,6 @@ public class GuiUtils {
 		return new Separator();
 	}
 
-	public static ToggleGroup createToggleButtonGroup(String ...titles) {//Doesn't work, will probably make a new class for this
-	    ToggleGroup toggleGroup = new ToggleGroup();
-	    for (int i = 0; i < titles.length; i++) {
-	        createToggleButton(titles[i]).setToggleGroup(toggleGroup);
-        }
-	    return toggleGroup;
-    }
-
     public static ToggleButton createToggleButton(String title) {
 	    return new ToggleButton(title);
     }
@@ -163,7 +155,7 @@ public class GuiUtils {
 	}
 
     public static Button createButton(String title, boolean nativeWidth, double width, ClickHandler clickHandler) {
-        return createButton(title, false, width, null, clickHandler);
+        return createButton(title, nativeWidth, width, null, clickHandler);
     }
 
 	public static Button createButton(String title, double width, ClickHandler clickHandler) {

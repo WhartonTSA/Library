@@ -69,6 +69,7 @@ public class SearchBarElement extends ToolBar implements Element{
         });
 
         super.getItems().addAll(searchLabel, searchField, filteredLabel, mainSpacer, closeButton);
+        super.setStyle("-fx-base: #bbedbc;");
     }
 
     public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane mainContainer, Table<IMember> table, String literallyPutAnyStringHereIDCYoureFavoriteWordMaybe) {

@@ -39,7 +39,7 @@ public class MemberMetaDialogs {
             //String lastName = results.get(LAST_NAME).getString();
             //boolean teacher = results.get(TEACHER).getBoolean();
             //IPerson person = new Person(firstName, lastName, teacher);
-            IPerson person = (IPerson) results.get(EXISTING).getResult();
+            IPerson person = LibraryManagerUtils.getPersonFromName((String) results.get(EXISTING).getResult());
             Loader.getLoader().loadPerson(person);
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
