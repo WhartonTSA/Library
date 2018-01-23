@@ -1,15 +1,22 @@
 package org.whstsa.library.gui.factories;
 
+import com.sun.javafx.event.CompositeEventHandler;
+import com.sun.javafx.event.EventHandlerManager;
+import com.sun.javafx.scene.NodeEventDispatcher;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
+import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
 import org.whstsa.library.api.books.IBook;
@@ -17,7 +24,12 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.util.CheckBoxClickHandler;
 import org.whstsa.library.util.ClickHandler;
+import org.whstsa.library.util.Logger;
 
+import javax.swing.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class DialogBuilder {
@@ -164,6 +176,7 @@ public class DialogBuilder {
     }
 
     public Dialog<Map<String, Element>> build() {
+        SimpleBooleanProperty isCancelled = new SimpleBooleanProperty(true);
         Dialog<Map<String, Element>> dialog = new Dialog<>();
         dialog.setTitle(this.title);
 
@@ -186,6 +199,9 @@ public class DialogBuilder {
             Node buttonNode = dialog.getDialogPane().lookupButton(button);
             if (buttonNode != null) {
                 buttonNode.addEventFilter(ActionEvent.ACTION, event -> {
+                    if (isCancelled.get()) {
+                        return;
+                    }
                     action.callback(event);
                     if (this.closingButtons.contains(button)) {
                         buttonNode.getScene().getWindow().hide();
@@ -202,6 +218,15 @@ public class DialogBuilder {
                 });
             }
         });
+
+        final Node cancelNode = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+        if (cancelNode != null) {
+            cancelNode.addEventFilter(ActionEvent.ACTION, event -> {
+                isCancelled.set(true);
+                dialog.getDialogPane().getScene().getWindow().hide();
+                event.consume();
+            });
+        }
 
         return dialog;
     }

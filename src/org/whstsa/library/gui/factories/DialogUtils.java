@@ -1,5 +1,6 @@
 package org.whstsa.library.gui.factories;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -34,6 +35,10 @@ public class DialogUtils {
 		alert.setTitle(title);
 		alert.setHeaderText(header);
 		alert.setContentText(body);
+		final Node cancelNode = alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+		if (cancelNode != null && cancelNode instanceof Button) {
+			cancelNode.addEventFilter(ActionEvent.ACTION, event -> alert.getDialogPane().getScene().getWindow().hide());
+		}
 		if (onClose != null) {
 			alert.setOnCloseRequest(new EventHandler<DialogEvent>() {
 				@Override
