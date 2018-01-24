@@ -12,7 +12,6 @@ import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
-import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
@@ -28,6 +27,15 @@ public class DatabaseManagementTables {
         libraryTable.addColumn("Library Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 100);
         ObservableReference<List<ILibrary>> observableReference = ObjectDelegate::getLibraries;
         libraryTable.setReference(observableReference);
+        libraryTable.getTable().setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                ILibrary selectedLibrary = libraryTable.getSelected();
+                if (selectedLibrary == null) {
+                    return;
+                }
+                libraryDB.getInterfaceManager().display(new GuiLibraryManager(selectedLibrary, libraryDB));
+            }
+        });
 
 
 
@@ -87,6 +95,17 @@ public class DatabaseManagementTables {
         ObservableReference<List<IPerson>> observableReference = ObjectDelegate::getPeople;
         personTable.setReference(observableReference);
         personTable.getTable().setOnMouseEntered(event -> personTable.refresh());
+        personTable.getTable().setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                IPerson selectedPerson = personTable.getSelected();
+                if (selectedPerson == null) {
+                    return;
+                }
+                PersonMetaDialogs.updatePerson(selectedPerson, person ->
+                        personTable.refresh()
+                );
+            }
+        });
 
         Button newPersonButton = GuiUtils.createButton("New Person", event ->
             PersonMetaDialogs.createPerson(person -> {
@@ -159,6 +178,7 @@ public class DatabaseManagementTables {
         ToggleButton viewBooks = GuiUtils.createToggleButton("Books");
         viewBooks.setToggleGroup(viewButtons);
         viewBooks.setUserData(false);
+        viewMembers.setDisable(true);
 
 
         HBox viewSwitch = GuiUtils.createHBox(2, viewMembers, viewBooks);
@@ -169,6 +189,9 @@ public class DatabaseManagementTables {
                 mainMemberTable.refresh();
                 mainBookTable.refresh();
                 viewBooks.setDisable(true);
+                viewMembers.setDisable(false);
+                viewBooks.setSelected(true);
+                viewMembers.setSelected(false);
             }, selectedMember, mainContainer, mainBookTable, libraryReference);
         });
         checkout.setDisable(true);
@@ -253,7 +276,7 @@ public class DatabaseManagementTables {
         );
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
-        Button refreshButton = GuiUtils.createButton("Refresh (debug)", event -> {
+        Button refreshButton = GuiUtils.createButton("Refresh (debug)", true, event -> {
             mainBookTable.refresh();
             mainMemberTable.refresh();
             viewBooks.setDisable(false);

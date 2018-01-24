@@ -43,6 +43,15 @@ public class LibraryManagerUtils {
         return names;
     }
 
+    public static IPerson getPersonFromName(String name) {
+        for (int i = 0; i < ObjectDelegate.getPeople().size(); i++) {
+            if (ObjectDelegate.getPeople().get(i).getName().equals(name)) {
+                return ObjectDelegate.getPeople().get(i);
+            }
+        }
+        return null;
+    }
+
     public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the
         List<IPerson> people = ObjectDelegate.getPeople();
         ObjectDelegate.getAllMembers().forEach(person -> {
