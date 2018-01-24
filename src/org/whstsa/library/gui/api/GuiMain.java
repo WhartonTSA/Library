@@ -2,8 +2,12 @@ package org.whstsa.library.gui.api;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableColumn;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.db.ObjectDelegate;
@@ -27,11 +31,17 @@ public class GuiMain implements Gui {
 
     @Override
     public Scene draw() {
+
+        MenuBar menuBar = new MenuBar(new Menu("File"));
+
         StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB);
 
         StackPane personContainer = DatabaseManagementTables.personOverviewTable();
 
-        StackPane container = GuiUtils.createTitledSplitPane("Library Manager", GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer);
+        VBox container = new VBox(menuBar);
+        container.setSpacing(10);
+
+        container.getChildren().add(GuiUtils.createTitledSplitPane("Library Manager", GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer));
 
         return new Scene(container, 800, 512);
     }

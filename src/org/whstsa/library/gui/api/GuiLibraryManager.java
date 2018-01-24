@@ -1,7 +1,11 @@
 package org.whstsa.library.gui.api;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.gui.components.tables.DatabaseManagementTables;
@@ -17,6 +21,7 @@ public class GuiLibraryManager implements Gui {
         library = lib;
         this.libraryDB = libraryDB;
         window = DatabaseManagementTables.libraryManagerTable(() -> this.library, this.libraryDB);
+        window.setTop(new VBox(new MenuBar(new Menu("File")), new HBox()));
     }
 
     public ILibrary getActiveLibrary() {
