@@ -106,7 +106,7 @@ public class BookMetaDialogs {
 
     }
 
-    public static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, ObservableReference<ILibrary> libraryReference) {
+    private static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, ObservableReference<ILibrary> libraryReference) {
         mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 25);
         mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
         mainTable.addColumn("Owner Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 100);
@@ -120,6 +120,7 @@ public class BookMetaDialogs {
         }
         ObservableReference<List<BookStatusRow>> observableReference = () -> tableItems;
         mainTable.setReference(observableReference);
+        mainTable.getTable().setSelectionModel(null);
 
         mainTable.getTable().setRowFactory(row -> new TableRow<BookStatusRow>() {
             @Override
