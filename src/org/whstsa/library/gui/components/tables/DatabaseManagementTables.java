@@ -12,6 +12,7 @@ import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
+import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
@@ -156,30 +157,35 @@ public class DatabaseManagementTables {
         memberManagerTable(mainMemberTable, libraryReference);
         TableView<IMember> memberTableView = mainMemberTable.getTable();
         memberTableView.setId("memberTable");
+        mainMemberTable.refresh();
 
         Table<IBook> mainBookTable = new Table<>();
         bookManagerTable(mainBookTable, libraryReference);
         TableView<IBook> bookTableView = mainBookTable.getTable();
         bookTableView.setId("bookTable");
+        mainBookTable.refresh();
 
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
             libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
         );
 
         //Toggle Button Group
-        ToggleGroup viewButtons = new ToggleGroup();
+        ToggleGroup viewToggleGroup = new ToggleGroup();
 
         ToggleButton viewMembers = GuiUtils.createToggleButton("Members");
         viewMembers.setUserData(true);
-        viewMembers.setToggleGroup(viewButtons);
+        viewMembers.setToggleGroup(viewToggleGroup);
         viewMembers.setSelected(true);
         ToggleButton viewBooks = GuiUtils.createToggleButton("Books");
-        viewBooks.setToggleGroup(viewButtons);
+        viewBooks.setToggleGroup(viewToggleGroup);
         viewBooks.setUserData(false);
         viewMembers.setDisable(true);
 
+        LabelElement viewLabel = GuiUtils.createLabel("View Table", 12);
 
-        HBox viewSwitch = GuiUtils.createHBox(2, viewMembers, viewBooks);
+        HBox viewButtons = GuiUtils.createHBox(0, viewMembers, viewBooks);
+
+        VBox viewSwitch = GuiUtils.createVBox(0, viewLabel, viewButtons);
 
         Button checkout = GuiUtils.createButton("Checkout", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
@@ -226,7 +232,7 @@ public class DatabaseManagementTables {
         });
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
-            GuiUtils.createSearchBar("memberSearch", "Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable, "antidisestablishmentarianism")
+            GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable, "")
         );
         Button memberDelete = GuiUtils.createButton("Remove", event ->
             MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
@@ -293,7 +299,7 @@ public class DatabaseManagementTables {
             bookDelete.setDisable(newSelection == null);
         });
 
-        VBox buttonGroup = GuiUtils.createVBox(15, back, viewSwitch,
+        VBox buttonGroup = GuiUtils.createVBox(15, back, viewLabel, viewSwitch,
                 GuiUtils.createSeparator(), membersLabel, checkout, checkin, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
                 booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton,
                 GuiUtils.createSeparator(), refreshButton);
@@ -301,9 +307,9 @@ public class DatabaseManagementTables {
 
         mainContainer.setLeft(buttonGroup);
         mainContainer.setCenter(memberTableView);
-        viewButtons.selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
+        viewToggleGroup.selectedToggleProperty().addListener((ov, toggle, new_toggle) -> {
             if (new_toggle != null) {
-                if ((boolean) viewButtons.getSelectedToggle().getUserData()) {
+                if ((boolean) viewToggleGroup.getSelectedToggle().getUserData()) {
                     LibraryDB.LOGGER.debug("Switching to Member table");
                     mainContainer.setCenter(memberTableView);
                     viewMembers.setDisable(true);

@@ -1,5 +1,6 @@
 package org.whstsa.library.gui.api;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -12,6 +13,7 @@ import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.InterfaceManager;
+import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.components.tables.DatabaseManagementTables;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -38,10 +40,13 @@ public class GuiMain implements Gui {
 
         StackPane personContainer = DatabaseManagementTables.personOverviewTable();
 
-        VBox container = new VBox(menuBar);
-        container.setSpacing(10);
+        StackPane tableContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer);
 
-        container.getChildren().add(GuiUtils.createTitledSplitPane("Library Manager", GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer));
+        LabelElement title = GuiUtils.createTitle("Library Manager");
+
+        VBox container = new VBox(menuBar, title, tableContainer);
+        container.setSpacing(10);
+        container.setAlignment(Pos.TOP_CENTER);
 
         return new Scene(container, 800, 512);
     }
