@@ -49,10 +49,12 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
     /**
      * Adds a membership to this person and returns the newly-created member object
      *
+     * @deprecated don't pass premade members
      * @param member the member to add
      * @return the newly-created member object
      * @throws MemberMismatchException if {@code member.getPerson() != this}
      */
+    @Deprecated
     IMember addMembership(IMember member) throws MemberMismatchException;
 
     /**

@@ -143,13 +143,28 @@ public class Library implements ILibrary {
 
     @Override
     public IMember addMember(IPerson person) {
-        IMember possibleMember = this.hasMember(person);
-        if (possibleMember != null) {
-            return possibleMember;
+        if (this.hasMember(person)) {
+            return this.getPersonMemberMap().get(person);
         }
         IMember member = person.addMembership(this);
         this.members.add(member);
         return member;
+    }
+
+    @Override
+    public IMember addMember(IMember member) {
+        if (member.getLibrary() != this) {
+            throw new MemberMismatchException("Member is not created for this library.");
+        }
+        if (!this.members.contains(member)) {
+            this.members.add(member);
+        }
+        return member;
+    }
+
+    @Override
+    public IMember getMember(IPerson person) {
+        return this.getPersonMemberMap().get(person);
     }
 
     @Override
@@ -229,13 +244,9 @@ public class Library implements ILibrary {
         return this.name;
     }
 
-    private IMember hasMember(IPerson person) {
-        for (IMember member : this.members) {
-            if (member.getPerson() == person) {
-                return member;
-            }
-        }
-        return null;
+    @Override
+    public boolean hasMember(IPerson person) {
+        return this.getPersonMemberMap().containsKey(person);
     }
 
     @Override
@@ -253,6 +264,12 @@ public class Library implements ILibrary {
             bookListMap.get(book).addAll(checkoutList);
         }));
         return bookListMap;
+    }
+
+    protected Map<IPerson, IMember> getPersonMemberMap() {
+        Map<IPerson, IMember> personIMemberMap = new HashMap<>();
+        this.members.forEach(member -> personIMemberMap.put(member.getPerson(), member));
+        return personIMemberMap;
     }
 
 }

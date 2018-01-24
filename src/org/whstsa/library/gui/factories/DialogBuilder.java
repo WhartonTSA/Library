@@ -176,7 +176,7 @@ public class DialogBuilder {
     }
 
     public Dialog<Map<String, Element>> build() {
-        SimpleBooleanProperty isCancelled = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty isCancelled = new SimpleBooleanProperty(false);
         Dialog<Map<String, Element>> dialog = new Dialog<>();
         dialog.setTitle(this.title);
 
@@ -200,6 +200,7 @@ public class DialogBuilder {
             if (buttonNode != null) {
                 buttonNode.addEventFilter(ActionEvent.ACTION, event -> {
                     if (isCancelled.get()) {
+                        System.out.println("YOU BEEN STRUCK BY A SMOOTH CRIMINAL");
                         return;
                     }
                     action.callback(event);

@@ -12,6 +12,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.util.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -121,21 +122,26 @@ public class Person implements IPerson {
 
     @Override
     public List<IMember> getMemberships() {
-        return ObjectDelegate.getLibraries().stream().filter(library -> library.getMemberMap().get(this.uuid) != null).map(library -> library.getMemberMap().get(this.uuid)).collect(Collectors.toList());
+        return ObjectDelegate.getLibraries().stream()
+                .filter(library -> library.hasMember(this))
+                .map(library -> library.getMember(this))
+                .collect(Collectors.toList());
     }
 
+    @Deprecated
     @Override
     public IMember addMembership(IMember member) throws MemberMismatchException {
+        Logger.DEFAULT_LOGGER.warn("[DEPRECATED] Don't use premade members to add memberships from the Person class.");
         if (member.getPerson() != this) {
             throw new MemberMismatchException("Member failed to addElement to person " + this.getID() + " because they are assigned person " + member.getPerson().getID());
         }
-        return member;
+        return member.getLibrary().addMember(member);
     }
 
     @Override
     public IMember addMembership(ILibrary library) {
         try {
-            return this.addMembership(new Member(this, library));
+            return library.addMember(new Member(this, library));
         } catch (MemberMismatchException ex) {
             // This will never be thrown, but this satisfies compiler errors
             return null;

@@ -6,6 +6,7 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.books.IBookContainer;
 import org.whstsa.library.api.exceptions.BookNotRegisteredException;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
+import org.whstsa.library.api.exceptions.MemberMismatchException;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,29 @@ public interface ILibrary extends IBookContainer, Loadable {
      * @return the member object
      */
     IMember addMember(IPerson person);
+
+    /**
+     * Adds an already-created member to this library
+     *
+     * @param member the member to track
+     * @return the member
+     * @throws MemberMismatchException if {@code member.library != this}
+     */
+    IMember addMember(IMember member) throws MemberMismatchException;
+
+    /**
+     * Searches for a member within the library's member tracker
+     * @param person the member to search for
+     * @return the member, or null if there is no member
+     */
+    IMember getMember(IPerson person);
+
+    /**
+     * Returns whether the library is tracking the given person
+     * @param person the person to check for
+     * @return whether the person holds a membership here
+     */
+    boolean hasMember(IPerson person);
 
     /**
      * Changes the name of the library
