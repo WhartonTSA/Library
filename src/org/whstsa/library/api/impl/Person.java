@@ -11,8 +11,10 @@ import org.whstsa.library.api.impl.library.Member;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
+import org.whstsa.library.db.ObjectDelegate;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by eric on 11/18/17.
@@ -23,7 +25,6 @@ public class Person implements IPerson {
     private String lastName;
 
     private boolean teacher;
-    private Map<ILibrary, IMember> memberships;
     private double wallet = 0;
 
     private UUID uuid;
@@ -32,7 +33,6 @@ public class Person implements IPerson {
         this.firstName = firstName;
         this.lastName = lastName;
         this.teacher = teacher;
-        this.memberships = new HashMap<>();
         this.uuid = UUID.randomUUID();
     }
 
@@ -121,7 +121,7 @@ public class Person implements IPerson {
 
     @Override
     public List<IMember> getMemberships() {
-        return new ArrayList<>(this.memberships.values());
+        return ObjectDelegate.getLibraries().stream().filter(library -> library.getMemberMap().get(this.uuid) != null).map(library -> library.getMemberMap().get(this.uuid)).collect(Collectors.toList());
     }
 
     @Override
@@ -129,7 +129,6 @@ public class Person implements IPerson {
         if (member.getPerson() != this) {
             throw new MemberMismatchException("Member failed to addElement to person " + this.getID() + " because they are assigned person " + member.getPerson().getID());
         }
-        this.memberships.put(member.getLibrary(), member);
         return member;
     }
 

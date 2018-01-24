@@ -19,6 +19,7 @@ import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
+import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.factories.DialogUtils;
@@ -46,7 +47,6 @@ public class CheckoutMetaDialogs {
             payFine = GuiUtils.createCheckBox("", false);
             payFine.selectedProperty().addListener((observable, oldValue, newValue) -> checkoutButton.setDisable(false));
             checkoutButton.setDisable(true);
-
         }
 
         HBox mainSpacer = new HBox(new Label(""));
