@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -64,7 +65,7 @@ public class SearchBarElement extends ToolBar implements Element{
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            mainContainer.setTop(null);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             table.refresh();
         });
 
@@ -118,7 +119,7 @@ public class SearchBarElement extends ToolBar implements Element{
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            mainContainer.setTop(null);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             table.refresh();
         });
 

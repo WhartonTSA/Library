@@ -121,11 +121,11 @@ public class GuiUtils {
 	}
 
 	public static void createSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IBook> table) {
-        container.setTop(new SearchBarElement(id, label, items, container, table));
+		((VBox) container.getTop()).getChildren().set(1, new SearchBarElement(id, label, items, container, table));
     }
 
     public static void createSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IMember> table, String whatever) {
-        container.setTop(new SearchBarElement(id, label, items, container, table, whatever));
+		((VBox) container.getTop()).getChildren().set(1, new SearchBarElement(id, label, items, container, table, whatever));
     }
 
     public static Separator createSeparator() {

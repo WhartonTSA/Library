@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -53,7 +54,7 @@ public class CheckoutMetaDialogs {
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            mainContainer.setTop(null);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         });
 
@@ -73,7 +74,7 @@ public class CheckoutMetaDialogs {
                     mainSpacer,
                     closeButton);
         }
-        mainContainer.setTop(toolBar);
+        ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setStyle("-fx-base: #d1e3ff;");
         checkoutButton.setStyle("fx-base: #dddddd;");
         bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -107,7 +108,7 @@ public class CheckoutMetaDialogs {
             });
             callback.callback(member);
             bookTable.refresh();
-            mainContainer.setTop(null);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         });
 
@@ -213,7 +214,7 @@ public class CheckoutMetaDialogs {
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            mainContainer.setTop(null);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             mainContainer.setCenter(bookTable.getTable());
             viewBooks.setDisable(true);
             viewMembers.setDisable(false);
@@ -235,7 +236,7 @@ public class CheckoutMetaDialogs {
                     mainSpacer,
                     closeButton);
         }
-        mainContainer.setTop(toolBar);
+        ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setStyle("-fx-base: #d1e3ff;");
         checkinButton.setStyle("fx-base: #dddddd;");
 
@@ -277,7 +278,7 @@ public class CheckoutMetaDialogs {
                 }
             });
             mainTable.refresh();
-            mainContainer.setTop(null);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
         });
     }
 }

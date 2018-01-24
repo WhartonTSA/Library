@@ -37,8 +37,6 @@ public class DatabaseManagementTables {
             }
         });
 
-
-
         Button newLibraryButton = GuiUtils.createButton("New Library", (event) ->
             LibraryMetaDialogs.createLibrary((library) -> {
                 if (library == null) {
