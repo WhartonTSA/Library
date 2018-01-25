@@ -96,7 +96,7 @@ public class BookMetaDialogs {
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();
-        copiesTable = copiesManagerTable(copiesTable, libraryReference);
+        copiesTable = copiesManagerTable(copiesTable, book, libraryReference);
 
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
         dialogPane.addRow(1, copiesTable.getTable());
@@ -106,17 +106,14 @@ public class BookMetaDialogs {
 
     }
 
-    private static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, ObservableReference<ILibrary> libraryReference) {
+    private static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, IBook book, ObservableReference<ILibrary> libraryReference) {
         mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 25);
         mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
         mainTable.addColumn("Owner Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 100);
 
         List<BookStatusRow> tableItems = FXCollections.observableArrayList();
-        for (int i = 1, step = 0; step < libraryReference.poll().getBooks().size(); i+=4, step++) {//TODO change to getBookMap.filter.blahblahblah I just need the books
+        for (int i = 1; i < libraryReference.poll().getBooks().size(); i++) {//TODO change to getBookMap.filter.blahblahblah I just need the books
             tableItems.add(new BookStatusRow(i, BookStatus.AVAILABLE, "Nobody"));
-            tableItems.add(new BookStatusRow(i + 1, BookStatus.CHECKED_OUT, "Somebody"));
-            tableItems.add(new BookStatusRow(i + 2, BookStatus.RESERVED, "Somebody"));
-            tableItems.add(new BookStatusRow(i + 3, BookStatus.UNAVAILABLE, "Who Knows"));
         }
         ObservableReference<List<BookStatusRow>> observableReference = () -> tableItems;
         mainTable.setReference(observableReference);
