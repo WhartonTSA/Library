@@ -34,7 +34,7 @@ public class GuiMain implements Gui {
     @Override
     public Scene draw() {
 
-        MenuBar menuBar = new MenuBar(new Menu("File"));
+        GuiMenuBar menuBar = new GuiMenuBar(true);
 
         StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB);
 
@@ -44,7 +44,7 @@ public class GuiMain implements Gui {
 
         LabelElement title = GuiUtils.createTitle("Library Manager");
 
-        VBox container = new VBox(menuBar, title, tableContainer);
+        VBox container = new VBox(menuBar.getMenu(), title, tableContainer);
         container.setSpacing(10);
         container.setAlignment(Pos.TOP_CENTER);
 

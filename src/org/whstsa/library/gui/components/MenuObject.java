@@ -15,8 +15,4 @@ public class MenuObject {
     public MenuObject(MenuItem menuItem) {
         this.menuItem = menuItem;
     }
-
-    public Menu getMenu() {
-        return menu;
-    }
 }
