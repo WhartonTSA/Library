@@ -3,6 +3,7 @@ package org.whstsa.library.gui.components;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCombination;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.ClickHandlerMenu;
@@ -46,14 +47,17 @@ public class MenuBarElement {
         }
     }
 
-    public void addMenuItem(int menuIndex, String title, ClickHandlerMenuItem clickHandler) {
+    public void addMenuItem(int menuIndex, String title, ClickHandlerMenuItem clickHandler, KeyCombination keyCombo) {
         MenuItem menuItem = new MenuItem(title);
         menuItem.setOnAction(event -> clickHandler.onclick(menuItem));
+        if (keyCombo != null) {
+            menuItem.setAccelerator(keyCombo);
+        }
         menuItems.get(menuIndex).put(menuItem, clickHandler);
     }
 
     public void addMenuItem(int menuIndex, String title) {
-        addMenuItem(menuIndex, title, defaultClickHandlerMenuItem());
+        addMenuItem(menuIndex, title, defaultClickHandlerMenuItem(), null);
     }
 
     public void addMenuItems(int menuIndex, String ...titles) {//Mostly for making placeholder MenuItems

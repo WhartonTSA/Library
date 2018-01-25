@@ -3,6 +3,8 @@ package org.whstsa.library.gui.components.tables;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
@@ -360,6 +362,14 @@ public class DatabaseManagementTables {
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
             return new ReadOnlyStringWrapper(isCheckedOut ? "Some day" : "Not checked out");
         }, true, TableColumn.SortType.DESCENDING, 25);*/
+        TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
+
+        dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                this.setTextFill(Color.RED);
+            }
+        });
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {
