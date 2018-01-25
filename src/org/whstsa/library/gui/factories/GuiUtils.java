@@ -17,7 +17,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.components.*;
-import org.whstsa.library.util.CheckBoxClickHandler;
+import org.whstsa.library.util.ClickHandlerCheckBox;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
 
@@ -192,7 +192,7 @@ public class GuiUtils {
 		return createTextField(prompt, false);
 	}
 
-	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline, boolean disabled, CheckBoxClickHandler clickHandler) {
+	public static CheckBoxElement createCheckBox(String prompt, boolean selected, boolean inline, boolean disabled, ClickHandlerCheckBox clickHandler) {
         CheckBoxElement checkBoxElement = new CheckBoxElement(prompt, prompt, inline, disabled);
         checkBoxElement.setSelected(selected);
         if (clickHandler != null) {

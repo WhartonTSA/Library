@@ -69,10 +69,8 @@ public class PersonMetaDialogs {
                         return;
                     }
                     try {
-                        System.out.println(person.getMemberships());
                         person.getMemberships().forEach(member -> {
                             member.getLibrary().removeMember(member);
-                            System.out.println(member.getLibrary().getMembers() + "hi");
                         });
                     } catch (CannotDeregisterException ex) {
                         DialogUtils.createDialog("Couldn't Deregister", ex.getMessage(), null, Alert.AlertType.ERROR).show();

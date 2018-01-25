@@ -1,35 +1,21 @@
 package org.whstsa.library.gui.factories;
 
-import com.sun.javafx.event.CompositeEventHandler;
-import com.sun.javafx.event.EventHandlerManager;
-import com.sun.javafx.scene.NodeEventDispatcher;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventType;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
-import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.components.Element;
-import org.whstsa.library.util.CheckBoxClickHandler;
-import org.whstsa.library.util.ClickHandler;
-import org.whstsa.library.util.Logger;
+import org.whstsa.library.util.ClickHandlerCheckBox;
 
-import javax.swing.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
 
 public class DialogBuilder {
@@ -98,7 +84,7 @@ public class DialogBuilder {
         return this.addTextField(prompt, null);
     }
 
-    public DialogBuilder addCheckBox(String prompt, boolean selected, boolean inline, boolean disabled, CheckBoxClickHandler clickHandler) {
+    public DialogBuilder addCheckBox(String prompt, boolean selected, boolean inline, boolean disabled, ClickHandlerCheckBox clickHandler) {
         return this.addElement(GuiUtils.createCheckBox(prompt, selected, inline, disabled, clickHandler));
     }
 
@@ -176,7 +162,7 @@ public class DialogBuilder {
     }
 
     public Dialog<Map<String, Element>> build() {
-        SimpleBooleanProperty isCancelled = new SimpleBooleanProperty(true);
+        SimpleBooleanProperty isCancelled = new SimpleBooleanProperty(false);
         Dialog<Map<String, Element>> dialog = new Dialog<>();
         dialog.setTitle(this.title);
 
@@ -200,6 +186,7 @@ public class DialogBuilder {
             if (buttonNode != null) {
                 buttonNode.addEventFilter(ActionEvent.ACTION, event -> {
                     if (isCancelled.get()) {
+                        System.out.println("YOU BEEN STRUCK BY A SMOOTH CRIMINAL");
                         return;
                     }
                     action.callback(event);

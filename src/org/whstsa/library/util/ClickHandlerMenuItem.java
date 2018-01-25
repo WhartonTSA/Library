@@ -6,6 +6,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import org.whstsa.library.gui.components.CheckBoxElement;
 
-public interface ClickHandler {
-	void onclick(Button button);
+public interface ClickHandlerMenuItem {
+    void onclick(MenuItem menuItem);
 }
