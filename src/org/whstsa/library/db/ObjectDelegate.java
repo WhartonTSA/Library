@@ -7,6 +7,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by eric on 11/19/17.
@@ -89,6 +90,10 @@ public class ObjectDelegate {
 
     public static List<UUID> getCombinedIDs() {
         return new ArrayList<>(getCombinedMap().keySet());
+    }
+
+    public static List<IPerson> getActivePeople() {
+        return getPeople().stream().filter(person -> person.getMemberships().size() > 0).collect(Collectors.toList());
     }
 
     private static Loader getLoader() {

@@ -31,7 +31,7 @@ public class OutstandingFinesException extends CannotDeregisterException {
 
     @Override
     public String getMessage() {
-        return "Cannot " + this.action.getMessage() + " member because they have $" + this.fine + " in outstanding fines";
+        return "Cannot " + this.action.getMessage() + " " + this.member.getName() + " because they have $" + this.fine + " in outstanding fines.";
     }
 
     public enum Actions {
