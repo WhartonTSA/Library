@@ -373,16 +373,22 @@ public class DatabaseManagementTables {
             dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
                 @Override
                 public void updateItem(String item, boolean empty) {
-                    boolean isBlank;
+                    System.out.println("a");
                     try {
-                        isBlank = !(checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList()).size() > 0);
-                    } catch (NullPointerException ex) {
-                        isBlank = true;
-                    }
-                    if (isBlank) {
+                        List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());
+                        this.setText(overdue.get(0).getDueDate().toString());
                         this.setTextFill(Color.RED);
-                    } else {
-                        this.setTextFill(Color.GREEN);
+                        System.out.println("b");
+                    } catch (NullPointerException ex) {
+                        try {
+                            this.setText(checkouts.get(0).getDueDate().toString());
+                            this.setTextFill(Color.GREEN);
+                            System.out.println("c");
+                        } catch (NullPointerException e) {
+                            this.setText("N/A");
+                            this.setTextFill(Color.BLACK);
+                            System.out.println("d");
+                        }
                     }
                 }
             });
