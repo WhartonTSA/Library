@@ -43,6 +43,12 @@ public class LibraryManagerUtils {
         return names;
     }
 
+    public static List<String> getNamesFromMembers(List<IMember> member) {
+        List<String> names = new ArrayList<>();
+        member.forEach(memberI -> names.add(memberI.getName()));
+        return names;
+    }
+
     public static IPerson getPersonFromName(String name) {
         for (int i = 0; i < ObjectDelegate.getPeople().size(); i++) {
             if (ObjectDelegate.getPeople().get(i).getName().equals(name)) {
@@ -74,6 +80,15 @@ public class LibraryManagerUtils {
     public static IMember getMemberFromLibrary(IPerson person, ILibrary library) {
         for (int i = 0; i < library.getMembers().size(); i++) {
             if (library.getMembers().get(i).getPerson().equals(person)) {
+                return library.getMembers().get(i);
+            }
+        }
+        return null;
+    }
+
+    public static IMember getMemberFromName(String name, ILibrary library) {
+        for (int i = 0; i < library.getMembers().size(); i++) {
+            if (library.getMembers().get(i).getName().equals(name)) {
                 return library.getMembers().get(i);
             }
         }

@@ -3,6 +3,8 @@ package org.whstsa.library.gui.components.tables;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
@@ -12,6 +14,7 @@ import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
+import org.whstsa.library.gui.api.GuiMenuBar;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Table;
@@ -20,6 +23,7 @@ import org.whstsa.library.gui.dialogs.*;
 import org.whstsa.library.gui.factories.GuiUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DatabaseManagementTables {
 
@@ -28,6 +32,7 @@ public class DatabaseManagementTables {
         libraryTable.addColumn("Library Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 100);
         ObservableReference<List<ILibrary>> observableReference = ObjectDelegate::getLibraries;
         libraryTable.setReference(observableReference);
+        libraryTable.getTable().setOnMouseEntered(event -> libraryTable.refresh());
         libraryTable.getTable().setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 ILibrary selectedLibrary = libraryTable.getSelected();
@@ -39,13 +44,13 @@ public class DatabaseManagementTables {
         });
 
         Button newLibraryButton = GuiUtils.createButton("New Library", (event) ->
-            LibraryMetaDialogs.createLibrary((library) -> {
-                if (library == null) {
-                    return;
-                }
-                Loader.getLoader().loadLibrary(library);
-                libraryTable.refresh();
-            })
+                LibraryMetaDialogs.createLibrary((library) -> {
+                    if (library == null) {
+                        return;
+                    }
+                    Loader.getLoader().loadLibrary(library);
+                    libraryTable.refresh();
+                })
         );
 
         Button editLibraryButton = GuiUtils.createButton("Edit Library", (event) -> {
@@ -65,7 +70,7 @@ public class DatabaseManagementTables {
                 return;
             }
             LibraryMetaDialogs.deleteLibrary(selectedLibrary, (library) ->
-                libraryTable.refresh()
+                    libraryTable.refresh()
             );
         });
         Button openLibraryButton = GuiUtils.createButton("Open Library", true, (event) -> {
@@ -107,13 +112,13 @@ public class DatabaseManagementTables {
         });
 
         Button newPersonButton = GuiUtils.createButton("New Person", event ->
-            PersonMetaDialogs.createPerson(person -> {
-                if (person == null) {
-                    return;
-                }
-                Loader.getLoader().loadPerson(person);
-                personTable.refresh();
-            })
+                PersonMetaDialogs.createPerson(person -> {
+                    if (person == null) {
+                        return;
+                    }
+                    Loader.getLoader().loadPerson(person);
+                    personTable.refresh();
+                })
         );
 
         Button editPersonButton = GuiUtils.createButton("Edit Person", event -> {
@@ -122,7 +127,7 @@ public class DatabaseManagementTables {
                 return;
             }
             PersonMetaDialogs.updatePerson(selectedPerson, person ->
-                personTable.refresh()
+                    personTable.refresh()
             );
         });
         editPersonButton.setDisable(true);
@@ -133,7 +138,7 @@ public class DatabaseManagementTables {
                 return;
             }
             PersonMetaDialogs.deletePerson(selectedPerson, person ->
-                personTable.refresh()
+                    personTable.refresh()
             );
         });
         deletePersonButton.setDisable(true);
@@ -165,8 +170,11 @@ public class DatabaseManagementTables {
         bookTableView.setId("bookTable");
         mainBookTable.refresh();
 
+        GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference);
+        ((HBox) mainContainer.getTop()).getChildren().set(0, mainMenuBar.getMenu());
+
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
-            libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
+                libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
         );
 
         //Toggle Button Group
@@ -213,13 +221,13 @@ public class DatabaseManagementTables {
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event ->
-            MemberMetaDialogs.createMember(member -> {
-                if (member == null) {
-                    return;
-                }
-                Loader.getLoader().loadPerson(member);
-                mainMemberTable.refresh();
-            }, libraryReference)
+                MemberMetaDialogs.createMember(member -> {
+                    if (member == null) {
+                        return;
+                    }
+                    Loader.getLoader().loadPerson(member);
+                    mainMemberTable.refresh();
+                }, libraryReference)
         );
         Button memberEdit = GuiUtils.createButton("Edit", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
@@ -227,33 +235,33 @@ public class DatabaseManagementTables {
                 return;
             }
             MemberMetaDialogs.updateMember(selectedMember, member ->
-                mainMemberTable.refresh()
+                    mainMemberTable.refresh()
             );
         });
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
-            GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable, "")
+                GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable, "")
         );
         Button memberDelete = GuiUtils.createButton("Remove", event ->
-            MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
-                if (member == null) {
-                    return;
-                }
-                mainMemberTable.refresh();
-            })
+                MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
+                    if (member == null) {
+                        return;
+                    }
+                    mainMemberTable.refresh();
+                })
         );
         memberDelete.setDisable(true);
 
 
         Label booksLabel = GuiUtils.createLabel("Books", 16);
         Button bookAdd = GuiUtils.createButton("Add", event ->
-            BookMetaDialogs.createBook(book -> {
-                if (book == null) {
-                return;
-                }
-                Loader.getLoader().loadBook(book);
-                mainBookTable.refresh();
-            }, libraryReference)
+                BookMetaDialogs.createBook(book -> {
+                    if (book == null) {
+                        return;
+                    }
+                    Loader.getLoader().loadBook(book);
+                    mainBookTable.refresh();
+                }, libraryReference)
         );
         Button bookEdit = GuiUtils.createButton("Edit", event -> {
             IBook selectedBook = mainBookTable.getSelected();
@@ -261,7 +269,7 @@ public class DatabaseManagementTables {
                 return;
             }
             BookMetaDialogs.updateBook(selectedBook, book ->
-                mainBookTable.refresh()
+                    mainBookTable.refresh()
             );
         });
         bookEdit.setDisable(true);
@@ -271,12 +279,12 @@ public class DatabaseManagementTables {
                 return;
             }
             BookMetaDialogs.deleteBook(selectedBook, book ->
-                mainBookTable.refresh()
+                    mainBookTable.refresh()
             );
         });
         bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event ->
-            GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
+                GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
         );
 
         Button settingsButton = GuiUtils.createButton("Settings", GuiUtils.defaultClickHandler());
@@ -354,12 +362,23 @@ public class DatabaseManagementTables {
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
             return new ReadOnlyStringWrapper(isCheckedOut ? "True" : "False");
         }, true, TableColumn.SortType.DESCENDING, 30);
-        /*mainTable.addColumn("Due Date", (cellData) -> {
+        mainTable.addColumn("Due Date", (cellData) -> {
             ILibrary library = libraryReference.poll();
             List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
-            return new ReadOnlyStringWrapper(isCheckedOut ? "Some day" : "Not checked out");
-        }, true, TableColumn.SortType.DESCENDING, 25);*/
+            TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
+            dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    if (checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList()).size() > 0) {
+                        this.setTextFill(Color.RED);
+                    } else {
+                        this.setTextFill(Color.GREEN);
+                    }
+                }
+            });
+            return new ReadOnlyStringWrapper(isCheckedOut ? checkouts.get(0).getDueDate().toString() : "Not checked out");
+        }, true, TableColumn.SortType.DESCENDING, 25);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {

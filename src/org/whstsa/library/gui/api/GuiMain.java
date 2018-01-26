@@ -34,7 +34,7 @@ public class GuiMain implements Gui {
     @Override
     public Scene draw() {
 
-        GuiMenuBar menuBar = new GuiMenuBar(true);
+        GuiMenuBar menuBar = new GuiMenuBar();
 
         StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB);
 

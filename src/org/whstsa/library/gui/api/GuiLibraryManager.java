@@ -21,8 +21,7 @@ public class GuiLibraryManager implements Gui {
         library = lib;
         this.libraryDB = libraryDB;
         window = DatabaseManagementTables.libraryManagerTable(() -> this.library, this.libraryDB);
-        GuiMenuBar menuBar = new GuiMenuBar(false);
-        window.setTop(new VBox(menuBar.getMenu(), new HBox()));
+        window.setTop(new VBox(new MenuBar(), new HBox()));
     }
 
     public ILibrary getActiveLibrary() {
