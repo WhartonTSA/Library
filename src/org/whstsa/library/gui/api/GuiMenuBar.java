@@ -23,8 +23,8 @@ public class GuiMenuBar {
 
         barElement.addMenu("_File");
         barElement.addSubMenu(0, MenuBarElement.createMenu("_New"));
-        barElement.addSubMenuItem(0, 0, "New Person...", event -> PersonMetaDialogs.createPerson(person -> {}), null);
-        barElement.addSubMenuItem(0, 0, "New Library...", event -> LibraryMetaDialogs.createLibrary(library -> {}), null, false);
+        barElement.addSubMenuItem(0, 0, "New Person...", event -> PersonMetaDialogs.createPerson(person -> {}), KeyCombination.keyCombination("CTRL+P"));
+        barElement.addSubMenuItem(0, 0, "New Library...", event -> LibraryMetaDialogs.createLibrary(library -> {}), KeyCombination.keyCombination("CTRL+L"), false);
         barElement.addSubMenuItem(0, 0, "New Book...", null, null, true);
         barElement.addSubMenuItem(0, 0, "New Membership...", null, null, true);
         barElement.addSubMenuItem(0, 0, "New Checkout...", null, null, true);
@@ -48,16 +48,16 @@ public class GuiMenuBar {
 
         barElement.addMenu("_File");
         barElement.addSubMenu(0, MenuBarElement.createMenu("_New"));
-        barElement.addSubMenuItem(0, 0, "New Person...", event -> PersonMetaDialogs.createPerson(person -> {}), null);
+        barElement.addSubMenuItem(0, 0, "New Person...", event -> PersonMetaDialogs.createPerson(person -> {}), KeyCombination.keyCombination("CTRL+P"));
         barElement.addSubMenuItem(0, 0, "New Library...", event -> LibraryMetaDialogs.createLibrary(library -> {}), null, true);
-        barElement.addSubMenuItem(0, 0, "New Book...", event -> BookMetaDialogs.createBook(book -> {bookTable.refresh();}, libraryReference), null, false);
-        barElement.addSubMenuItem(0, 0, "New Membership...", event -> MemberMetaDialogs.createMember(member -> {memberTable.refresh();}, libraryReference), null, false);
-        barElement.addSubMenuItem(0, 0, "New Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> {memberTable.refresh();}, libraryReference), null, false);
-        barElement.addSubMenuItem(0, 0, "New Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> {}, libraryReference), null, false);
+        barElement.addSubMenuItem(0, 0, "New Book...", event -> BookMetaDialogs.createBook(book -> {bookTable.refresh();}, libraryReference), KeyCombination.keyCombination("CTRL+B"), false);
+        barElement.addSubMenuItem(0, 0, "New Membership...", event -> MemberMetaDialogs.createMember(member -> {memberTable.refresh();}, libraryReference), KeyCombination.keyCombination("CTRL+M"), false);
+        barElement.addSubMenuItem(0, 0, "New Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> {memberTable.refresh();}, libraryReference), KeyCombination.keyCombination("CTRL+C"), false);
+        barElement.addSubMenuItem(0, 0, "New Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> {}, libraryReference), KeyCombination.keyCombination("CTRL+R"), false);
         barElement.addMenuItem(0, "Save", event -> System.out.println("Saved."), KeyCombination.keyCombination("CTRL+S"));
         barElement.addMenuItem(0, "Settings...");
         barElement.addMenuSeparator(0);
-        barElement.addMenuItem(0, "_Exit", event -> System.out.println("Exiting..."), null);
+        barElement.addMenuItem(0, "_Exit", event -> System.exit(0), null);
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "Edit JSON... (Dev)");
         barElement.addMenu("_Help");
