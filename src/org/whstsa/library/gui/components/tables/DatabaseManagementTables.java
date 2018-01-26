@@ -157,6 +157,7 @@ public class DatabaseManagementTables {
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference, LibraryDB libraryDB) {
 
         BorderPane mainContainer = new BorderPane();
+        mainContainer.setTop(new VBox(new MenuBar(), new HBox()));
 
         Table<IMember> mainMemberTable = new Table<>();
         memberManagerTable(mainMemberTable, libraryReference);
@@ -171,7 +172,9 @@ public class DatabaseManagementTables {
         mainBookTable.refresh();
 
         GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference);
-        ((HBox) mainContainer.getTop()).getChildren().set(0, mainMenuBar.getMenu());
+        ((VBox) mainContainer.getTop())
+                .getChildren()
+                .set(0, mainMenuBar.getMenu());
 
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
                 libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
@@ -370,7 +373,13 @@ public class DatabaseManagementTables {
             dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
                 @Override
                 public void updateItem(String item, boolean empty) {
-                    if (checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList()).size() > 0) {
+                    boolean isBlank;
+                    try {
+                        isBlank = !(checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList()).size() > 0);
+                    } catch (NullPointerException ex) {
+                        isBlank = true;
+                    }
+                    if (isBlank) {
                         this.setTextFill(Color.RED);
                     } else {
                         this.setTextFill(Color.GREEN);
