@@ -110,6 +110,7 @@ public class BookMetaDialogs {
         mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 25);
         mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
         mainTable.addColumn("Owner Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 100);
+        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate().toString()), true, TableColumn.SortType.DESCENDING, 1000);
 
         List<BookStatusRow> tableItems = FXCollections.observableArrayList();
         for (int i = 1; i < libraryReference.poll().getBooks().size(); i++) {//TODO change to getBookMap.filter.blahblahblah I just need the books
