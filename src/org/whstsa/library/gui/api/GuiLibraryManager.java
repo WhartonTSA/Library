@@ -14,13 +14,13 @@ import org.whstsa.library.gui.components.SearchBarElement;
 public class GuiLibraryManager implements Gui {
 
     private final ILibrary library;
-    private final LibraryDB libraryDB;
-    public final BorderPane window;
+    private final BorderPane window;
+    private final String stageTitle;
 
     public GuiLibraryManager(ILibrary lib, LibraryDB libraryDB) {
-        library = lib;
-        this.libraryDB = libraryDB;
-        window = DatabaseManagementTables.libraryManagerTable(() -> this.library, this.libraryDB);
+        this.library = lib;
+        this.stageTitle = lib.getName() + " - Library Manager 1.0";
+        this.window = DatabaseManagementTables.libraryManagerTable(() -> this.library, libraryDB);
     }
 
     public ILibrary getActiveLibrary() {
@@ -40,5 +40,7 @@ public class GuiLibraryManager implements Gui {
     public String getUUID() {
         return "GUI_LIBRARY_MANAGER";
     }
+
+    public String getStageTitle() { return stageTitle;}
 
 }

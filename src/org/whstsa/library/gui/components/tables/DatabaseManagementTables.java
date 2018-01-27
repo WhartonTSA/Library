@@ -1,6 +1,7 @@
 package org.whstsa.library.gui.components.tables;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -157,7 +158,9 @@ public class DatabaseManagementTables {
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference, LibraryDB libraryDB) {
 
         BorderPane mainContainer = new BorderPane();
-        mainContainer.setTop(new VBox(new MenuBar(), new HBox()));
+        HBox titleBar = new HBox(GuiUtils.createLabel(libraryReference.poll().getName() + " Members", 20));
+        titleBar.setAlignment(Pos.CENTER);
+        mainContainer.setTop(new VBox(new MenuBar(), titleBar));
 
         Table<IMember> mainMemberTable = new Table<>();
         memberManagerTable(mainMemberTable, libraryReference);
@@ -192,11 +195,7 @@ public class DatabaseManagementTables {
         viewBooks.setUserData(false);
         viewMembers.setDisable(true);
 
-        LabelElement viewLabel = GuiUtils.createLabel("View Table", 12);
-
         HBox viewButtons = GuiUtils.createHBox(0, viewMembers, viewBooks);
-
-        VBox viewSwitch = GuiUtils.createVBox(0, viewLabel, viewButtons);
 
         Button checkout = GuiUtils.createButton("Checkout", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
@@ -310,7 +309,7 @@ public class DatabaseManagementTables {
             bookDelete.setDisable(newSelection == null);
         });
 
-        VBox buttonGroup = GuiUtils.createVBox(15, back, viewLabel, viewSwitch,
+        VBox buttonGroup = GuiUtils.createVBox(15, back, viewButtons,
                 GuiUtils.createSeparator(), membersLabel, checkout, checkin, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
                 booksLabel, bookAdd, bookEdit, bookDelete, bookSearch, settingsButton,
                 GuiUtils.createSeparator(), refreshButton);
@@ -323,6 +322,7 @@ public class DatabaseManagementTables {
                 if ((boolean) viewToggleGroup.getSelectedToggle().getUserData()) {
                     LibraryDB.LOGGER.debug("Switching to Member table");
                     mainContainer.setCenter(memberTableView);
+                    titleBar.getChildren().set(0, GuiUtils.createLabel(libraryReference.poll().getName() + " Members", 20));
                     viewMembers.setDisable(true);
                     viewBooks.setDisable(false);
 
@@ -330,6 +330,7 @@ public class DatabaseManagementTables {
                 else {
                     LibraryDB.LOGGER.debug("Switching to Book table");
                     mainContainer.setCenter(bookTableView);
+                    titleBar.getChildren().set(0, GuiUtils.createLabel(libraryReference.poll().getName() + " Books", 20));
                     viewMembers.setDisable(false);
                     viewBooks.setDisable(true);
                 }
@@ -369,31 +370,40 @@ public class DatabaseManagementTables {
             ILibrary library = libraryReference.poll();
             List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
+            if (!isCheckedOut) {
+                return new ReadOnlyStringWrapper("N/A");
+            }
             TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
             dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
                 @Override
                 public void updateItem(String item, boolean empty) {
-                    System.out.println("a");
-                    try {
-                        List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());
-                        this.setText(overdue.get(0).getDueDate().toString());
-                        this.setTextFill(Color.RED);
-                        System.out.println("b");
-                    } catch (NullPointerException ex) {
+                    if (!(item == null) || !empty) {
                         try {
-                            this.setText(checkouts.get(0).getDueDate().toString());
-                            this.setTextFill(Color.GREEN);
-                            System.out.println("c");
-                        } catch (NullPointerException e) {
-                            this.setText("N/A");
-                            this.setTextFill(Color.BLACK);
-                            System.out.println("d");
+                            List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());
+                            setText(overdue.get(0).getDueDate().toString());
+                            setTextFill(Color.RED);
+                        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+                            try {
+                                if (checkouts.size() > 1) {
+                                    setText(checkouts.get(0).getDueDate().toString() + "...");
+                                    setTextFill(Color.GREEN);
+                                } else {
+                                    setText(checkouts.get(0).getDueDate().toString());
+                                    setTextFill(Color.GREEN);
+                                }
+                            } catch (NullPointerException e) {
+                                LibraryDB.LOGGER.debug("There was an error finding the due date.");
+                                setText("");
+                            }
                         }
+                    }
+                    else {
+                        setTextFill(Color.BLACK);
                     }
                 }
             });
             return new ReadOnlyStringWrapper(isCheckedOut ? checkouts.get(0).getDueDate().toString() : "Not checked out");
-        }, true, TableColumn.SortType.DESCENDING, 25);
+        }, true, TableColumn.SortType.DESCENDING, 40);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {

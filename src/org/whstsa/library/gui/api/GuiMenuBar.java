@@ -29,15 +29,15 @@ public class GuiMenuBar {
         barElement.addSubMenuItem(0, 0, "New Membership...", null, null, true);
         barElement.addSubMenuItem(0, 0, "New Checkout...", null, null, true);
         barElement.addSubMenuItem(0, 0, "New Return...", null, null, true);
-        barElement.addMenuItem(0, "Save", event -> System.out.println("Saved."), KeyCombination.keyCombination("CTRL+S"));
-        barElement.addMenuItem(0, "Settings...");
+        barElement.addMenuItem(0, "_Save", event -> System.out.println("Saved."), KeyCombination.keyCombination("CTRL+S"));//TODO
+        barElement.addMenuItem(0, "S_ettings...");
         barElement.addMenuSeparator(0);
-        barElement.addMenuItem(0, "_Exit", event -> System.out.println("Exiting..."), null);
+        barElement.addMenuItem(0, "E_xit", event -> ExitMetaDialogs.exitConfirm(), null);
         barElement.addMenu("_Edit");
-        barElement.addMenuItem(1, "Edit JSON... (Dev)");
+        barElement.addMenuItem(1, "_Edit JSON... (Dev)");//TODO
         barElement.addMenu("_Help");
-        barElement.addMenuItem(2, "About...");
-        barElement.addMenuItem(2, "Help...");
+        barElement.addMenuItem(2, "_About...");//TODO
+        barElement.addMenuItem(2, "_Help...");//TODO
 
         this.mainMenuBar = barElement;
     }

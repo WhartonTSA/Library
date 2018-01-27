@@ -33,6 +33,7 @@ public class LibraryDB extends Application {
 
     public void start(Stage stage) {
         this.stage = stage;
+        stage.setTitle("Library Manager 1.0");
         stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
         this.stage.setResizable(true);
         this.interfaceManager = new InterfaceManager(this);

@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
@@ -31,17 +32,14 @@ public class MemberMetaDialogs {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
                 .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference)), true, -1)
-                //.addTextField(FIRST_NAME)
-                //.addTextField(LAST_NAME)
-                //.addCheckBox(TEACHER)
                 .build();
+        GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
+        if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference).size() < 1) {
+            dialogPane.add(GuiUtils.createLabel("There are no people to create a member from. Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
+        }
         DialogUtils.getDialogResults(dialog, (results) -> {
-            //String firstName = results.get(FIRST_NAME).getString();
-            //String lastName = results.get(LAST_NAME).getString();
-            //boolean teacher = results.get(TEACHER).getBoolean();
-            //IPerson person = new Person(firstName, lastName, teacher);
             IPerson person = LibraryManagerUtils.getPersonFromName((String) results.get(EXISTING).getResult());
-            Loader.getLoader().loadPerson(person);
+            Loader.getLoader().loadPerson(person);//TODO Do we need this statement?
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
             callback.callback(person);
@@ -50,7 +48,7 @@ public class MemberMetaDialogs {
 
     public static void updateMember(IMember member, Callback<IMember> callback) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Edit Member")
+                .setTitle("Edit Person")
                 .addTextField(FIRST_NAME, member.getPerson().getFirstName())
                 .addTextField(LAST_NAME, member.getPerson().getLastName())
                 .addCheckBox(TEACHER, member.getPerson().isTeacher())

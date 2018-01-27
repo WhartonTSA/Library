@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.ObservableReference;
@@ -229,20 +230,20 @@ public class GuiUtils {
 		return comboBox;
 	}
 
-	public static LabelElement createLabel(String text, double size, Pos pos) {//TODO add functionality for boolean inline
+	public static LabelElement createLabel(String text, double size, Color color) {
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);
 		LabelElement label = new LabelElement(text, text);
 		label.setFont(Font.font(size));
-		label.setAlignment(pos);
+		label.setTextFill(color);
 		return label;
 	}
 
 	public static LabelElement createLabel(String text, double size) {
-	    return createLabel(text, size, Pos.CENTER);
+	    return createLabel(text, size, Color.BLACK);
 	}
 
 	public static LabelElement createLabel(String text) {
-	    return createLabel(text, 16, Pos.CENTER);
+	    return createLabel(text, 16, Color.BLACK);
     }
 	
 	public static LabelElement createTitle(String title) {

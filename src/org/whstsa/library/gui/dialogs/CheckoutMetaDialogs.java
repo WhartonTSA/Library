@@ -143,7 +143,7 @@ public class CheckoutMetaDialogs {
                 .build();
         if (member.getFine() > 0) {
             GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12, Pos.CENTER_RIGHT);
+            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12);
             fineLabel.setTextFill(Color.RED);
             dialogPane.add(fineLabel, 1, 1);
         }
@@ -296,7 +296,7 @@ public class CheckoutMetaDialogs {
                 .build();
         if (member.getFine() > 0) {
             GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12, Pos.CENTER_RIGHT);
+            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12);
             fineLabel.setTextFill(Color.RED);
             dialogPane.add(fineLabel, 1, 1);
         }
