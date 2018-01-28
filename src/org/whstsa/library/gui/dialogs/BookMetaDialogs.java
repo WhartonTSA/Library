@@ -114,7 +114,7 @@ public class BookMetaDialogs {
 
         List<BookStatusRow> tableItems = FXCollections.observableArrayList();
         for (int i = 1; i < libraryReference.poll().getBooks().size(); i++) {//TODO change to getBookMap.filter.blahblahblah I just need the books
-            tableItems.add(new BookStatusRow(i, BookStatus.AVAILABLE, "Nobody"));
+            tableItems.add(new BookStatusRow(i, BookStatus.AVAILABLE, "Nobody"));//This is where the data for the table is created
         }
         ObservableReference<List<BookStatusRow>> observableReference = () -> tableItems;
         mainTable.setReference(observableReference);
@@ -129,7 +129,7 @@ public class BookMetaDialogs {
                     setStyle("");
                 }
                 else {
-                    switch (item.getStatus()) {
+                    switch (item.getStatus()) {//If cell isn't blank, the status value will determine the color of the row
                         case AVAILABLE: setStyle("-fx-background-color: #95edaf;"); break;
                         case CHECKED_OUT: setStyle("-fx-background-color: #ebff89;"); break;
                         case RESERVED: setStyle("-fx-background-color: #ffba75;"); break;

@@ -16,7 +16,8 @@ public class ExitMetaDialogs {
         Dialog dialog = new DialogBuilder()
                 .setTitle("Quit?")
                 .addButton(ButtonType.YES, true, event -> {
-                    System.out.println("Exiting (in theory)");//TODO
+                    System.out.println("Exiting");//TODO
+                    System.exit(0);
                 })
                 .addButton(ButtonType.NO, true, event -> {
                     System.out.println("kk");//TODO

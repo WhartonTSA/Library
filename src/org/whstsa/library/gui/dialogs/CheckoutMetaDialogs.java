@@ -39,7 +39,10 @@ public class CheckoutMetaDialogs {
     private static String RETURN = "Return";
 
 
-    public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ObservableReference<ILibrary> libraryReference) {
+    public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ObservableReference<ILibrary> libraryReference) {
+
+        viewBooks.setDisable(true);
+        viewMembers.setDisable(true);
 
         Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
 
@@ -62,8 +65,11 @@ public class CheckoutMetaDialogs {
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
+            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
             bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            mainContainer.setCenter(bookTable.getTable());
+            viewBooks.setDisable(true);
+            viewMembers.setDisable(false);
         });
 
         ToolBar toolBar = new ToolBar();
@@ -82,6 +88,7 @@ public class CheckoutMetaDialogs {
                     mainSpacer,
                     closeButton);
         }
+        toolBar.setId("toolbar");
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setStyle("-fx-base: #d1e3ff;");
         checkoutButton.setStyle("fx-base: #dddddd;");
@@ -98,6 +105,9 @@ public class CheckoutMetaDialogs {
         mainContainer.setCenter(bookTable.getTable());
 
         checkoutButton.setOnMouseClicked(event -> {
+            viewBooks.setDisable(true);
+            viewMembers.setDisable(false);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
             ObservableList<IBook> selectedBooks = bookTable.getTable().getSelectionModel().getSelectedItems();
             if (member.getFine() > 0) {
                 try {
@@ -135,7 +145,7 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    public static void checkoutMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
+    private static void checkoutMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Checking out " + member.getName() + ".")
                 .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)
@@ -154,7 +164,7 @@ public class CheckoutMetaDialogs {
                     return;
                 }
                 try {
-                    member.getCheckouts().forEach(checkout -> checkout.getFine());
+                    member.getCheckouts().forEach(ICheckout::getFine);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -170,6 +180,10 @@ public class CheckoutMetaDialogs {
     }
 
     public static void checkinMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ObservableReference<ILibrary> libraryReference) {
+
+        viewBooks.setDisable(true);
+        viewMembers.setDisable(true);
+
         Button checkinButton = GuiUtils.createButton("Return", true, GuiUtils.defaultClickHandler());
 
         LabelElement spacer = null;
@@ -197,7 +211,7 @@ public class CheckoutMetaDialogs {
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
+            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
             mainContainer.setCenter(bookTable.getTable());
             viewBooks.setDisable(true);
             viewMembers.setDisable(false);
@@ -219,6 +233,7 @@ public class CheckoutMetaDialogs {
                     mainSpacer,
                     closeButton);
         }
+        toolBar.setId("toolbar");
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setStyle("-fx-base: #d1e3ff;");
         checkinButton.setStyle("fx-base: #dddddd;");
@@ -232,10 +247,12 @@ public class CheckoutMetaDialogs {
                         " books from ",
                         member.getName() + "."))
         );
-
         mainContainer.setCenter(mainTable.getTable());
 
         checkinButton.setOnMouseClicked(event -> {
+            viewBooks.setDisable(true);
+            viewMembers.setDisable(false);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
             ObservableList<IBook> selectedBooks = mainTable.getTable().getSelectionModel().getSelectedItems();
             if (member.getFine() > 0) {
                 try {
@@ -261,7 +278,7 @@ public class CheckoutMetaDialogs {
                 }
             });
             mainTable.refresh();
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
+            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
         });
     }
 
@@ -280,7 +297,7 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    public static void checkinMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
+    private static void checkinMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Returning " + member.getName() + "'s books.")
                 .addChoiceBox(RETURN, member.getCheckoutMap(), true, -1)

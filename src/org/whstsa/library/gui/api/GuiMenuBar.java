@@ -57,7 +57,7 @@ public class GuiMenuBar {
         barElement.addMenuItem(0, "Save", event -> System.out.println("Saved."), KeyCombination.keyCombination("CTRL+S"));
         barElement.addMenuItem(0, "Settings...");
         barElement.addMenuSeparator(0);
-        barElement.addMenuItem(0, "_Exit", event -> System.exit(0), null);
+        barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(), null);
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "Edit JSON... (Dev)");
         barElement.addMenu("_Help");

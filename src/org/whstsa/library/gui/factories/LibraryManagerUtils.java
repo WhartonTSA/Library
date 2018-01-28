@@ -2,6 +2,8 @@ package org.whstsa.library.gui.factories;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
@@ -14,6 +16,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LibraryManagerUtils {
+
+    public static HBox createTitleBar(String title) {
+        HBox box = new HBox();
+        box.getChildren().add(GuiUtils.createLabel(title, 20));
+        box.setId("titlebar");
+        box.setAlignment(Pos.CENTER);
+        return box;
+    }
 
     public static List<IPerson> returnPeople(ObservableReference<ILibrary> libraryReference) {
         List<IPerson> people = new ArrayList<>();
@@ -58,7 +68,7 @@ public class LibraryManagerUtils {
         return null;
     }
 
-    public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the
+    public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the library referenced
         List<IPerson> people = ObjectDelegate.getPeople();
         ObjectDelegate.getAllMembers().forEach(person -> {
             if (people.contains(person.getPerson())) {

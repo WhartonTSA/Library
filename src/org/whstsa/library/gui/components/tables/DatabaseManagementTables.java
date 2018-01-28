@@ -23,6 +23,8 @@ import org.whstsa.library.gui.dialogs.*;
 
 import org.whstsa.library.gui.factories.GuiUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -158,9 +160,7 @@ public class DatabaseManagementTables {
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference, LibraryDB libraryDB) {
 
         BorderPane mainContainer = new BorderPane();
-        HBox titleBar = new HBox(GuiUtils.createLabel(libraryReference.poll().getName() + " Members", 20));
-        titleBar.setAlignment(Pos.CENTER);
-        mainContainer.setTop(new VBox(new MenuBar(), titleBar));
+        mainContainer.setTop(new VBox(new MenuBar(), LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members")));
 
         Table<IMember> mainMemberTable = new Table<>();
         memberManagerTable(mainMemberTable, libraryReference);
@@ -197,6 +197,8 @@ public class DatabaseManagementTables {
 
         HBox viewButtons = GuiUtils.createHBox(0, viewMembers, viewBooks);
 
+        boolean isInCheckout = false;
+
         Button checkout = GuiUtils.createButton("Checkout", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
             CheckoutMetaDialogs.checkoutMember(member -> {
@@ -206,7 +208,8 @@ public class DatabaseManagementTables {
                 viewMembers.setDisable(false);
                 viewBooks.setSelected(true);
                 viewMembers.setSelected(false);
-            }, selectedMember, mainContainer, mainBookTable, libraryReference);
+
+            }, selectedMember, mainContainer, mainBookTable, viewBooks, viewMembers, libraryReference);
         });
         checkout.setDisable(true);
         checkout.setStyle("-fx-base:#91c4e2;");
@@ -322,7 +325,7 @@ public class DatabaseManagementTables {
                 if ((boolean) viewToggleGroup.getSelectedToggle().getUserData()) {
                     LibraryDB.LOGGER.debug("Switching to Member table");
                     mainContainer.setCenter(memberTableView);
-                    titleBar.getChildren().set(0, GuiUtils.createLabel(libraryReference.poll().getName() + " Members", 20));
+                    ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members"));
                     viewMembers.setDisable(true);
                     viewBooks.setDisable(false);
 
@@ -330,7 +333,7 @@ public class DatabaseManagementTables {
                 else {
                     LibraryDB.LOGGER.debug("Switching to Book table");
                     mainContainer.setCenter(bookTableView);
-                    titleBar.getChildren().set(0, GuiUtils.createLabel(libraryReference.poll().getName() + " Books", 20));
+                    ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
                     viewMembers.setDisable(false);
                     viewBooks.setDisable(true);
                 }
@@ -371,38 +374,39 @@ public class DatabaseManagementTables {
             List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
             if (!isCheckedOut) {
-                return new ReadOnlyStringWrapper("N/A");
+                return new ReadOnlyStringWrapper("N/A");//If book isn't checked out
             }
             TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
             dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
                 @Override
                 public void updateItem(String item, boolean empty) {
                     if (!(item == null) || !empty) {
+                        DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
                         try {
-                            List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());
-                            setText(overdue.get(0).getDueDate().toString());
+                            List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());//If book is overdue
+                            setText(formattedDate.format(overdue.get(0).getDueDate()));
                             setTextFill(Color.RED);
                         } catch (NullPointerException | IndexOutOfBoundsException ex) {
                             try {
                                 if (checkouts.size() > 1) {
-                                    setText(checkouts.get(0).getDueDate().toString() + "...");
+                                    setText(formattedDate.format(checkouts.get(0).getDueDate()) + "...");//If book isn't overdue and there is more than one copy checked out
                                     setTextFill(Color.GREEN);
                                 } else {
-                                    setText(checkouts.get(0).getDueDate().toString());
+                                    setText(formattedDate.format(checkouts.get(0).getDueDate()));//If book isn't overdue and only one copy is checked out
                                     setTextFill(Color.GREEN);
                                 }
                             } catch (NullPointerException e) {
-                                LibraryDB.LOGGER.debug("There was an error finding the due date.");
+                                LibraryDB.LOGGER.debug("There was an error finding the due date.");//If there was an error
                                 setText("");
                             }
                         }
                     }
                     else {
-                        setTextFill(Color.BLACK);
+                        setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
                     }
                 }
             });
-            return new ReadOnlyStringWrapper(isCheckedOut ? checkouts.get(0).getDueDate().toString() : "Not checked out");
+            return new ReadOnlyStringWrapper(isCheckedOut ? checkouts.get(0).getDueDate().toString() : "Not checked out");//Don't really need this, but the cellValueProperty needs a return statement
         }, true, TableColumn.SortType.DESCENDING, 40);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
