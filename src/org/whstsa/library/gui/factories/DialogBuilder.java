@@ -186,7 +186,6 @@ public class DialogBuilder {
             if (buttonNode != null) {
                 buttonNode.addEventFilter(ActionEvent.ACTION, event -> {
                     if (isCancelled.get()) {
-                        System.out.println("YOU BEEN STRUCK BY A SMOOTH CRIMINAL");
                         return;
                     }
                     action.callback(event);
