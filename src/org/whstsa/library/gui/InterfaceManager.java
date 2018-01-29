@@ -28,10 +28,24 @@ public class InterfaceManager {
 	public Stage getStage() {
 		return this.libraryDB.getStage();
 	}
-	
+
 	private void displayScene(Scene scene) {
-		this.oldScene = this.getCurrentScene();
-		this.getStage().setScene(scene);
+		this.displayScene(scene, 0);
+	}
+
+	private void displayScene(Scene scene, int tries) {
+		if (tries > 5) {
+			Logger.DEFAULT_LOGGER.error("Failed to display scene!");
+			return;
+		}
+		try {
+			this.oldScene = this.getCurrentScene();
+			this.getStage().setScene(scene);
+		} catch (IllegalStateException ex) {
+			Logger.DEFAULT_LOGGER.warn("Couldn't set the scene");
+			ex.printStackTrace();
+			this.displayScene(scene, tries++);
+		}
 	}
 	
 	/**
