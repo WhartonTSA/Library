@@ -10,7 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.whstsa.library.LibraryDB;
+import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.impl.Person;
+import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.InterfaceManager;
 import org.whstsa.library.gui.components.LabelElement;
@@ -34,11 +36,14 @@ public class GuiMain implements Gui {
     @Override
     public Scene draw() {
 
-        GuiMenuBar menuBar = new GuiMenuBar();
+        Table<ILibrary> libraryTable = new Table<>();
+        Table<IPerson> personTable = new Table<>();
 
-        StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB);
+        GuiMenuBar menuBar = new GuiMenuBar(null, null, null, libraryTable, personTable);
 
-        StackPane personContainer = DatabaseManagementTables.personOverviewTable();
+        StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB, libraryTable);
+
+        StackPane personContainer = DatabaseManagementTables.personOverviewTable(personTable);
 
         StackPane tableContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer);
 

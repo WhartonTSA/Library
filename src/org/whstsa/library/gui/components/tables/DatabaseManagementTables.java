@@ -31,7 +31,10 @@ import java.util.stream.Collectors;
 public class DatabaseManagementTables {
 
     public static StackPane libraryOverviewTable(LibraryDB libraryDB) {
-        Table<ILibrary> libraryTable = new Table<>();
+        return libraryOverviewTable(libraryDB, new Table<>());
+    }
+
+    public static StackPane libraryOverviewTable(LibraryDB libraryDB, Table<ILibrary> libraryTable) {
         libraryTable.addColumn("Library Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 100);
         ObservableReference<List<ILibrary>> observableReference = ObjectDelegate::getLibraries;
         libraryTable.setReference(observableReference);
@@ -96,7 +99,10 @@ public class DatabaseManagementTables {
     }
 
     public static StackPane personOverviewTable() {
-        Table<IPerson> personTable = new Table<>();
+        return personOverviewTable(new Table<>());
+    }
+
+    public static StackPane personOverviewTable(Table<IPerson> personTable) {
         personTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getFirstName()), true, TableColumn.SortType.DESCENDING, 50);
         personTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getLastName()), true, TableColumn.SortType.DESCENDING, 50);
         ObservableReference<List<IPerson>> observableReference = ObjectDelegate::getPeople;
@@ -174,7 +180,7 @@ public class DatabaseManagementTables {
         bookTableView.setId("bookTable");
         mainBookTable.refresh();
 
-        GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference);
+        GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null);
         ((VBox) mainContainer.getTop())
                 .getChildren()
                 .set(0, mainMenuBar.getMenu());
