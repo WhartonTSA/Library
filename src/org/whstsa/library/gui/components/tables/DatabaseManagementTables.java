@@ -376,37 +376,38 @@ public class DatabaseManagementTables {
             if (!isCheckedOut) {
                 return new ReadOnlyStringWrapper("N/A");//If book isn't checked out
             }
-            TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
-            dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
-                @Override
-                public void updateItem(String item, boolean empty) {
-                    if (!(item == null) || !empty) {
-                        DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
-                        try {
-                            List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());//If book is overdue
-                            setText(formattedDate.format(overdue.get(0).getDueDate()));
-                            setTextFill(Color.RED);
-                        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+            else {
+                TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
+                dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        if (!(item == null) || !empty) {
+                            DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
                             try {
-                                if (checkouts.size() > 1) {
-                                    setText(formattedDate.format(checkouts.get(0).getDueDate()) + "...");//If book isn't overdue and there is more than one copy checked out
-                                    setTextFill(Color.GREEN);
-                                } else {
-                                    setText(formattedDate.format(checkouts.get(0).getDueDate()));//If book isn't overdue and only one copy is checked out
-                                    setTextFill(Color.GREEN);
+                                List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());//If book is overdue
+                                setText(formattedDate.format(overdue.get(0).getDueDate()));
+                                setTextFill(Color.RED);
+                            } catch (NullPointerException | IndexOutOfBoundsException ex) {
+                                try {
+                                    if (checkouts.size() > 1) {
+                                        setText(formattedDate.format(checkouts.get(0).getDueDate()) + "...");//If book isn't overdue and there is more than one copy checked out
+                                        setTextFill(Color.GREEN);
+                                    } else {
+                                        setText(formattedDate.format(checkouts.get(0).getDueDate()));//If book isn't overdue and only one copy is checked out
+                                        setTextFill(Color.GREEN);
+                                    }
+                                } catch (NullPointerException e) {
+                                    LibraryDB.LOGGER.debug("There was an error finding the due date.");//If there was an error
+                                    setText("");
                                 }
-                            } catch (NullPointerException e) {
-                                LibraryDB.LOGGER.debug("There was an error finding the due date.");//If there was an error
-                                setText("");
                             }
+                        } else {
+                            setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
                         }
                     }
-                    else {
-                        setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
-                    }
-                }
-            });
-            return new ReadOnlyStringWrapper(isCheckedOut ? checkouts.get(0).getDueDate().toString() : "Not checked out");//Don't really need this, but the cellValueProperty needs a return statement
+                });
+                return new ReadOnlyStringWrapper(isCheckedOut ? checkouts.get(0).getDueDate().toString() : "Not checked out");//Don't really need this, but the cellValueProperty needs a return statement
+            }
         }, true, TableColumn.SortType.DESCENDING, 40);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
