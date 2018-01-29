@@ -3,7 +3,8 @@ package org.whstsa.library.util;
 public class Logger {
 	
 	public static boolean DEBUG = true;
-	
+
+	@Deprecated
 	public static final Logger DEFAULT_LOGGER = new Logger();
 	
 	private static final int TAG_SPACING = 10;
