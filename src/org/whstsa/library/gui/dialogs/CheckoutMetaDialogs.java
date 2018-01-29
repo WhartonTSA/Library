@@ -26,6 +26,7 @@ import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
+import org.whstsa.library.util.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -119,7 +120,7 @@ public class CheckoutMetaDialogs {
             selectedBooks.forEach(book -> {
                 try {
                     libraryReference.poll().reserveBook(member, book);
-                    System.out.println("Checking out " + book.getTitle() + " to " + member.getName() + ".");
+                    Logger.DEFAULT_LOGGER.debug("Checking out " + book.getTitle() + " to " + member.getName() + ".");
                 } catch (Exception ex) {
                     DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
