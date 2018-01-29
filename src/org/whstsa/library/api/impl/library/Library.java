@@ -10,6 +10,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.util.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ public class Library implements ILibrary {
 
     private List<IBook> books;
     private List<IMember> members;
+    private Map<UUID, Integer> bookQuantity;
 
     private String name;
 
@@ -31,6 +33,7 @@ public class Library implements ILibrary {
         this.members = new ArrayList<>();
         this.name = name;
         this.uuid = UUID.randomUUID();
+        this.bookQuantity = new HashMap<>();
     }
 
     public static ILibrary findLibrary(UUID memberID) {
@@ -74,6 +77,10 @@ public class Library implements ILibrary {
 
         object.put("name", this.name);
 
+        JSONObject quantities = new JSONObject();
+        this.bookQuantity.forEach((id, quantity) -> quantities.put(id.toString(), quantity));
+        object.put("quantities", quantities);
+
         return object;
     }
 
@@ -83,6 +90,7 @@ public class Library implements ILibrary {
             return;
         }
         this.books.add(book);
+        this.setQuantity(book.getID(), 5);
     }
 
     @Override
@@ -101,6 +109,7 @@ public class Library implements ILibrary {
         if (book != null) {
             if (!this.books.contains(book)) {
                 this.books.add(book);
+                this.setQuantity(id ,5);
             }
         }
     }
@@ -135,20 +144,17 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException {
+    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException, OutOfStockException {
+        if (!this.bookQuantity.containsKey(book.getID())) {
+            this.bookQuantity.put(book.getID(), 5);
+        }
+        if (this.bookQuantity.get(book.getID()) == null || this.bookQuantity.get(book.getID()) == 0) {
+            throw new OutOfStockException(book , this);
+        }
         ICheckout checkout = new Checkout(member, book);
         member.checkout(checkout);
+        this.bookQuantity.put(book.getID(), bookQuantity.get(book.getID()) - 1);
         return checkout;
-    }
-
-    @Override
-    public IMember addMember(IPerson person) {
-        if (this.hasMember(person)) {
-            return this.getPersonMemberMap().get(person);
-        }
-        IMember member = person.addMembership(this);
-        this.members.add(member);
-        return member;
     }
 
     @Override
@@ -165,6 +171,17 @@ public class Library implements ILibrary {
     @Override
     public IMember getMember(IPerson person) {
         return this.getPersonMemberMap().get(person);
+    }
+
+    @Override
+    public IMember addMember(IPerson person) {
+        IMember possibleMember = this.hasMember(person) ? this.getMember(person) : null;
+        if (possibleMember != null) {
+            return possibleMember;
+        }
+        IMember member = person.addMembership(this);
+        this.members.add(member);
+        return member;
     }
 
     @Override
@@ -246,8 +263,14 @@ public class Library implements ILibrary {
 
     @Override
     public boolean hasMember(IPerson person) {
-        return this.getPersonMemberMap().containsKey(person);
+        for (IMember member : this.members) {
+            if (member.getPerson() == person) {
+                return true;
+            }
+        }
+        return false;
     }
+
 
     @Override
     public void load() {
@@ -270,6 +293,19 @@ public class Library implements ILibrary {
         Map<IPerson, IMember> personIMemberMap = new HashMap<>();
         this.members.forEach(member -> personIMemberMap.put(member.getPerson(), member));
         return personIMemberMap;
+    }
+
+    @Override
+    public Map<UUID, Integer> getBookQuantity() { return bookQuantity; }
+
+    @Override
+    public int getQuantity(UUID id) {
+        return this.bookQuantity.get(id);
+    }
+
+    @Override
+    public void setQuantity(UUID id, int amount) {
+        this.bookQuantity.put(id, amount);
     }
 
 }

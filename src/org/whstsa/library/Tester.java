@@ -6,6 +6,7 @@ import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.Serializable;
 import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.impl.library.Checkout;
@@ -35,7 +36,7 @@ public class Tester {
 
     private static Tester tester;
 
-    public Tester() {
+    public Tester() throws OutOfStockException {
         this.library = new Library("POPTROPICA");
         Loader.getLoader().loadLibrary(library);
         this.populatePeople();
@@ -53,7 +54,11 @@ public class Tester {
         this.testAllReturns();
         this.printAllBalances();
         Loader.getLoader().load(this.computeJSON());
-        this.testDeregistrationWhileHavingBooks();
+        try {
+            this.testDeregistrationWhileHavingBooks();
+        } catch (OutOfStockException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void print(JSONObject... objects) {
@@ -108,11 +113,16 @@ public class Tester {
         Loader.getLoader().loadBook(book3);
     }
 
-    private void testDeregistrationWhileHavingBooks() {
+    private void testDeregistrationWhileHavingBooks() throws OutOfStockException {
         IMember member = this.library.getMembers().get(0);
         IBook book = this.library.getBooks().get(0);
-        ICheckout checkout = this.library.reserveBook(member, book);
-        System.out.println("Removing member while they have a book checked-out");
+        try {
+            ICheckout checkout = this.library.reserveBook(member, book);
+            System.out.println("Removing member while they have a book checked-out");
+        }
+        catch (OutOfStockException ex) {
+            System.out.println(ex.getMessage());
+        }
         try {
             this.library.removeMember(member);
         } catch (Exception ex) {
@@ -222,7 +232,7 @@ public class Tester {
         }
     }
 
-    private void checkoutRandomBookEachMember(ILibrary library) {
+    private void checkoutRandomBookEachMember(ILibrary library) throws OutOfStockException {
         System.out.format("Checking out a random book for each member of library %s", library.getName());
         for (IMember member : library.getMembers()) {
             IBook book = library.getBooks().get(RANDOM.nextInt(library.getBooks().size()));
@@ -239,7 +249,7 @@ public class Tester {
         World.setDate(cal.getTime());
     }
 
-    private void checkoutRandomAllLibraries() {
+    private void checkoutRandomAllLibraries() throws OutOfStockException {
         System.out.println("Checking out a random book for each member of all libraries");
         for (ILibrary library : ObjectDelegate.getLibraries()) {
             this.checkoutRandomBookEachMember(library);

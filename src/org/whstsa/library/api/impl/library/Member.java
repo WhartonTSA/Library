@@ -111,6 +111,7 @@ public class Member implements IMember {
             throw new OutstandingFinesException(this, OutstandingFinesException.Actions.CHECK_IN, checkout.getFine());
         }
         checkout.checkIn();
+        library.setQuantity(checkout.getBook().getID(), library.getQuantity(checkout.getBook().getID()) + 1);
     }
 
     @Override
@@ -213,7 +214,7 @@ public class Member implements IMember {
     }
 
     @Override
-    public List<ICheckout> getCheckouts(boolean notReturned){
+    public List<ICheckout> getCheckouts(boolean notReturned) {
         List<ICheckout> checkouts = new ArrayList<>();
         this.books.values().forEach(checkouts::addAll);
         if (notReturned) {
@@ -231,5 +232,4 @@ public class Member implements IMember {
     public String getName() {
         return this.getPerson().getName();
     }
-
 }
