@@ -25,6 +25,8 @@ import org.whstsa.library.gui.factories.GuiUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -379,27 +381,26 @@ public class DatabaseManagementTables {
             boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
             if (!isCheckedOut) {
                 return new ReadOnlyStringWrapper("N/A");//If book isn't checked out
-            }
-            else {
+            } else {
                 TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
                 dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
                     @Override
                     public void updateItem(String item, boolean empty) {
                         if (!(item == null) || !empty) {
                             DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
-                            try {
-                                List<ICheckout> overdue = checkouts.stream().filter(ICheckout::isOverdue).collect(Collectors.toList());//If book is overdue
-                                setText(formattedDate.format(overdue.get(0).getDueDate()));
-                                setTextFill(Color.RED);
-                            } catch (NullPointerException | IndexOutOfBoundsException ex) {
-                                try {
-                                    setText(formattedDate.format(checkouts.get(0).getDueDate()) + (checkouts.size() > 1 ? "..." : ""));//If book isn't overdue and there is more than one copy checked out
-                                    setTextFill(Color.GREEN);
-                                } catch (NullPointerException e) {
-                                    LibraryDB.LOGGER.debug("There was an error finding the due date.");//If there was an error
-                                    setText("");
-                                }
+                            // Sorts the checkouts by date to get the nearest due date
+                            List<ICheckout> sortedCheckouts = checkouts.stream()
+                                    .sorted(Comparator.comparing(ICheckout::getDueDate))
+                                    .collect(Collectors.toList());
+                            // Display N/A if there are no checkouts
+                            if (sortedCheckouts.size() == 0 || sortedCheckouts.get(0) == null) {
+                                setText("N/A");
+                                return;
                             }
+                            ICheckout checkout = sortedCheckouts.get(0);
+                            Date nearestDate = checkout.getDueDate();
+                            setText(formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : ""));
+                            setTextFill(checkout.isOverdue() ? Color.RED : Color.GREEN);
                         } else {
                             setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
                         }
