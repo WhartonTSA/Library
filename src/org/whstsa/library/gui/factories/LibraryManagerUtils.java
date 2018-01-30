@@ -3,6 +3,8 @@ package org.whstsa.library.gui.factories;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
@@ -10,6 +12,7 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.components.Element;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +26,11 @@ public class LibraryManagerUtils {
         box.setId("titlebar");
         box.setAlignment(Pos.CENTER);
         return box;
+    }
+
+    public static void addTooltip(Node node, String text) {
+        Tooltip tooltip = new Tooltip(text);
+        Tooltip.install(node, tooltip);
     }
 
     public static List<IPerson> returnPeople(ObservableReference<ILibrary> libraryReference) {

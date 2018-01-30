@@ -45,6 +45,8 @@ public class CheckoutMetaDialogs {
         viewBooks.setDisable(true);
         viewMembers.setDisable(true);
 
+        LibraryManagerUtils.addTooltip(bookTable.getTable(), "CTRL + Click to select multiple books");
+
         Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
 
         LabelElement spacer = null;
@@ -201,6 +203,8 @@ public class CheckoutMetaDialogs {
         }
 
         Table<IBook> mainTable = new Table<>();
+
+        LibraryManagerUtils.addTooltip(mainTable.getTable(), "CTRL + Click to select multiple books");
 
         mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);

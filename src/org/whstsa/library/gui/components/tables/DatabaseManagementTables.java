@@ -172,12 +172,14 @@ public class DatabaseManagementTables {
         memberManagerTable(mainMemberTable, libraryReference);
         TableView<IMember> memberTableView = mainMemberTable.getTable();
         memberTableView.setId("memberTable");
+        LibraryManagerUtils.addTooltip(mainMemberTable.getTable(), "Double-click to see a member's checked-out books.");
         mainMemberTable.refresh();
 
         Table<IBook> mainBookTable = new Table<>();
         bookManagerTable(mainBookTable, libraryReference);
         TableView<IBook> bookTableView = mainBookTable.getTable();
         bookTableView.setId("bookTable");
+        LibraryManagerUtils.addTooltip(mainBookTable.getTable(), "Double-click to see the status of the copies of this book.");
         mainBookTable.refresh();
 
         GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null);
