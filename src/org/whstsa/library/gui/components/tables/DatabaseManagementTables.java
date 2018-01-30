@@ -181,9 +181,7 @@ public class DatabaseManagementTables {
         mainBookTable.refresh();
 
         GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null);
-        ((VBox) mainContainer.getTop())
-                .getChildren()
-                .set(0, mainMenuBar.getMenu());
+        ((VBox) mainContainer.getTop()).getChildren().set(0, mainMenuBar.getMenu());
 
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
                 libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
@@ -202,8 +200,6 @@ public class DatabaseManagementTables {
         viewMembers.setDisable(true);
 
         HBox viewButtons = GuiUtils.createHBox(0, viewMembers, viewBooks);
-
-        boolean isInCheckout = false;
 
         Button checkout = GuiUtils.createButton("Checkout", event -> {
             IMember selectedMember = mainMemberTable.getSelected();

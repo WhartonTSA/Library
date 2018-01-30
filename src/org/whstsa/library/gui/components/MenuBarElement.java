@@ -68,13 +68,13 @@ public class MenuBarElement extends MenuBar {
         }
     }
 
-    public void addSubMenuItem(int menuIndex, int subMenuIndex, String title, ClickHandlerMenuItem clickHandler, KeyCombination keyCombo, boolean mainMenuDisabled) {
+    public void addSubMenuItem(int menuIndex, int subMenuIndex, String title, ClickHandlerMenuItem clickHandler, KeyCombination keyCombo, boolean disabled) {
         MenuItem menuItem = new MenuItem(title);
         menuItem.setOnAction(event -> clickHandler.onclick(menuItem));
         if (keyCombo != null) {
             menuItem.setAccelerator(keyCombo);
         }
-        if (mainMenuDisabled) {
+        if (disabled) {
             menuItem.setDisable(true);
         }
         ((Menu) super.getMenus().get(menuIndex).getItems().get(subMenuIndex)).getItems().add(menuItem);
