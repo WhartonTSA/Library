@@ -22,10 +22,10 @@ public class GuiMenuBar {
     private MenuBar mainMenuBar;
 
     public GuiMenuBar() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, null);
     }
 
-    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable) {
+    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB) {
 
         MenuBarElement barElement = new MenuBarElement();
 
@@ -52,7 +52,7 @@ public class GuiMenuBar {
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "_Edit JSON... (Dev)");
         barElement.addMenu("_Help");
-        barElement.addMenuItem(2, "_About...");
+        barElement.addMenuItem(2, "_About...", event -> libraryDB.getInterfaceManager().display(new GuiAbout()), null);
         barElement.addMenuItem(2, "_Help...");
 
         this.mainMenuBar = barElement;
