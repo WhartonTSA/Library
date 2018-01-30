@@ -393,13 +393,8 @@ public class DatabaseManagementTables {
                                 setTextFill(Color.RED);
                             } catch (NullPointerException | IndexOutOfBoundsException ex) {
                                 try {
-                                    if (checkouts.size() > 1) {
-                                        setText(formattedDate.format(checkouts.get(0).getDueDate()) + "...");//If book isn't overdue and there is more than one copy checked out
-                                        setTextFill(Color.GREEN);
-                                    } else {
-                                        setText(formattedDate.format(checkouts.get(0).getDueDate()));//If book isn't overdue and only one copy is checked out
-                                        setTextFill(Color.GREEN);
-                                    }
+                                    setText(formattedDate.format(checkouts.get(0).getDueDate()) + (checkouts.size() > 1 ? "..." : ""));//If book isn't overdue and there is more than one copy checked out
+                                    setTextFill(Color.GREEN);
                                 } catch (NullPointerException e) {
                                     LibraryDB.LOGGER.debug("There was an error finding the due date.");//If there was an error
                                     setText("");
