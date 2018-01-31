@@ -149,7 +149,7 @@ public class Library implements ILibrary {
             this.bookQuantity.put(book.getID(), 5);
         }
         if (this.bookQuantity.get(book.getID()) == null || this.bookQuantity.get(book.getID()) == 0) {
-            throw new OutOfStockException(book , this);
+            throw new OutOfStockException(book, this);
         }
         ICheckout checkout = new Checkout(member, book);
         member.checkout(checkout);
