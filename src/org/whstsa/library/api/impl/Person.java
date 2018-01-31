@@ -141,7 +141,7 @@ public class Person implements IPerson {
     @Override
     public IMember addMembership(ILibrary library) {
         try {
-            return library.addMember(new Member(this, library));
+            return new Member(this, library);
         } catch (MemberMismatchException ex) {
             // This will never be thrown, but this satisfies compiler errors
             return null;

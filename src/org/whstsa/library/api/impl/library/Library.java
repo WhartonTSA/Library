@@ -162,7 +162,7 @@ public class Library implements ILibrary {
         if (member.getLibrary() != this) {
             throw new MemberMismatchException("Member is not created for this library.");
         }
-        if (!this.members.contains(member)) {
+        if (!this.members.contains(member) && !this.getPeople().contains(member.getPerson())) {
             this.members.add(member);
         }
         return member;
@@ -180,8 +180,7 @@ public class Library implements ILibrary {
             return possibleMember;
         }
         IMember member = person.addMembership(this);
-        this.members.add(member);
-        return member;
+        return this.addMember(member);
     }
 
     @Override
