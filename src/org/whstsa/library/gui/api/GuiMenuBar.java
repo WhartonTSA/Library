@@ -52,7 +52,7 @@ public class GuiMenuBar {
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "_Edit JSON... (Dev)");
         barElement.addMenu("_Help");
-        barElement.addMenuItem(2, "_About...", event -> libraryDB.getInterfaceManager().display(new GuiAbout()), null);
+        barElement.addMenuItem(2, "_About...", event -> libraryDB.getInterfaceManager().display(new GuiAbout(libraryDB, libraryReference)), null);
         barElement.addMenuItem(2, "_Help...");
 
         this.mainMenuBar = barElement;
