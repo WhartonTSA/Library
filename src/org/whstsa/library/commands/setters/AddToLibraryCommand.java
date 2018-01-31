@@ -47,7 +47,7 @@ public class AddToLibraryCommand implements ICommand {
             }
         }).map(ObjectDelegate::getPerson).filter(Objects::nonNull).collect(Collectors.toList());
         people.forEach(person -> {
-            boolean alreadyRegistered = person.getMemberships().stream().filter(member -> member.getLibrary() == library).collect(Collectors.toList()).size() != 0;
+            boolean alreadyRegistered = library.getPeople().contains(person);
             if (alreadyRegistered) {
                 commandSender.sendMessage("Notice: Skipping id " + person.getID() + " as they are already registered.");
                 return;

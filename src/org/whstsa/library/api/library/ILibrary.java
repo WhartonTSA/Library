@@ -117,6 +117,13 @@ public interface ILibrary extends IBookContainer, Loadable {
     Map<UUID, IMember> getMemberMap();
 
     /**
+     * Returns a list of people at this library
+     *
+     * @return the list of people
+     */
+    List<IPerson> getPeople();
+
+    /**
      * Returns the name of this library
      *
      * @return the name of this library
@@ -135,7 +142,7 @@ public interface ILibrary extends IBookContainer, Loadable {
      *
      * @return the variable bookQuantity
      */
-    Map<UUID , Integer> getBookQuantity();
+    Map<UUID, Integer> getBookQuantity();
 
     /**
      * Returns the quantity for a certain book
