@@ -310,13 +310,14 @@ public class Loader {
 
             library.impl_setMembers(memberList);
 
-            libraryObject.getJSONObject("quantities").keySet().forEach(id -> {
-                UUID bookID = UUID.fromString(id);
-                IBook book = this.bookMap.get(bookID);
-                if (book == null) {
-                    return;
+            JSONObject quantities = libraryObject.getJSONObject("quantities");
+
+            quantities.keySet().forEach(id -> {
+                try {
+                    library.setQuantity(UUID.fromString(id), quantities.getInt(id));
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
                 }
-                library.setQuantity(book.getID() , libraryObject.getInt(id));
             });
 
             Tester.print("Loaded library object");
