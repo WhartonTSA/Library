@@ -32,6 +32,7 @@ public class LibraryDB extends Application {
     private IOFileSelection jsonFileBrowser;
 
     public void start(Stage stage) {
+        new CommandWatcher(System.in, System.out).run();
         this.stage = stage;
         stage.setTitle("Library Manager 1.0");
         stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
@@ -48,7 +49,6 @@ public class LibraryDB extends Application {
             LOGGER.debug("JSON Loaded.");
             this.interfaceManager.display(new GuiMain(this));
         });
-        //new CommandWatcher(System.in, System.out).start();
     }
 
     public Stage getStage() {
@@ -67,6 +67,7 @@ public class LibraryDB extends Application {
             JSONObject root = FILE_DELEGATE.parse();
             Loader.getLoader().load(root);
         } catch (UncheckedIOException | IOException | NullPointerException | JSONException ex) {
+            ex.printStackTrace();
             Alert alert = DialogUtils.createDialog("Invalid file", "You have provided an invalid file. Please check that you chose the correct file, or try a new database.", null, Alert.AlertType.ERROR, (Callback<Boolean> arg1) -> {
                 arg1.callback(true);
                 LOGGER.debug("Prompting for new JSON GUI");
@@ -78,7 +79,6 @@ public class LibraryDB extends Application {
         callback.callback(null);
     }
 
-    public static final Scanner SCANNER = new Scanner(System.in);
     public static final Readline READER = new Readline(System.in, System.out);
 
     public static final boolean TESTING = false;

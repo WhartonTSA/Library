@@ -1,6 +1,8 @@
 package org.whstsa.library.util;
 
 import org.json.JSONObject;
+import org.whstsa.library.commands.InputListener;
+import org.whstsa.library.commands.InputRunner;
 import org.whstsa.library.commands.api.ICommand;
 import org.whstsa.library.commands.api.ICommandSender;
 import org.whstsa.library.commands.api.impl.ConsoleSender;
@@ -10,6 +12,7 @@ import org.whstsa.library.commands.patchers.UpdateWalletCommand;
 import org.whstsa.library.commands.setters.*;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,19 +20,17 @@ import java.util.stream.Collectors;
 /**
  * Created by eric on 11/19/17.
  */
-public class CommandWatcher {
+public class CommandWatcher implements InputListener {
 
     private static final String COMMAND_SYNTAX_ARGUMENT_FORMAT = " <%s>";
     private final InputStream inputStream;
     private final PrintStream printStream;
-    private final Scanner scanner;
     private boolean watching;
     private Map<String, ICommand> commandMap;
 
     public CommandWatcher(InputStream inputStream, PrintStream printStream) {
         this.inputStream = inputStream;
         this.printStream = printStream;
-        this.scanner = new Scanner(this.inputStream);
         this.commandMap = new HashMap<>();
         this.loadCommands();
         this.watching = false;
@@ -42,33 +43,37 @@ public class CommandWatcher {
         return helpPrompt.toString();
     }
 
-    public void start() {
-        this.watching = true;
-        while (this.watching) {
-            this.printStream.print("> ");
-            List<String> argv = Arrays.asList(this.scanner.nextLine().split("(?<!\\\\)\\s+"));
-            argv = argv.stream().map(str -> str.replace("\\ ", " ")).collect(Collectors.toList());
-            String[] args = new String[argv.size() - 1];
-            for (int i = 1; i < argv.size(); i++) {
-                args[i - 1] = argv.get(i);
-            }
-            String commandKey = argv.get(0);
-            ICommandSender commandSender = ConsoleSender.getConsoleSender();
-            if (this.commandMap.containsKey(commandKey)) {
-                ICommand command = this.commandMap.get(commandKey);
-                JSONObject result = command.handle(args, commandSender);
-                if (result == null) {
-                    continue;
-                }
-                if (result.has(ICommand.HELP_FLAG) && result.getBoolean(ICommand.HELP_FLAG)) {
-                    commandSender.sendMessage(buildHelpPrompt(command));
-                } else {
-                    commandSender.sendMessage(result);
-                }
-            } else {
-                commandSender.sendMessage("Unknown command, type /help for a list of commands.");
-            }
+    public void inputReceived(String input) {
+        List<String> argv = Arrays.asList(input.split("(?<!\\\\)\\s+"));
+        argv = argv.stream().map(str -> str.replace("\\ ", " ")).collect(Collectors.toList());
+        String[] args = new String[argv.size() - 1];
+        for (int i = 1; i < argv.size(); i++) {
+            args[i - 1] = argv.get(i);
         }
+        String commandKey = argv.get(0);
+        ICommandSender commandSender = ConsoleSender.getConsoleSender();
+        if (this.commandMap.containsKey(commandKey)) {
+            ICommand command = this.commandMap.get(commandKey);
+            JSONObject result = command.handle(args, commandSender);
+            if (result == null) {
+                return;
+            }
+            if (result.has(ICommand.HELP_FLAG) && result.getBoolean(ICommand.HELP_FLAG)) {
+                commandSender.sendMessage(buildHelpPrompt(command));
+            } else {
+                commandSender.sendMessage(result);
+            }
+        } else {
+            commandSender.sendMessage("Unknown command, type /help for a list of commands.");
+        }
+    }
+
+    public void run() {
+        new Thread(() -> {
+            InputRunner inputRunner = new InputRunner();
+            inputRunner.addListener(this);
+            inputRunner.run();
+        }).start();
     }
 
     public List<ICommand> getCommands() {
