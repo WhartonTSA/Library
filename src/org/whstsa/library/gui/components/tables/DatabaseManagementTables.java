@@ -358,7 +358,7 @@ public class DatabaseManagementTables {
         ObservableReference<List<IMember>> observableReference = () -> libraryReference.poll().getMembers();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) {
+            if (event.getClickCount() == 2 && mainTable.getSelected() != null) {
                 LibraryDB.LOGGER.debug("Listing member's books");
                 MemberMetaDialogs.listBooks(t -> {}, mainTable.getSelected());
             }

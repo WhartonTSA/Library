@@ -15,6 +15,7 @@ import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Element;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +39,10 @@ public class LibraryManagerUtils {
         libraryReference.poll().getMembers().forEach(member -> people.add(member.getPerson()));
 
         return people;
+    }
+
+    public static List<String> asList(String ...items) {
+        return new ArrayList<>(Arrays.asList(items));
     }
 
     public static ObservableList<String>  getMemberNames(ObservableReference<ILibrary> libraryReference) {
