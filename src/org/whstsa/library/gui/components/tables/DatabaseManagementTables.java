@@ -377,16 +377,14 @@ public class DatabaseManagementTables {
         }, true, TableColumn.SortType.DESCENDING, 30);
         mainTable.addColumn("Due Date", (cellData) -> {
             ILibrary library = libraryReference.poll();
-            List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
-            boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
-            if (!isCheckedOut) {
-                return new ReadOnlyStringWrapper("N/A");//If book isn't checked out
-            } else {
-                TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
-                dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        if (!(item == null) || !empty) {
+            TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(4);
+            dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
+                @Override
+                public void updateItem(String item, boolean empty) {
+                    if (!(item == null) || !empty) {
+                        List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
+                        boolean hasBeenCheckedOut = checkouts != null;
+                        if (hasBeenCheckedOut) {
                             DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
                             // Sorts the checkouts by date to get the nearest due date
                             List<ICheckout> sortedCheckouts = checkouts.stream()
@@ -401,13 +399,16 @@ public class DatabaseManagementTables {
                             Date nearestDate = checkout.getDueDate();
                             setText(formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : ""));
                             setTextFill(checkout.isOverdue() ? Color.RED : Color.GREEN);
-                        } else {
-                            setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
                         }
+                        else {
+                            setText("N/A");
+                        }
+                    } else {
+                        setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
                     }
-                });
-                return new ReadOnlyStringWrapper(isCheckedOut ? checkouts.get(0).getDueDate().toString() : "Not checked out");//Don't really need this, but the cellValueProperty needs a return statement
-            }
+                }
+            });
+            return new ReadOnlyStringWrapper("N/A");//Don't really need this, but the cellValueProperty needs a return statement
         }, true, TableColumn.SortType.DESCENDING, 40);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);

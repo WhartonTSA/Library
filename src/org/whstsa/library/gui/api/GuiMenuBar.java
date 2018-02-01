@@ -51,6 +51,7 @@ public class GuiMenuBar {
         barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(), null);
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "_Edit JSON... (Dev)");
+        barElement.addMenuItem(1, "Simulate");
         barElement.addMenu("_Help");
         barElement.addMenuItem(2, "_About...", event -> libraryDB.getInterfaceManager().display(new GuiAbout(libraryDB, libraryReference)), null);
         barElement.addMenuItem(2, "_Help...");
