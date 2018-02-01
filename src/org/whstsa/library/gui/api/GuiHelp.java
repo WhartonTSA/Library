@@ -1,5 +1,6 @@
 package org.whstsa.library.gui.api;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
@@ -28,22 +29,18 @@ public class GuiHelp implements Gui {
         Button backButton = GuiUtils.createButton("Back to Main Menu", true,
                 library == null ? event -> libraryDB.getInterfaceManager().display(new GuiMain(libraryDB)) :
                         event -> libraryDB.getInterfaceManager().display(new GuiLibraryManager(library.poll(), this.libraryDB)));
-
-        LabelElement title = GuiUtils.createTitle("About");
+        VBox buttonBar = GuiUtils.createVBox(backButton);
+        buttonBar.setAlignment(Pos.CENTER);
 
         helpText = new HelpText();
 
-        Text content = AboutText.getText();
-        TextFlow mainTextFlow = new TextFlow(content);
-        mainTextFlow.setMaxWidth(800);
-
         Pagination pageSelect = new Pagination();
         pageSelect.setPageFactory(this::displayPage);
+        pageSelect.setPageCount(helpText.getPageAmount());
 
         BorderPane container = new BorderPane();
-        container.setCenter(content);
-        container.setTop(backButton);
-        container.setBottom(pageSelect);
+        container.setCenter(pageSelect);
+        container.setTop(buttonBar);
 
         this.window = container;
     }
@@ -60,6 +57,6 @@ public class GuiHelp implements Gui {
 
     @Override
     public String getUUID() {
-        return "GUI_ABOUT";
+        return "GUI_HELP";
     }
 }
