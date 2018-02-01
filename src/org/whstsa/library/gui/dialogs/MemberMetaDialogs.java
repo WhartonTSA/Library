@@ -39,7 +39,6 @@ public class MemberMetaDialogs {
         }
         DialogUtils.getDialogResults(dialog, (results) -> {
             IPerson person = LibraryManagerUtils.getPersonFromName((String) results.get(EXISTING).getResult());
-            Loader.getLoader().loadPerson(person);//TODO Do we need this statement?
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
             callback.callback(person);
