@@ -127,7 +127,6 @@ public class DatabaseManagementTables {
                     if (person == null) {
                         return;
                     }
-                    Loader.getLoader().loadPerson(person);
                     personTable.refresh();
                 })
         );
@@ -233,10 +232,6 @@ public class DatabaseManagementTables {
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event ->
                 MemberMetaDialogs.createMember(member -> {
-                    if (member == null) {
-                        return;
-                    }
-                    Loader.getLoader().loadPerson(member);
                     mainMemberTable.refresh();
                 }, libraryReference)
         );
