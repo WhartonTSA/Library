@@ -10,6 +10,8 @@ import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.InCirculationException;
 import org.whstsa.library.api.impl.Book;
+import org.whstsa.library.api.impl.library.Library;
+import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
@@ -21,6 +23,7 @@ import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.util.BookStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +95,7 @@ public class BookMetaDialogs {
     public static void listCopies(Callback<IBook> callback, IBook book, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Copies")
-                .addLabel("There are " + libraryReference.poll().getBooks().size() + " copie(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
+                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + "available copie(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();
@@ -110,11 +113,18 @@ public class BookMetaDialogs {
         mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 25);
         mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
         mainTable.addColumn("Owner Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate().toString()), true, TableColumn.SortType.DESCENDING, 1000);
+        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate() == null ?  "N/A" : cellData.getValue().getDueDate().toString()), true, TableColumn.SortType.DESCENDING, 1000);
 
         List<BookStatusRow> tableItems = FXCollections.observableArrayList();
-        for (int i = 1; i < libraryReference.poll().getBooks().size(); i++) {//TODO change to getBookMap.filter.blahblahblah I just need the books
-            tableItems.add(new BookStatusRow(i, BookStatus.AVAILABLE, "Nobody"));//This is where the data for the table is created
+        List<ICheckout> library = libraryReference.poll().getCheckouts().get(book);
+        if (library == null) {
+            library = new ArrayList<>();
+        }
+        for (int counter = 1; counter <= library.size(); counter++) {
+            tableItems.add(new BookStatusRow(counter, BookStatus.CHECKED_OUT, library.get(counter - 1).getOwner().getName(), library.get(counter - 1).getDueDate()));//This is where the data for the table is created
+        }
+        for (int counter = library.size() + 1; counter <= libraryReference.poll().getBookQuantity().get(book.getID());counter++) {
+            tableItems.add(new BookStatusRow(counter, BookStatus.AVAILABLE, "Nobody", null));
         }
         ObservableReference<List<BookStatusRow>> observableReference = () -> tableItems;
         mainTable.setReference(observableReference);

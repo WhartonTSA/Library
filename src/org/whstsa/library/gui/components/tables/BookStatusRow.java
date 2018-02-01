@@ -11,7 +11,7 @@ public class BookStatusRow {
     private String ownerName;
     private Date dueDate;
 
-    public BookStatusRow(int copy, BookStatus status, String ownerName) {
+    public BookStatusRow(int copy, BookStatus status, String ownerName, Date dueDate) {
         this.copy = copy;
         this.status = status;
         this.ownerName = ownerName;
@@ -30,7 +30,7 @@ public class BookStatusRow {
         return this.ownerName;
     }
 
-    public Date getDueDate() {return this.getDueDate();}
+    public Date getDueDate() {return this.dueDate;}
 
 
 }
