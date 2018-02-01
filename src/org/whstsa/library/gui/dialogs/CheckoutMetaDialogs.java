@@ -22,12 +22,14 @@ import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.Table;
+import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.util.Logger;
 
+import javax.xml.transform.Result;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ public class CheckoutMetaDialogs {
     private static String PAYFINE = "Pay Fine";
     private static String BOOK = "Book";
     private static String RETURN = "Return";
+    private static String QUANTITY = "Quantity";
 
 
     public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ObservableReference<ILibrary> libraryReference) {
@@ -121,7 +124,7 @@ public class CheckoutMetaDialogs {
             }
             selectedBooks.forEach(book -> {
                 try {
-                    libraryReference.poll().reserveBook(member, book);
+                    libraryReference.poll().reserveBook(member, book, 5);
                     Logger.DEFAULT_LOGGER.debug("Checking out " + book.getTitle() + " to " + member.getName() + ".");
                 } catch (Exception ex) {
                     DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
@@ -148,7 +151,7 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    private static void checkoutMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
+    private static void checkoutMemberDialog(Callback<IMember> callback, IMember member,  ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Checking out " + member.getName() + ".")
                 .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)
@@ -173,8 +176,17 @@ public class CheckoutMetaDialogs {
                 }
             }
             IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
+            Integer quantity = null;
+            Element quantityElement = results.get(QUANTITY);
+            if (quantityElement instanceof TextFieldElement) {
+                TextFieldElement textFieldQuantityElement = (TextFieldElement) quantityElement;
+                quantity = textFieldQuantityElement.getNumber();
+            }
+            if (quantity == null) {
+                quantity = 1;
+            }
             try {
-                libraryReference.poll().reserveBook(member, book);
+                libraryReference.poll().reserveBook(member, book, quantity);
                 callback.callback(member);
             } catch (Exception ex) {
                 DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();

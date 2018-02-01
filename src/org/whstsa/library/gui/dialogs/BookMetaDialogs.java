@@ -15,6 +15,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.Table;
@@ -32,6 +33,7 @@ public class BookMetaDialogs {
     private static final String TITLE = "Title";
     private static final String AUTHOR = "Author";
     private static final String GENRE = "Genre";
+    private static String QUANTITY = "Quantity";
 
 
     public static void createBook(Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
@@ -40,6 +42,7 @@ public class BookMetaDialogs {
                 .addTextField(TITLE)
                 .addTextField(AUTHOR)
                 .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, -1)
+                .addTextField(QUANTITY, "1")
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String title = results.get(TITLE).getString();
@@ -48,7 +51,16 @@ public class BookMetaDialogs {
             BookType genre = BookType.getGenre(type);
             IBook book = new Book(title, author, genre);
             Loader.getLoader().loadBook(book);
-            libraryReference.poll().addBook(book);
+            Integer quantity = null;
+            Element quantityElement = results.get(QUANTITY);
+            if (quantityElement instanceof TextFieldElement) {
+                TextFieldElement textFieldQuantityElement = (TextFieldElement) quantityElement;
+                quantity = textFieldQuantityElement.getNumber();
+            }
+            if (quantity == null) {
+                quantity = 1;
+            }
+            libraryReference.poll().addBook(book, quantity);
             callback.callback(book);
         }, TITLE, AUTHOR, GENRE);
     }
@@ -95,7 +107,7 @@ public class BookMetaDialogs {
     public static void listCopies(Callback<IBook> callback, IBook book, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Copies")
-                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + "available copie(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
+                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + " available copie(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();

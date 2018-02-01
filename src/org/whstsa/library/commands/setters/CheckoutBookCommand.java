@@ -41,7 +41,7 @@ public class CheckoutBookCommand implements ICommand {
             return CommandUtil.createErrorResponse("No book with the given ID could be found.");
         }
         try {
-            result = member.getLibrary().reserveBook(member, book).toJSON();
+            result = member.getLibrary().reserveBook(member, book, 5).toJSON();
         } catch (OutOfStockException ex) {
             return CommandUtil.createErrorResponse("There are no more books that can be checked out");
         }

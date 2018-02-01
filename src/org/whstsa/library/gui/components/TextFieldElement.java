@@ -28,6 +28,14 @@ public class TextFieldElement extends TextField implements Element {
         return GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, this.label, this);
     }
 
+    public Integer getNumber() {
+        try {
+            return Integer.parseInt(this.getResult());
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
     public String getResult() {
         return this.getText();
     }

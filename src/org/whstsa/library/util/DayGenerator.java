@@ -90,7 +90,7 @@ public class DayGenerator {
 					IBook book = bookDB.get(randomBookIndex);
 					if (book != null) {
 						try {
-							library.reserveBook(member, book);
+							library.reserveBook(member, book, RANDOM.nextInt(10));
 							LOGGER.debug(member.getName() + " took " + book.getTitle() + " (" + library.getQuantity(book.getID()) + ")");
 						}
 						catch (OutOfStockException e) {
@@ -143,7 +143,7 @@ public class DayGenerator {
 		IBook book = new Book(bookName, authorName, bookType);
 		ILibrary library = randomLibrary();
 		Loader.getLoader().loadBook(book);
-		library.addBook(book);
+		library.addBook(book, 5);
 		LOGGER.debug(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthorName(), library.getName()));
 	}
 

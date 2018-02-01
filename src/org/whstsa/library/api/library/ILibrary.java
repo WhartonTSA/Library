@@ -20,10 +20,12 @@ public interface ILibrary extends IBookContainer, Loadable {
      *
      * @param member the member checking a book out
      * @param book   the book being checked out
+     * @param quantity the total quantity of books being added
      * @return the checkout object
      * @throws BookNotRegisteredException if {@code !books.contain(book)}
+     * @throws OutOfStockException if there are no more copies available to book
      */
-    ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException, OutOfStockException;
+    ICheckout reserveBook(IMember member, IBook book, int quantity) throws BookNotRegisteredException, OutOfStockException;
 
     /**
      * Creates a member object and adds them to this library

@@ -85,12 +85,12 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public void addBook(IBook book) {
+    public void addBook(IBook book, int quantity) {
         if (this.books.contains(book)) {
             return;
         }
         this.books.add(book);
-        this.setQuantity(book.getID(), 5);
+        this.setQuantity(book.getID(), quantity);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException, OutOfStockException {
+    public ICheckout reserveBook(IMember member, IBook book, int quantity) throws BookNotRegisteredException, OutOfStockException {
         if (!this.bookQuantity.containsKey(book.getID())) {
             this.bookQuantity.put(book.getID(), 5);
         }

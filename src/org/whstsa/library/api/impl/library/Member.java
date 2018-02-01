@@ -80,7 +80,7 @@ public class Member implements IMember {
     }
 
     @Override
-    public void addBook(IBook book) {
+    public void addBook(IBook book, int quantity) {
         ICheckout checkout = new Checkout(this, book);
         this.checkout(checkout);
     }
@@ -129,7 +129,7 @@ public class Member implements IMember {
     public void addBook(UUID id) {
         IBook book = this.getLibrary().getBookMap().get(id);
         if (book != null) {
-            this.addBook(book);
+            this.addBook(book.getID());
         }
     }
 

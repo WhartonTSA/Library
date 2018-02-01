@@ -117,7 +117,7 @@ public class Tester {
         IMember member = this.library.getMembers().get(0);
         IBook book = this.library.getBooks().get(0);
         try {
-            ICheckout checkout = this.library.reserveBook(member, book);
+            ICheckout checkout = this.library.reserveBook(member, book , 5);
             System.out.println("Removing member while they have a book checked-out");
         }
         catch (OutOfStockException ex) {
@@ -236,7 +236,7 @@ public class Tester {
         System.out.format("Checking out a random book for each member of library %s", library.getName());
         for (IMember member : library.getMembers()) {
             IBook book = library.getBooks().get(RANDOM.nextInt(library.getBooks().size()));
-            library.reserveBook(member, book);
+            library.reserveBook(member, book, 5);
         }
     }
 
