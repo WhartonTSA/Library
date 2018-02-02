@@ -13,6 +13,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.util.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,14 +93,12 @@ public class LibraryManagerUtils {
             }
         });
 
-        Map<Integer, IPerson> sortedScores = scores.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).collect(Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue,
-                (e1, e2) -> e1,
-                HashMap::new
-        ));
+        Optional<Map.Entry<Integer, IPerson>> personEntry = scores.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).findFirst();
+        if (personEntry.isPresent()) {
+            return personEntry.get().getValue();
+        }
 
-        return sortedScores.get(0);
+        return null;
     }
 
     public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the library referenced
