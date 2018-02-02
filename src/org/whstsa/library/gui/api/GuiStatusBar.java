@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.whstsa.library.World;
+import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.GuiUtils;
 
@@ -54,26 +55,15 @@ public class GuiStatusBar extends HBox {
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
     private void liveDate() {
-        Runnable runnable = () -> {
-            while (true) {
-                String dateString = simpleDateFormat.format(World.getDate());
-                this.dateLabel.setText(dateString);
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {
+            String dateString = simpleDateFormat.format(World.getDate());
+            this.dateLabel.setText(dateString);
 
-                if (!World.getDate().equals(new Date())) {
-                    this.dateLabel.setTextFill(Color.web("#0056ad"));
-                    this.dateLabel.setTooltip(new Tooltip("This is the date simulated by the Library Manager, not today's date."));
-                }
-                try {
-                    Thread.sleep(1000);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            if (!World.getDate().equals(new Date())) {
+                this.dateLabel.setTextFill(Color.web("#0056ad"));
+                this.dateLabel.setTooltip(new Tooltip("This is the date simulated by the Library Manager, not today's date."));
             }
-        };
-
-        Thread t = new Thread(runnable);
-        t.start();
+        });
     }
 
     private void liveSavedStatus() {

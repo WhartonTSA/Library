@@ -3,9 +3,11 @@ package org.whstsa.library;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
@@ -32,6 +34,7 @@ public class LibraryDB extends Application {
     private IOFileSelection jsonFileBrowser;
 
     public void start(Stage stage) {
+        BackgroundWorker.getBackgroundWorker().run();
         new CommandWatcher(System.in, System.out).run();
         this.stage = stage;
         stage.setTitle("Library Manager 1.0");
