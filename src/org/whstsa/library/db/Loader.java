@@ -208,7 +208,6 @@ public class Loader {
             String firstName = personObject.getString("firstName");
             String lastName = personObject.getString("lastName");
             boolean teacher = personObject.getBoolean("teacher");
-            double wallet = personObject.getDouble("wallet");
             String rawUUID = String.valueOf(personObject.get("uuid"));
 
             UUID uuid;
@@ -219,7 +218,6 @@ public class Loader {
             }
 
             Person person = new Person(firstName, lastName, teacher);
-            person.addMoney(wallet);
             person.impl_setID(uuid);
 
             Tester.print("Loaded person object");

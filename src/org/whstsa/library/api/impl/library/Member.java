@@ -115,7 +115,7 @@ public class Member implements IMember {
     }
 
     @Override
-    public void checkInAndPayFines(ICheckout checkout) throws NotEnoughMoneyException, MemberMismatchException, CheckedInException {
+    public void checkInAndPayFines(ICheckout checkout) throws MemberMismatchException, CheckedInException {
         if (checkout.getOwner() != this) {
             throw new MemberMismatchException(String.format(MEMBER_MISMATCH_CHECKIN, checkout.getOwner().getID(), this.getID()));
         }

@@ -11,14 +11,12 @@ import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
 import org.whstsa.library.api.exceptions.CheckedInException;
-import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
 import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
-import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 
@@ -32,7 +30,6 @@ public class DayGenerator {
 	 * Removing Members (more rare-ish) 1/50 per person, MUST NOT HAVE FINE/BOOK, if cannot remove, will remove as soon as possible
 	 * Adding New Books (names) 1/4 pd
 	 * Getting Books / Removing Books 1/5 per person, MUST HAVE NO FINE AND NOT ON DEREGISTERED LIST
-	 * Add Money To Wallet 1/5 per person (increases chance for those who have fine at the time)
 	 * Pay Fine  1/5 per person with fine, IF THEY HAVE ENOUGH
 	 **/
 
@@ -105,25 +102,13 @@ public class DayGenerator {
 				}
 			}
 		});
-		ObjectDelegate.getAllMembers().forEach(member -> {
-			IPerson person = member.getPerson();
-			if (chance(10) || (member.getFine() != 0.0 && chance(5))) {
-				double randomAmountAdded = RANDOM.nextInt(9) * 1.0 + RANDOM.nextInt(3) * 0.25 + 1.0;
-				person.addMoney(randomAmountAdded);
-				actions.add(person.getName() + " has $" + person.getWallet() + " in their wallet");
-			}
-		});
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
 			List<ICheckout> checkoutList = member.getCheckouts();
 			for (ICheckout checkout : checkoutList) {
 				double fine = checkout.getFine();
 				if (fine != 0.0) {
-					try {
-						checkout.payFine();
-						actions.add(String.format("Payed off fee for %s for %s of $%s, $%s remaining", checkout.getBook().getTitle(), checkout.getOwner().getName(), fine, checkout.getOwner().getPerson().getWallet()));
-					} catch (NotEnoughMoneyException ex) {
-						actions.add(String.format("Not paying off fee for %s for %s of $%.2f", checkout.getBook().getTitle(), checkout.getOwner().getName(), ex.getTransaction()));
-					}
+					checkout.payFine();
+					actions.add(String.format("Payed off fee for %s for %s of $%s", checkout.getBook().getTitle(), checkout.getOwner().getName(), fine));
 				}
 			}
 		});

@@ -1,9 +1,7 @@
 package org.whstsa.library.api;
 
-import javafx.beans.property.StringProperty;
 import org.whstsa.library.api.books.IBookContainerReadonly;
 import org.whstsa.library.api.exceptions.MemberMismatchException;
-import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 
@@ -64,32 +62,6 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
      * @return the newly-created member object
      */
     IMember addMembership(ILibrary library);
-
-    /**
-     * Returns the current balance of this person
-     *
-     * @return the balance
-     */
-    double getWallet();
-
-    /**
-     * Adds the given amount of money to the person and returns
-     * the new balance
-     *
-     * @param money the money to add
-     * @return the new balance
-     */
-    double addMoney(double money);
-
-    /**
-     * Deducts the given amount of money from the person and
-     * returns the new balance
-     *
-     * @param money the money to deduct
-     * @return the new balance
-     * @throws NotEnoughMoneyException if {@code money > balance}
-     */
-    double deductMoney(double money) throws NotEnoughMoneyException;
 
     /**
      * Sets whether the person is now a teacher

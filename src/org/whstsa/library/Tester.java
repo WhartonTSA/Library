@@ -49,10 +49,7 @@ public class Tester {
         this.testUnregisteredBookChecks();
         this.testAllReturns();
         this.advanceTime(40);
-        this.addToAllUsers(100);
-        this.printAllBalances();
         this.testAllReturns();
-        this.printAllBalances();
         Loader.getLoader().load(this.computeJSON());
         try {
             this.testDeregistrationWhileHavingBooks();
@@ -151,14 +148,6 @@ public class Tester {
         }
     }
 
-    private void printAllBalances() {
-        System.out.println(SEPARATOR);
-        for (IPerson person : ObjectDelegate.getPeople()) {
-            System.out.format("%s has $%.2f", person.getName(), person.getWallet());
-        }
-        System.out.println(SEPARATOR);
-    }
-
     private void addBooksToAllLibraries() {
         System.out.println("Adding all books to all libraries");
         for (ILibrary library : ObjectDelegate.getLibraries()) {
@@ -222,14 +211,6 @@ public class Tester {
             this.testUnregisteredBookCheck(library);
         }
         System.out.println(SEPARATOR);
-    }
-
-    private void addToAllUsers(double money) {
-        System.out.format("Adding $%.2f to all users", money);
-        for (IPerson person : ObjectDelegate.getPeople()) {
-            System.out.format("Adding $%.2f to %s", money, person.getName());
-            person.addMoney(money);
-        }
     }
 
     private void checkoutRandomBookEachMember(ILibrary library) throws OutOfStockException {
