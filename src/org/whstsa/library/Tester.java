@@ -147,7 +147,7 @@ public class Tester {
     private void addBooksToLibrary(ILibrary library) {
         System.out.format("Adding all books to library %s", library.getName());
         for (IBook book : ObjectDelegate.getBooks()) {
-            library.addBook(book);
+            library.addBook(book.getID());
         }
     }
 
