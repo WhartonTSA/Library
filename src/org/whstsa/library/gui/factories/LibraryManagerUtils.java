@@ -101,15 +101,12 @@ public class LibraryManagerUtils {
         return null;
     }
 
-    public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the library referenced
-        List<IPerson> people = ObjectDelegate.getPeople();
-        ObjectDelegate.getAllMembers().forEach(person -> {
-            if (people.contains(person.getPerson())) {
-                people.remove(person.getPerson());
-            }
-        });
-        System.out.println(people.toString());
-        return getNamesFromPeople(people);
+    public static List<IPerson> getPeopleWithoutLibrary(ILibrary library) {
+        return ObjectDelegate.getPeople().stream().filter(person -> !library.hasMember(person)).collect(Collectors.toList());
+    }
+
+    public static List<IPerson> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the library referenced
+        return getPeopleWithoutLibrary(libraryReference.poll());
     }
 
     public static ObservableList<String>  getBookTitlesFromList(ObservableList<IBook> books) {
