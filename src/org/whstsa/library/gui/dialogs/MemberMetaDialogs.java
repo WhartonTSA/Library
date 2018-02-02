@@ -38,7 +38,7 @@ public class MemberMetaDialogs {
             dialogPane.add(GuiUtils.createLabel("There are no people to create a member from. Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
         }
         DialogUtils.getDialogResults(dialog, (results) -> {
-            IPerson person = LibraryManagerUtils.getPersonFromName((String) results.get(EXISTING).getResult());
+            IPerson person = LibraryManagerUtils.getPersonFromName(results.get(EXISTING).getString());
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
             callback.callback(person);

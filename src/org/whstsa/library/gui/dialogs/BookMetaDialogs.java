@@ -24,6 +24,8 @@ import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.util.BookStatus;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -122,10 +124,11 @@ public class BookMetaDialogs {
     }
 
     private static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, IBook book, ObservableReference<ILibrary> libraryReference) {
+        DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
         mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 25);
-        mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
         mainTable.addColumn("Owner Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate() == null ?  "N/A" : cellData.getValue().getDueDate().toString()), true, TableColumn.SortType.DESCENDING, 1000);
+        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate() == null ?  "N/A" : formattedDate.format(cellData.getValue().getDueDate())), true, TableColumn.SortType.DESCENDING, 50);
+        mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
 
         List<BookStatusRow> tableItems = FXCollections.observableArrayList();
         List<ICheckout> library = libraryReference.poll().getCheckouts().get(book);
