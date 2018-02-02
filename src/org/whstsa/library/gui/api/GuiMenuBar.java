@@ -22,10 +22,10 @@ public class GuiMenuBar {
     private MenuBar mainMenuBar;
 
     public GuiMenuBar() {
-        this(null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null);
     }
 
-    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB) {
+    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
 
         MenuBarElement barElement = new MenuBarElement();
 
@@ -40,7 +40,9 @@ public class GuiMenuBar {
         barElement.addMenuItem(0, "Save", event -> {
             try {
                 LibraryDB.getFileDelegate().save(Loader.getLoader().computeJSON());
+                if (statusBar != null) {statusBar.setSaved(true);}
                 Logger.DEFAULT_LOGGER.debug("Saved a copy of the data");
+
             } catch (IOException ex) {
                 DialogUtils.createDialog("Couldn't save", "Your data couldn't be saved. Error:\n" + ex.getLocalizedMessage()).show();
                 ex.printStackTrace();

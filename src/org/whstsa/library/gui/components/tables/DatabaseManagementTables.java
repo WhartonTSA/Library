@@ -167,9 +167,11 @@ public class DatabaseManagementTables {
 
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference, LibraryDB libraryDB) {
 
+
         BorderPane mainContainer = new BorderPane();
+        GuiStatusBar statusBar = new GuiStatusBar();
+        mainContainer.setBottom(statusBar);
         mainContainer.setTop(new VBox(new MenuBar(), LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members")));
-        mainContainer.setBottom(new GuiStatusBar());
 
         Table<IMember> mainMemberTable = new Table<>();
         memberManagerTable(mainMemberTable, libraryReference);
@@ -185,7 +187,7 @@ public class DatabaseManagementTables {
         LibraryManagerUtils.addTooltip(mainBookTable.getTable(), "Double-click to see the status of the copies of this book.");
         mainBookTable.refresh();
 
-        GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null, libraryDB);
+        GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null, libraryDB, null);
         ((VBox) mainContainer.getTop()).getChildren().set(0, mainMenuBar.getMenu());
 
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->

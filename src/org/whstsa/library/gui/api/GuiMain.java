@@ -39,7 +39,7 @@ public class GuiMain implements Gui {
         Table<ILibrary> libraryTable = new Table<>();
         Table<IPerson> personTable = new Table<>();
 
-        GuiMenuBar menuBar = new GuiMenuBar(null, null, null, libraryTable, personTable, libraryDB);
+        GuiMenuBar menuBar = new GuiMenuBar(null, null, null, libraryTable, personTable, libraryDB, null);
 
         StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB, libraryTable);
 
