@@ -14,9 +14,7 @@ import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Element;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LibraryManagerUtils {
@@ -73,12 +71,35 @@ public class LibraryManagerUtils {
     }
 
     public static IPerson getPersonFromName(String name) {
-        for (int i = 0; i < ObjectDelegate.getPeople().size(); i++) {
-            if (ObjectDelegate.getPeople().get(i).getName().equals(name)) {
-                return ObjectDelegate.getPeople().get(i);
+        Map<Integer, IPerson> scores = new HashMap<>();
+        ObjectDelegate.getPeople().forEach(person -> {
+            int score = 0;
+            String comparingName = person.getName();
+            if (name.equals(comparingName)) {
+                score += 10;
+            } else if (name.equalsIgnoreCase(comparingName)) {
+                score += 8;
             }
-        }
-        return null;
+
+            if (name.contains(comparingName)) {
+                score += 3;
+            } else if (name.toLowerCase().contains(comparingName.toLowerCase())) {
+                score += 2;
+            }
+
+            if (score > 0) {
+                scores.put(score, person);
+            }
+        });
+
+        Map<Integer, IPerson> sortedScores = scores.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1,
+                HashMap::new
+        ));
+
+        return sortedScores.get(0);
     }
 
     public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the library referenced

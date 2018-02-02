@@ -133,6 +133,12 @@ public class GuiUtils {
 		return new Separator();
 	}
 
+	public static HBox createSpacer() {
+		HBox spacer = new HBox(new Label(""));
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		return spacer;
+	}
+
     public static ToggleButton createToggleButton(String title) {
 	    return new ToggleButton(title);
     }

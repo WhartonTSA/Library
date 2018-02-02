@@ -20,21 +20,15 @@ public class SimulateMetaDialogs {
 
     private static String SIMULATE = "Days";
 
-    public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
+    public static void simulateDay(ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Simulate Days")
                 .addTextField(SIMULATE)
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference).size() < 1) {
-            dialogPane.add(GuiUtils.createLabel("There are no people to create a member from. Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
-        }
         DialogUtils.getDialogResults(dialog, (results) -> {
-            IPerson person = LibraryManagerUtils.getPersonFromName((String) results.get(SIMULATE).getResult());
-            Loader.getLoader().loadPerson(person);//TODO Do we need this statement?
-            person.addMembership(libraryReference.poll());
-            libraryReference.poll().addMember(person);
-            callback.callback(person);
+            int days = (int) results.get(SIMULATE).getResult();
+            //Put SimulateDay code here
         }, SIMULATE);
     }
 

@@ -26,8 +26,8 @@ public class GuiAbout implements Gui {
 
         LabelElement title = GuiUtils.createTitle("About");
 
-        Text content = AboutText.getText();
-        TextFlow mainTextFlow = new TextFlow(content);
+        AboutText text = new AboutText();
+        TextFlow mainTextFlow = text.getTextFlow();
         System.out.println("Getting about text");
         mainTextFlow.setMaxWidth(800);
 
