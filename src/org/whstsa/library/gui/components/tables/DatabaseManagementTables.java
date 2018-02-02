@@ -16,6 +16,7 @@ import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.api.GuiMenuBar;
+import org.whstsa.library.gui.api.GuiStatusBar;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Table;
@@ -168,6 +169,7 @@ public class DatabaseManagementTables {
 
         BorderPane mainContainer = new BorderPane();
         mainContainer.setTop(new VBox(new MenuBar(), LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members")));
+        mainContainer.setBottom(new GuiStatusBar());
 
         Table<IMember> mainMemberTable = new Table<>();
         memberManagerTable(mainMemberTable, libraryReference);
@@ -376,31 +378,31 @@ public class DatabaseManagementTables {
             dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
                 @Override
                 public void updateItem(String item, boolean empty) {
-                    if (!(item == null) || !empty) {
-                        List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
-                        boolean hasBeenCheckedOut = checkouts != null;
-                        if (hasBeenCheckedOut) {
-                            DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
-                            // Sorts the checkouts by date to get the nearest due date
-                            List<ICheckout> sortedCheckouts = checkouts.stream()
-                                    .sorted(Comparator.comparing(ICheckout::getDueDate))
-                                    .collect(Collectors.toList());
-                            // Display N/A if there are no checkouts
-                            if (sortedCheckouts.size() == 0 || sortedCheckouts.get(0) == null) {
-                                setText("N/A");
-                                return;
-                            }
-                            ICheckout checkout = sortedCheckouts.get(0);
-                            Date nearestDate = checkout.getDueDate();
-                            setText(formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : ""));
-                            setTextFill(checkout.isOverdue() ? Color.RED : Color.GREEN);
-                        }
-                        else {
+                if (!(item == null) || !empty) {
+                    List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
+                    boolean hasBeenCheckedOut = checkouts != null;
+                    if (hasBeenCheckedOut) {
+                        DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
+                        // Sorts the checkouts by date to get the nearest due date
+                        List<ICheckout> sortedCheckouts = checkouts.stream()
+                                .sorted(Comparator.comparing(ICheckout::getDueDate))
+                                .collect(Collectors.toList());
+                        // Display N/A if there are no checkouts
+                        if (sortedCheckouts.size() == 0 || sortedCheckouts.get(0) == null) {
                             setText("N/A");
+                            return;
                         }
-                    } else {
-                        setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
+                        ICheckout checkout = sortedCheckouts.get(0);
+                        Date nearestDate = checkout.getDueDate();
+                        setText(formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : ""));
+                        setTextFill(checkout.isOverdue() ? Color.RED : Color.GREEN);
                     }
+                    else {
+                        setText("N/A");
+                    }
+                } else {
+                    setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
+                }
                 }
             });
             return new ReadOnlyStringWrapper("N/A");//Don't really need this, but the cellValueProperty needs a return statement
