@@ -38,15 +38,17 @@ public class DayGenerator {
 
 	private static Logger LOGGER = new Logger("DayGenerator");
 	private static List<UUID> deregisterPendingPeople = new ArrayList<>();
+	private static List<String> actions = new ArrayList<>();
 
-	public static void simulateDay() {
+	public static List<String> simulateDay() {
+		actions = new ArrayList<>();
 		ObjectDelegate.getAllMembers().stream().filter(member -> deregisterPendingPeople.contains(member.getID())).collect(Collectors.toList()).forEach(member -> {
 			try {
 				member.getLibrary().removeMember(member);
-				LOGGER.debug(String.format("%s has finally been deregistered ", member.getName()));
+				actions.add(String.format("%s has finally been deregistered ", member.getName()));
 				deregisterPendingPeople.remove(member.getID());
 			} catch (CannotDeregisterException ex) {
-				//LOGGER.debug(String.format("Couldn't deregister %s yet: %s ", member.getName(), ex.getMessage())); (Commented out because don't want debug screen to be bombarded with couldn't deregister yet)
+				//actions.add(String.format("Couldn't deregister %s yet: %s ", member.getName(), ex.getMessage())); (Commented out because don't want debug screen to be bombarded with couldn't deregister yet)
 			}
 		});
 		while (chance(4)) {
@@ -56,9 +58,9 @@ public class DayGenerator {
 			if (chance(50) && !deregisterPendingPeople.contains(member)) {
 				try {
 					member.getLibrary().removeMember(member);
-					LOGGER.debug(String.format("%s has been deregistered ", member.getName()));
+					actions.add(String.format("%s has been deregistered ", member.getName()));
 				} catch (CannotDeregisterException ex) {
-					LOGGER.debug(String.format("Couldn't deregister %s: %s Deregistering as soon as possible", member.getName(), ex.getMessage()));
+					actions.add(String.format("Couldn't deregister %s: %s Deregistering as soon as possible", member.getName(), ex.getMessage()));
 					deregisterPendingPeople.add(member.getID());
 				}
 			}
@@ -72,12 +74,12 @@ public class DayGenerator {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
 						member.checkIn(checkout);
-						LOGGER.debug(member.getName() + " returned " + checkout.getBook().getTitle() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
+						actions.add(member.getName() + " returned " + checkout.getBook().getTitle() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
 						member.removeBook(checkout.getBook());
 					} catch (CheckedInException e) {
-						LOGGER.debug(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
+						actions.add(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
 					} catch (OutstandingFinesException e) {
-						LOGGER.debug(e.getMessage());
+						actions.add(e.getMessage());
 					}
 				}
 				else if (member.getLibrary().getBooks().size() != 0 && member.getFine() == 0 && !deregisterPendingPeople.contains(member.getID())) {
@@ -91,15 +93,15 @@ public class DayGenerator {
 					if (book != null) {
 						try {
 							library.reserveBook(member, book, RANDOM.nextInt(10));
-							LOGGER.debug(member.getName() + " took " + book.getTitle() + " (" + library.getQuantity(book.getID()) + ")");
+							actions.add(member.getName() + " took " + book.getTitle() + " (" + library.getQuantity(book.getID()) + ")");
 						}
 						catch (OutOfStockException e) {
-							LOGGER.debug(e.getMessage());
+							actions.add(e.getMessage());
 						}
 					}
 				}
 				else {
-					LOGGER.debug(member.getName() + " still has fines to pay before they can grab another book ($" + member.getFine()  + ") or they are on the deregister list");
+					actions.add(member.getName() + " still has fines to pay before they can grab another book ($" + member.getFine()  + ") or they are on the deregister list");
 				}
 			}
 		});
@@ -108,7 +110,7 @@ public class DayGenerator {
 			if (chance(10) || (member.getFine() != 0.0 && chance(5))) {
 				double randomAmountAdded = RANDOM.nextInt(9) * 1.0 + RANDOM.nextInt(3) * 0.25 + 1.0;
 				person.addMoney(randomAmountAdded);
-				LOGGER.debug(person.getName() + " has $" + person.getWallet() + " in their wallet");
+				actions.add(person.getName() + " has $" + person.getWallet() + " in their wallet");
 			}
 		});
 		ObjectDelegate.getAllMembers().stream().filter(member -> chance(5) && member.getFine() != 0.0).collect(Collectors.toList()).forEach(member -> {
@@ -118,13 +120,14 @@ public class DayGenerator {
 				if (fine != 0.0) {
 					try {
 						checkout.payFine();
-						LOGGER.debug(String.format("Payed off fee for %s for %s of $%s, $%s remaining", checkout.getBook().getTitle(), checkout.getOwner().getName(), fine, checkout.getOwner().getPerson().getWallet()));
+						actions.add(String.format("Payed off fee for %s for %s of $%s, $%s remaining", checkout.getBook().getTitle(), checkout.getOwner().getName(), fine, checkout.getOwner().getPerson().getWallet()));
 					} catch (NotEnoughMoneyException ex) {
-						LOGGER.debug(String.format("Not paying off fee for %s for %s of $%.2f", checkout.getBook().getTitle(), checkout.getOwner().getName(), ex.getTransaction()));
+						actions.add(String.format("Not paying off fee for %s for %s of $%.2f", checkout.getBook().getTitle(), checkout.getOwner().getName(), ex.getTransaction()));
 					}
 				}
 			}
 		});
+		return actions;
 	}
 
 	public static void generateMember(ILibrary library) {
@@ -132,7 +135,7 @@ public class DayGenerator {
 		IPerson person = new Person(generateFirstName(), generateLastName(), chance(5));
 		library.addMember(person);
 		Loader.getLoader().loadPerson(person);
-		LOGGER.debug(String.format("Added %s %s to %s (%s)", person.getFirstName(), person.getLastName(), library.getName(), person.isTeacher()));
+		actions.add(String.format("Added %s %s to %s (%s)", person.getFirstName(), person.getLastName(), library.getName(), person.isTeacher()));
 	}
 
 	public static void generateBook() {
@@ -144,7 +147,7 @@ public class DayGenerator {
 		ILibrary library = randomLibrary();
 		Loader.getLoader().loadBook(book);
 		library.addBook(book, 5);
-		LOGGER.debug(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthorName(), library.getName()));
+		actions.add(String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthorName(), library.getName()));
 	}
 
 	public static String generateFirstName() {
