@@ -31,11 +31,11 @@ public class MemberMetaDialogs {
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
-                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference)), true, -1)
+                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNamesFromPeople(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference))), true, -1)
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
         if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference).size() < 1) {
-            dialogPane.add(GuiUtils.createLabel("There are no people to create a member from. Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
+            dialogPane.add(GuiUtils.createLabel("There are no people to create a member from.\n Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
         }
         DialogUtils.getDialogResults(dialog, (results) -> {
             IPerson person = LibraryManagerUtils.getPersonFromName(results.get(EXISTING).getString());
