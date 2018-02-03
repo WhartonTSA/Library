@@ -1,5 +1,6 @@
 package org.whstsa.library.api;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyListProperty;
 import org.whstsa.library.util.Logger;
 
@@ -11,7 +12,7 @@ public class BackgroundWorker extends Thread {
 
     private static final BackgroundWorker singleton;
 
-    private List<TickedOperation> tickedOperationList = new ArrayList<>();
+    private List<Runnable> tickedOperationList = new ArrayList<>();
     private Logger logger = new Logger("BackgroundWorker");
 
     static {
@@ -41,22 +42,18 @@ public class BackgroundWorker extends Thread {
 
     public void tick() {
         try {
-            this.tickedOperationList.forEach(TickedOperation::tick);
+            this.tickedOperationList.forEach(Platform::runLater);
         } catch (Exception ex) {
             this.logger.error("Error occurred during tick!");
             ex.printStackTrace();
         }
     }
 
-    public List<TickedOperation> getTickOperations() {
+    public List<Runnable> getTickOperations() {
         return Collections.unmodifiableList(this.tickedOperationList);
     }
 
-    public void registerOperation(TickedOperation tickedOperation) {
-        this.tickedOperationList.add(tickedOperation);
-    }
-
-    public interface TickedOperation {
-        void tick();
+    public void registerOperation(Runnable operation) {
+        this.tickedOperationList.add(operation);
     }
 }
