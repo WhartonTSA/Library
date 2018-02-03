@@ -34,9 +34,9 @@ public class GuiMenuBar {
         barElement.addSubMenuItem(0, 0, "New _Person...", event -> PersonMetaDialogs.createPerson(person -> {if (personTable != null) {personTable.refresh();}}), KeyCombination.keyCombination("CTRL+P"));
         barElement.addSubMenuItem(0, 0, "New _Library...", event -> LibraryMetaDialogs.createLibrary(library -> {if (libraryTable != null) {libraryTable.refresh();}}), null, false);
         barElement.addSubMenuItem(0, 0, "New _Book...", event -> BookMetaDialogs.createBook(book -> bookTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+B"), bookTable == null);
-        barElement.addSubMenuItem(0, 0, "New _Membership...", event -> MemberMetaDialogs.createMember(member -> {memberTable.refresh();}, libraryReference), KeyCombination.keyCombination("CTRL+M"), memberTable == null);
-        barElement.addSubMenuItem(0, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> {memberTable.refresh();}, libraryReference), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
-        barElement.addSubMenuItem(0, 0, "New _Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> {}, libraryReference), KeyCombination.keyCombination("CTRL+R"), libraryReference == null);
+        barElement.addSubMenuItem(0, 0, "New _Membership...", event -> MemberMetaDialogs.createMember(member -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+M"), memberTable == null);
+        barElement.addSubMenuItem(0, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
+        barElement.addSubMenuItem(0, 0, "New _Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+R"), libraryReference == null);
         barElement.addMenuItem(0, "Save", event -> {
             try {
                 LibraryDB.getFileDelegate().save(Loader.getLoader().computeJSON());
