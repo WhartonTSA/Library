@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BackgroundWorker implements Runnable {
+public class BackgroundWorker extends Thread {
 
     private static final BackgroundWorker singleton;
 

@@ -34,7 +34,7 @@ public class LibraryDB extends Application {
     private IOFileSelection jsonFileBrowser;
 
     public void start(Stage stage) {
-        BackgroundWorker.getBackgroundWorker().run();
+        BackgroundWorker.getBackgroundWorker().start();
         new CommandWatcher(System.in, System.out).run();
         this.stage = stage;
         stage.setTitle("Library Manager 1.0");
