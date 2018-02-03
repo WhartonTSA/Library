@@ -10,7 +10,6 @@ import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.InCirculationException;
 import org.whstsa.library.api.impl.Book;
-import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
@@ -154,7 +153,7 @@ public class BookMetaDialogs {
                     setStyle("");
                 }
                 else {
-                    switch (item.getStatus()) {//If cell isn't blank, the status value will determine the color of the row
+                    switch (item.getStatus()) {
                         case AVAILABLE: setStyle("-fx-background-color: #95edaf;"); break;
                         case CHECKED_OUT: setStyle("-fx-background-color: #ebff89;"); break;
                         case RESERVED: setStyle("-fx-background-color: #ffba75;"); break;

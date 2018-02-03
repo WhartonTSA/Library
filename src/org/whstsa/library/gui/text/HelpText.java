@@ -13,7 +13,7 @@ import java.util.List;
 public class HelpText {
 
     private List<String> titles = new ArrayList<>();
-    private  List<TextFlow> pages = new ArrayList<>();
+    private  List<TextFlow> pages;
 
     public HelpText() {
         titles.addAll(LibraryManagerUtils.asList("Help",

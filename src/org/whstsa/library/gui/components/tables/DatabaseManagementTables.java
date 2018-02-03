@@ -1,28 +1,29 @@
 package org.whstsa.library.gui.components.tables;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.util.Callback;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.library.*;
+import org.whstsa.library.api.library.ICheckout;
+import org.whstsa.library.api.library.ILibrary;
+import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.api.GuiMenuBar;
 import org.whstsa.library.gui.api.GuiStatusBar;
-import org.whstsa.library.gui.components.LabelElement;
-import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
-
 import org.whstsa.library.gui.factories.GuiUtils;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,10 +33,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DatabaseManagementTables {
-
-    public static StackPane libraryOverviewTable(LibraryDB libraryDB) {
-        return libraryOverviewTable(libraryDB, new Table<>());
-    }
 
     public static StackPane libraryOverviewTable(LibraryDB libraryDB, Table<ILibrary> libraryTable) {
         libraryTable.addColumn("Library Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 100);
@@ -99,10 +96,6 @@ public class DatabaseManagementTables {
         StackPane libraryButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newLibraryButton, editLibraryButton, deleteLibraryButton, openLibraryButton);
 
         return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, libraryButtonContainer, libraryTable.getTable());
-    }
-
-    public static StackPane personOverviewTable() {
-        return personOverviewTable(new Table<>());
     }
 
     public static StackPane personOverviewTable(Table<IPerson> personTable) {
@@ -194,7 +187,6 @@ public class DatabaseManagementTables {
                 libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
         );
 
-        //Toggle Button Group
         ToggleGroup viewToggleGroup = new ToggleGroup();
 
         ToggleButton viewMembers = GuiUtils.createToggleButton("Members");
@@ -235,9 +227,7 @@ public class DatabaseManagementTables {
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
         Button memberNew = GuiUtils.createButton("New", event ->
-                MemberMetaDialogs.createMember(member -> {
-                    mainMemberTable.refresh();
-                }, libraryReference)
+                MemberMetaDialogs.createMember(member -> mainMemberTable.refresh(), libraryReference)
         );
         Button memberEdit = GuiUtils.createButton("Edit", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
@@ -407,7 +397,7 @@ public class DatabaseManagementTables {
                 }
                 }
             });
-            return new ReadOnlyStringWrapper("N/A");//Don't really need this, but the cellValueProperty needs a return statement
+            return new ReadOnlyStringWrapper("N/A");
         }, true, TableColumn.SortType.DESCENDING, 40);
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);

@@ -12,8 +12,6 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
-import org.whstsa.library.gui.components.Element;
-import org.whstsa.library.util.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;

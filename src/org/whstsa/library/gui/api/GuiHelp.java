@@ -6,14 +6,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Pagination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.library.ILibrary;
-import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.GuiUtils;
-import org.whstsa.library.gui.text.AboutText;
 import org.whstsa.library.gui.text.HelpText;
 
 public class GuiHelp implements Gui {
@@ -21,7 +17,6 @@ public class GuiHelp implements Gui {
     private LibraryDB libraryDB;
     private BorderPane window;
     private HelpText helpText;
-    private int pages;
 
     public GuiHelp(LibraryDB libraryDB, ObservableReference<ILibrary> library) {
         this.libraryDB = libraryDB;
