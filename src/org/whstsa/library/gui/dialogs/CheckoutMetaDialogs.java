@@ -134,16 +134,16 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    public static void checkOutPreMenu(Callback<Table<IMember>> callback, ObservableReference<ILibrary> libraryReference) {
+    public static void checkOutPreMenu(Callback<IMember> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Choose a member to checkout")
-                .addChoiceBox(RETURN, LibraryManagerUtils.getMemberNames(libraryReference), true, 0)
+                .addChoiceBox(CHECKOUT, LibraryManagerUtils.getMemberNames(libraryReference), true, 0)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(RETURN).getResult() != null) {
-                IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(RETURN).getResult(), libraryReference.poll());
+            if (results.get(CHECKOUT).getResult() != null) {
+                IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(CHECKOUT).getResult(), libraryReference.poll());
                 assert selectedMember != null;
-                checkoutMemberDialog(member -> {}, selectedMember, libraryReference);
+                checkoutMemberDialog(member -> callback.callback(selectedMember), selectedMember, libraryReference);
             }
         });
     }
@@ -296,7 +296,7 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    public static void checkInPreMenu(Callback<Table<IMember>> callback, ObservableReference<ILibrary> libraryReference) {
+    public static void checkInPreMenu(Callback<IMember> callback, ObservableReference<ILibrary> libraryReference) {
 
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Choose a member to checkin")
@@ -305,7 +305,7 @@ public class CheckoutMetaDialogs {
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {
                 IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(RETURN).getResult(), libraryReference.poll());
-                checkinMemberDialog(member -> {}, selectedMember, libraryReference);
+                checkinMemberDialog(member -> callback.callback(selectedMember), selectedMember, libraryReference);
             }
 
         });

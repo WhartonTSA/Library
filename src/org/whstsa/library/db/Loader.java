@@ -9,7 +9,6 @@ import org.whstsa.library.api.DateUtils;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.LoadingException;
-import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.impl.library.Checkout;
@@ -18,7 +17,6 @@ import org.whstsa.library.api.impl.library.Member;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.util.Logger;
 
 import java.util.*;
 

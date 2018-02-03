@@ -3,7 +3,6 @@ package org.whstsa.library.gui.api;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.ObservableReference;

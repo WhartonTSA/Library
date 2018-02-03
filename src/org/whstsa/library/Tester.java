@@ -1,6 +1,5 @@
 package org.whstsa.library;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
