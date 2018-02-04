@@ -108,7 +108,7 @@ public class BookMetaDialogs {
     public static void listCopies(Callback<IBook> callback, IBook book, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Copies")
-                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + " available copie(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
+                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + " available copy(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();
@@ -119,7 +119,6 @@ public class BookMetaDialogs {
 
         DialogUtils.getDialogResults(dialog, (results) -> {
         });
-
     }
 
     private static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, IBook book, ObservableReference<ILibrary> libraryReference) {

@@ -14,7 +14,6 @@ import org.whstsa.library.World;
 import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.GuiUtils;
-import org.whstsa.library.util.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -92,7 +91,7 @@ public class GuiStatusBar extends HBox {
             if (this.statusLabel.getID().equals(newValue)) {
                 return;
             }
-            setStatusLabel(this.saved ? "The library is saved." : "The library is unsaved. Exiting will erase all progress since last save.");
+            setStatusLabel(newValue);
         });
     }
 
@@ -103,6 +102,10 @@ public class GuiStatusBar extends HBox {
 
     public void setSaved(boolean saved) {
         this.saved = saved;
+    }
+
+    public boolean getSaved() {
+        return this.saved;
     }
 
 }
