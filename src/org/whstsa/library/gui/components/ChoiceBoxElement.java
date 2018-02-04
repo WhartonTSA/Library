@@ -5,24 +5,26 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
+import org.whstsa.library.util.ChoiceBoxProperty;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ChoiceBoxElement extends ChoiceBox implements Element{
+public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{/**DISCLAIMER I probably definitely did this wrong. Help me eric*/
 
     private Label label;
     private String id;
-    private ObservableList<ICheckout> checkoutList;
-    private Map<IBook, List<ICheckout>> items;
+    private ObservableList<T> checkoutList;
+    private Map<T, U> items;
     private boolean map;
 
-    public ChoiceBoxElement(String id, String label, ObservableList<String> items, boolean useLabel, int selected) {
+    public ChoiceBoxElement(String id, String label, ObservableList<T> items, boolean useLabel, int selected) {
         super();
         this.id = id;
         this.label = useLabel ? GuiUtils.createLabel(label) : null;
@@ -33,14 +35,15 @@ public class ChoiceBoxElement extends ChoiceBox implements Element{
         }
     }
 
-    public ChoiceBoxElement(String id, String label, Map<IBook, List<ICheckout>> items, boolean useLabel, int selected) {
+    public ChoiceBoxElement(String id, String label, Map<T, U> items, ChoiceBoxProperty<T> property, boolean useLabel, int selected) {
         super();
         this.id = id;
         this.label = useLabel ? GuiUtils.createLabel(label) : null;
         this.items = items;
         this.map = true;
-        List<IBook> setList = new ArrayList<>(items.keySet());
-        this.setItems(LibraryManagerUtils.getBookTitlesFromList(FXCollections.observableList(setList)));
+        List<T> setList = new ArrayList<>(items.keySet());
+        setList.forEach(property::property);//Using ChoiceBoxProperty<> like ClickHandler or Callback
+        this.setItems(LibraryManagerUtils.toObservableList((List<String>) setList));//Ok so, like, make sure its a string...
         if (selected != -1) {
             super.getSelectionModel().select(selected);
         }

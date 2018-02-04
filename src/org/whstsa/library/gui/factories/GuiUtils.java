@@ -18,6 +18,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.components.*;
+import org.whstsa.library.util.ChoiceBoxProperty;
 import org.whstsa.library.util.ClickHandlerCheckBox;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
@@ -222,9 +223,13 @@ public class GuiUtils {
 		return new ChoiceBoxElement(label, label, items, useLabel, selected);
 	}
 
-	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
-		return new ChoiceBoxElement(label, label, items, useLabel, selected);
+	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, ChoiceBoxProperty<String> property, boolean useLabel, int selected) {
+		return new ChoiceBoxElement(label, label, items, property, useLabel, selected);
 	}
+
+    public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
+        return new ChoiceBoxElement(label, label, items, null, useLabel, selected);
+    }
 
     public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
         return new ChoiceBoxElement("", "", items, false, -1);
