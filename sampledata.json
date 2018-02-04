@@ -18,18 +18,11 @@
             "7ff99c0c-8638-48b9-8275-93a3665a01e6",
             "16642b5d-e798-4bac-b266-4e5351bbf6ba"
         ],
-        "members": [
-            {
-                "checkouts": {},
-                "personID": "a266892e-2e45-4cec-b19d-2bec43f1e61c",
-                "uuid": "a3754800-3288-40f1-9868-3a85468fd0c7"
-            },
-            {
-                "checkouts": {},
-                "personID": "884b6cfd-8929-4344-bce1-044a41f50b54",
-                "uuid": "030f945c-f9d9-47aa-9def-2ce54a23542f"
-            }
-        ],
+        "members": [{
+            "checkouts": {},
+            "personID": "a266892e-2e45-4cec-b19d-2bec43f1e61c",
+            "uuid": "a3754800-3288-40f1-9868-3a85468fd0c7"
+        }],
         "name": "Wharton High School",
         "quantities": {
             "7ff99c0c-8638-48b9-8275-93a3665a01e6": 5,
