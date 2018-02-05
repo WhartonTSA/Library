@@ -161,7 +161,6 @@ public class DayGenerator {
 
 	public static ILibrary randomLibrary() {
 		List<ILibrary> libraries = ObjectDelegate.getLibraries();
-		System.out.println(libraries.size());
 		if (libraries.size() == 1) {
 			return libraries.get(0);
 		}

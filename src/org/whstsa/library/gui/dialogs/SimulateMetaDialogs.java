@@ -37,7 +37,15 @@ public class SimulateMetaDialogs {
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
         DialogUtils.getDialogResults(dialog, (results) -> {
-            int days = Integer.parseInt(results.get(SIMULATE).getString());
+            int days;
+            try {
+                days = Integer.parseInt(results.get(SIMULATE).getString());
+                if (days > 365) {
+                    days = 365;
+                }
+            } catch (NumberFormatException ex) {
+                days = 0;
+            }
             displaySimulateTable(days);
             callback.callback(days);
         }, SIMULATE);
