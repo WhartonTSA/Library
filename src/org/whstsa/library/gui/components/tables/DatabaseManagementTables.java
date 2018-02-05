@@ -8,6 +8,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.whstsa.library.LibraryDB;
+import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
@@ -342,6 +343,13 @@ public class DatabaseManagementTables {
                     viewMembers.setDisable(false);
                     viewBooks.setDisable(true);
                 }
+            }
+        });
+
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {
+            if (!viewBooks.isDisabled() || !viewMembers.isDisabled()) {
+                viewMembers.setDisable(false);
+                viewBooks.setDisable(false);
             }
         });
 

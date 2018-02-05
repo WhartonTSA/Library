@@ -11,7 +11,7 @@ public class AboutText {
         aboutTextContent = new Text("" +
                 "Library Manager is an application designed for the administration of a library's members and books, " +
                 "and handling of most of the member-to-staff actions. This application can display details of a books " +
-                "title, author, copies, status, due date, and possessor, and display a member's name, rank, fines, and checked out books. " +
+                "title, author, copies, status, due date, and borrower, and display a member's name, rank, fines, and checked out books. " +
                 "If you are having trouble with the application, you can find assistance in the Help > Help... menu. \n" +
                 "\n" +
                 "This application was designed and programmed by the Wharton High School Technology Student Association Software " +
