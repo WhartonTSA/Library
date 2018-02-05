@@ -42,7 +42,9 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{/**DISC
         this.items = items;
         this.map = true;
         List<T> setList = new ArrayList<>(items.keySet());
-        setList.forEach(property::property);//Using ChoiceBoxProperty<> like ClickHandler or Callback
+        if (property != null) {
+            setList.forEach(property::property);//Using ChoiceBoxProperty<> like ClickHandler or Callback
+        }
         this.setItems(LibraryManagerUtils.toObservableList((List<String>) setList));//Ok so, like, make sure its a string...
         if (selected != -1) {
             super.getSelectionModel().select(selected);

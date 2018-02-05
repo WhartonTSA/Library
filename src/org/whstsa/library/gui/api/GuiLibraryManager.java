@@ -23,7 +23,7 @@ public class GuiLibraryManager implements Gui {
 
     @Override
     public String getUUID() {
-        return "GUI_LIBRARY_MANAGER";
+        return "GUI_LIBRARY_MANAGER_" + library.getName().toUpperCase();
     }
 
 }
