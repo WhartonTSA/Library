@@ -298,12 +298,12 @@ public class DatabaseManagementTables {
                 GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
         );
 
-        Button refreshButton = GuiUtils.createButton("Refresh (debug)", true, event -> {
-            mainBookTable.refresh();
-            mainMemberTable.refresh();
-            viewBooks.setDisable(false);
-            viewMembers.setDisable(false);
-        });
+//        Button refreshButton = GuiUtils.createButton("Refresh (debug)", true, event -> {
+//            mainBookTable.refresh();
+//            mainMemberTable.refresh();
+//            viewBooks.setDisable(false);
+//            viewMembers.setDisable(false);
+//        });
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             checkout.setDisable(newSelection == null);
@@ -321,7 +321,7 @@ public class DatabaseManagementTables {
                 GuiUtils.createSeparator(), viewButtons,
                 GuiUtils.createSeparator(), membersLabel, checkout, checkin, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
                 GuiUtils.createSeparator(), booksLabel, bookAdd, bookEdit, bookDelete, bookSearch,
-                GuiUtils.createSeparator(), refreshButton);
+                GuiUtils.createSeparator());
         buttonGroup.setSpacing(5.0);
 
         mainContainer.setLeft(buttonGroup);
@@ -347,7 +347,7 @@ public class DatabaseManagementTables {
         });
 
         BackgroundWorker.getBackgroundWorker().registerOperation(() -> {
-            if (!viewBooks.isDisabled() || !viewMembers.isDisabled()) {
+            if (viewBooks.isDisabled() && viewMembers.isDisabled()) {
                 viewMembers.setDisable(false);
                 viewBooks.setDisable(false);
             }
