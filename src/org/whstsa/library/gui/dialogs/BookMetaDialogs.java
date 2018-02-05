@@ -134,6 +134,9 @@ public class BookMetaDialogs {
             library = new ArrayList<>();
         }
         for (int counter = 1; counter <= library.size(); counter++) {
+            if (library.get(counter - 1).isOverdue()) {
+                tableItems.add(new BookStatusRow(counter, BookStatus.OVERDUE, library.get(counter - 1).getOwner().getName(), library.get(counter - 1).getDueDate()));
+            }
             tableItems.add(new BookStatusRow(counter, BookStatus.CHECKED_OUT, library.get(counter - 1).getOwner().getName(), library.get(counter - 1).getDueDate()));//This is where the data for the table is created
         }
         for (int counter = library.size() + 1; counter <= libraryReference.poll().getBookQuantity().get(book.getID());counter++) {
@@ -156,7 +159,7 @@ public class BookMetaDialogs {
                         case AVAILABLE: setStyle("-fx-background-color: #95edaf;"); break;
                         case CHECKED_OUT: setStyle("-fx-background-color: #ebff89;"); break;
                         case RESERVED: setStyle("-fx-background-color: #ffba75;"); break;
-                        case UNAVAILABLE: setStyle("-fx-background-color: #ff7575;"); break;
+                        case OVERDUE: setStyle("-fx-background-color: #ff7575;"); break;
                     }
                 }
             }

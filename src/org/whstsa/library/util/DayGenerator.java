@@ -90,7 +90,7 @@ public class DayGenerator {
 					if (book != null) {
 						try {
 							library.reserveBook(member, book, RANDOM.nextInt(10));
-							actions.add(member.getName() + " took " + book.getTitle() + " (" + library.getQuantity(book.getID()) + ")");
+							actions.add(member.getName() + " took " + book.getTitle() + " (" + library.getQuantity(book.getID()) + " books remaining )");
 						}
 						catch (OutOfStockException e) {
 							actions.add(e.getMessage());
@@ -161,6 +161,7 @@ public class DayGenerator {
 
 	public static ILibrary randomLibrary() {
 		List<ILibrary> libraries = ObjectDelegate.getLibraries();
+		System.out.println(libraries.size());
 		if (libraries.size() == 1) {
 			return libraries.get(0);
 		}

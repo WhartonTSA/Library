@@ -2,6 +2,7 @@ package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.scene.Node;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.GridPane;
@@ -42,7 +43,7 @@ public class SimulateMetaDialogs {
     }
 
     public static Table<String> simulateTable (Table<String> table, int days) {
-        table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()) , true, TableColumn.SortType.DESCENDING, 25);
+        table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()) , false, TableColumn.SortType.DESCENDING, 2500);
         List<String> tableItems = FXCollections.observableArrayList();
         for (int index = 0; index < days;index++) {
             tableItems.add(World.getDate().toString());
@@ -68,6 +69,7 @@ public class SimulateMetaDialogs {
         Table<String> simulateTable =  new Table<>();
         simulateTable = simulateTable(simulateTable, days);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
+        dialogPane.addRow(0, GuiUtils.createLabel("MORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXT"));
         dialogPane.addRow(1, simulateTable.getTable());
         DialogUtils.getDialogResults(dialog, (results) -> {
 
