@@ -4,7 +4,7 @@ public enum BookStatus {
     AVAILABLE ("Available"),
     CHECKED_OUT ("Checked Out"),
     RESERVED ("Reserved"),
-    OVERDUE ("Unavailable");
+    OVERDUE ("Overdue");
 
     public final String status;
 

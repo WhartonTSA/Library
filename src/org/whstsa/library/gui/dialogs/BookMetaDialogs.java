@@ -137,7 +137,9 @@ public class BookMetaDialogs {
             if (library.get(counter - 1).isOverdue()) {
                 tableItems.add(new BookStatusRow(counter, BookStatus.OVERDUE, library.get(counter - 1).getOwner().getName(), library.get(counter - 1).getDueDate()));
             }
-            tableItems.add(new BookStatusRow(counter, BookStatus.CHECKED_OUT, library.get(counter - 1).getOwner().getName(), library.get(counter - 1).getDueDate()));//This is where the data for the table is created
+            else {
+                tableItems.add(new BookStatusRow(counter, BookStatus.CHECKED_OUT, library.get(counter - 1).getOwner().getName(), library.get(counter - 1).getDueDate()));//This is where the data for the table is created
+            }
         }
         for (int counter = library.size() + 1; counter <= libraryReference.poll().getBookQuantity().get(book.getID());counter++) {
             tableItems.add(new BookStatusRow(counter, BookStatus.AVAILABLE, "Nobody", null));

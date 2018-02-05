@@ -165,7 +165,7 @@ public class DayGenerator {
 		if (libraries.size() == 1) {
 			return libraries.get(0);
 		}
-		return libraries.get(RANDOM.nextInt(libraries.size() - 1));
+		return libraries.get(RANDOM.nextInt(libraries.size()));
 	}
 
 	private static boolean chance(int chance) {
