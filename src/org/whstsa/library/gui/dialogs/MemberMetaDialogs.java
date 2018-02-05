@@ -12,7 +12,6 @@ import org.whstsa.library.api.exceptions.CannotDeregisterException;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
-import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
@@ -31,14 +30,14 @@ public class MemberMetaDialogs {
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
-                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference)), true, -1)
+                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNamesFromPeople(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference))), true, -1)
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
         if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference).size() < 1) {
-            dialogPane.add(GuiUtils.createLabel("There are no people to create a member from. Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
+            dialogPane.add(GuiUtils.createLabel("There are no people to create a member from.\n Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
         }
         DialogUtils.getDialogResults(dialog, (results) -> {
-            IPerson person = LibraryManagerUtils.getPersonFromName((String) results.get(EXISTING).getResult());
+            IPerson person = LibraryManagerUtils.getPersonFromName(results.get(EXISTING).getString());
             person.addMembership(libraryReference.poll());
             libraryReference.poll().addMember(person);
             callback.callback(person);

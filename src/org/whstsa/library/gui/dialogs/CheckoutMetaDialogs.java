@@ -13,12 +13,10 @@ import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CheckedInException;
 import org.whstsa.library.api.exceptions.MemberMismatchException;
-import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
 import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.Table;
@@ -29,7 +27,6 @@ import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.util.Logger;
 
-import javax.xml.transform.Result;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -137,16 +134,16 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    public static void checkOutPreMenu(Callback<Table<IMember>> callback, ObservableReference<ILibrary> libraryReference) {
+    public static void checkOutPreMenu(Callback<IMember> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Choose a member to checkout")
-                .addChoiceBox(RETURN, LibraryManagerUtils.getMemberNames(libraryReference), true, 0)
+                .addChoiceBox(CHECKOUT, LibraryManagerUtils.getMemberNames(libraryReference), true, 0)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(RETURN).getResult() != null) {
-                IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(RETURN).getResult(), libraryReference.poll());
+            if (results.get(CHECKOUT).getResult() != null) {
+                IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(CHECKOUT).getResult(), libraryReference.poll());
                 assert selectedMember != null;
-                checkoutMemberDialog(member -> {}, selectedMember, libraryReference);
+                checkoutMemberDialog(member -> callback.callback(selectedMember), selectedMember, libraryReference);
             }
         });
     }
@@ -166,7 +163,7 @@ public class CheckoutMetaDialogs {
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (member.getFine() > 0) {
                 if (!results.get(PAYFINE).getBoolean()) {
-                    DialogUtils.createDialog("Couldn't pay fine. Member does not have enough money.", null, null, Alert.AlertType.ERROR).show();
+                    DialogUtils.createDialog("Couldn't pay fine.", null, null, Alert.AlertType.ERROR).show();
                     return;
                 }
                 try {
@@ -299,7 +296,7 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    public static void checkInPreMenu(Callback<Table<IMember>> callback, ObservableReference<ILibrary> libraryReference) {
+    public static void checkInPreMenu(Callback<IMember> callback, ObservableReference<ILibrary> libraryReference) {
 
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Choose a member to checkin")
@@ -308,7 +305,7 @@ public class CheckoutMetaDialogs {
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {
                 IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(RETURN).getResult(), libraryReference.poll());
-                checkinMemberDialog(member -> {}, selectedMember, libraryReference);
+                checkinMemberDialog(member -> callback.callback(selectedMember), selectedMember, libraryReference);
             }
 
         });
@@ -319,14 +316,7 @@ public class CheckoutMetaDialogs {
                 .setTitle("Returning " + member.getName() + "'s books.")
                 .addChoiceBox(RETURN, member.getCheckoutMap(), true, -1)
                 .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event ->
-                        member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(checkout -> {
-                            try {
-                                checkout.payFine();
-                            } catch (NotEnoughMoneyException ex) {
-                                DialogUtils.createDialog("Couldn't pay fine. Member does not have enough money.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
-                            }
-                        })
-                )
+                        member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(ICheckout::payFine))
                 .build();
         if (member.getFine() > 0) {
             GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();

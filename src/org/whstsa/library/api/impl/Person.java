@@ -1,12 +1,9 @@
 package org.whstsa.library.api.impl;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.json.JSONObject;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.MemberMismatchException;
-import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
 import org.whstsa.library.api.impl.library.Member;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
@@ -26,7 +23,6 @@ public class Person implements IPerson {
     private String lastName;
 
     private boolean teacher;
-    private double wallet = 0;
 
     private UUID uuid;
 
@@ -45,10 +41,6 @@ public class Person implements IPerson {
         this.uuid = uuid;
     }
 
-    public void impl_setMoney(double money) {
-        this.wallet = money;
-    }
-
     @Override
     public JSONObject toJSON() {
         JSONObject object = new JSONObject();
@@ -56,7 +48,6 @@ public class Person implements IPerson {
         object.put("firstName", this.firstName);
         object.put("lastName", this.lastName);
         object.put("teacher", this.teacher);
-        object.put("wallet", this.wallet);
         object.put("uuid", this.uuid);
 
         return object;
@@ -146,29 +137,6 @@ public class Person implements IPerson {
             // This will never be thrown, but this satisfies compiler errors
             return null;
         }
-    }
-
-    @Override
-    public double getWallet() {
-        return this.wallet;
-    }
-
-    @Override
-    public double addMoney(double money) {
-        if (money < 0) {
-            return this.wallet;
-        }
-        this.wallet += money;
-        return this.wallet;
-    }
-
-    @Override
-    public double deductMoney(double money) throws NotEnoughMoneyException {
-        if (money > this.wallet) {
-            throw new NotEnoughMoneyException(this, money);
-        }
-        this.wallet -= money;
-        return this.wallet;
     }
 
     @Override

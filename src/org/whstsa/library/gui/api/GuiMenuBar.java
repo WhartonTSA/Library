@@ -22,10 +22,10 @@ public class GuiMenuBar {
     private MenuBar mainMenuBar;
 
     public GuiMenuBar() {
-        this(null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null);
     }
 
-    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB) {
+    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
 
         MenuBarElement barElement = new MenuBarElement();
 
@@ -34,13 +34,15 @@ public class GuiMenuBar {
         barElement.addSubMenuItem(0, 0, "New _Person...", event -> PersonMetaDialogs.createPerson(person -> {if (personTable != null) {personTable.refresh();}}), KeyCombination.keyCombination("CTRL+P"));
         barElement.addSubMenuItem(0, 0, "New _Library...", event -> LibraryMetaDialogs.createLibrary(library -> {if (libraryTable != null) {libraryTable.refresh();}}), null, false);
         barElement.addSubMenuItem(0, 0, "New _Book...", event -> BookMetaDialogs.createBook(book -> bookTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+B"), bookTable == null);
-        barElement.addSubMenuItem(0, 0, "New _Membership...", event -> MemberMetaDialogs.createMember(member -> {memberTable.refresh();}, libraryReference), KeyCombination.keyCombination("CTRL+M"), memberTable == null);
-        barElement.addSubMenuItem(0, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> {memberTable.refresh();}, libraryReference), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
-        barElement.addSubMenuItem(0, 0, "New _Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> {}, libraryReference), KeyCombination.keyCombination("CTRL+R"), libraryReference == null);
+        barElement.addSubMenuItem(0, 0, "New _Membership...", event -> MemberMetaDialogs.createMember(member -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+M"), memberTable == null);
+        barElement.addSubMenuItem(0, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
+        barElement.addSubMenuItem(0, 0, "New _Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+R"), libraryReference == null);
         barElement.addMenuItem(0, "Save", event -> {
             try {
                 LibraryDB.getFileDelegate().save(Loader.getLoader().computeJSON());
+                if (statusBar != null) {statusBar.setSaved(true);}
                 Logger.DEFAULT_LOGGER.debug("Saved a copy of the data");
+
             } catch (IOException ex) {
                 DialogUtils.createDialog("Couldn't save", "Your data couldn't be saved. Error:\n" + ex.getLocalizedMessage()).show();
                 ex.printStackTrace();
@@ -48,10 +50,14 @@ public class GuiMenuBar {
         }, KeyCombination.keyCombination("CTRL+S"));
         barElement.addMenuItem(0, "_Settings...");
         barElement.addMenuSeparator(0);
-        barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(), null);
+        barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(statusBar != null && !statusBar.getSaved()), null);
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "_Edit JSON... (Dev)");
+<<<<<<< HEAD
         barElement.addMenuItem(1, "Simulate", event -> SimulateMetaDialogs.simulateDay(), KeyCombination.keyCombination("CTRL+SHIFT+S"));
+=======
+        barElement.addMenuItem(1, "Simulate", event -> SimulateMetaDialogs.simulateDay(libraryReference), KeyCombination.keyCombination("CTRL+SHIFT+S"), libraryReference == null);
+>>>>>>> 72d15c519dce69bdc64468aae95d08f2a0fd92c2
         barElement.addMenu("_Help");
         barElement.addMenuItem(2, "_About...", event -> libraryDB.getInterfaceManager().display(new GuiAbout(libraryDB, libraryReference)), null);
         barElement.addMenuItem(2, "_Help...", event -> libraryDB.getInterfaceManager().display(new GuiHelp(libraryDB, libraryReference)), null);

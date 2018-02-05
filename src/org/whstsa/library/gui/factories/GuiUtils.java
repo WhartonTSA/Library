@@ -18,6 +18,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.components.*;
+import org.whstsa.library.util.ChoiceBoxProperty;
 import org.whstsa.library.util.ClickHandlerCheckBox;
 import org.whstsa.library.util.ClickHandler;
 import org.whstsa.library.util.Logger;
@@ -28,9 +29,9 @@ import java.util.Map;
 
 public class GuiUtils {
 	
-	public static final int COMPONENT_PADDING = 16;
-	
-	public static final Font TITLE_FONT = new Font(30.0);
+	private static final int COMPONENT_PADDING = 16;
+	private static final Font TITLE_FONT = new Font(30.0);
+	private static final Font LABEL_FONT = new Font(16.0);
 	
 	public static StackPane createSplitPane(Orientation orientation, Node ...nodes) {
 		LibraryDB.LOGGER.debug("Assembling " + orientation.name + " StackPane with " + nodes.length + " nodes.");
@@ -71,7 +72,7 @@ public class GuiUtils {
     }
 
     public static HBox createHBox(double padding, Node ...nodes) {
-	    return createHBox(5.0, "", nodes);
+	    return createHBox(padding, "", nodes);
     }
     public static HBox createHBox(Node ...nodes) {
         return createHBox(5.0, nodes);
@@ -222,9 +223,13 @@ public class GuiUtils {
 		return new ChoiceBoxElement(label, label, items, useLabel, selected);
 	}
 
-	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
-		return new ChoiceBoxElement(label, label, items, useLabel, selected);
+	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, ChoiceBoxProperty<String> property, boolean useLabel, int selected) {
+		return new ChoiceBoxElement(label, label, items, property, useLabel, selected);
 	}
+
+    public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
+        return new ChoiceBoxElement(label, label, items, null, useLabel, selected);
+    }
 
     public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
         return new ChoiceBoxElement("", "", items, false, -1);
@@ -236,20 +241,24 @@ public class GuiUtils {
 		return comboBox;
 	}
 
-	public static LabelElement createLabel(String text, double size, Color color) {
+	public static LabelElement createLabel(String text, Font font, Color color) {
 		LibraryDB.LOGGER.debug("Assembling label with text " + text);
 		LabelElement label = new LabelElement(text, text);
-		label.setFont(Font.font(size));
+		label.setFont(font);
 		label.setTextFill(color);
 		return label;
 	}
 
+	public static LabelElement createLabel(String text, double size, Color color) {
+		return createLabel(text, new Font(size), Color.BLACK);
+	}
+
 	public static LabelElement createLabel(String text, double size) {
-	    return createLabel(text, size, Color.BLACK);
+	    return createLabel(text, LABEL_FONT, Color.BLACK);
 	}
 
 	public static LabelElement createLabel(String text) {
-	    return createLabel(text, 16, Color.BLACK);
+	    return createLabel(text, LABEL_FONT, Color.BLACK);
     }
 	
 	public static LabelElement createTitle(String title) {
@@ -264,23 +273,16 @@ public class GuiUtils {
 	}
 
 	public static ClickHandler defaultClickHandler() {
-	    return new ClickHandler() {
-	        @Override
-	        public void onclick(Button button) {}
-        };
+	    return button -> {};
     }
-
-//	public static TableView<T> createTableView(T dataStore, List<String> columns) {
-//
-//	}
 	
-	public static enum Direction {
+	public enum Direction {
 		LEFTHAND, RIGHTHAND;
 		
 		public final String name = this.name().toLowerCase();
 	}
 	
-	public static enum Orientation {
+	public enum Orientation {
 		VERTICAL, HORIZONTAL;
 		
 		public final String name = this.name().toLowerCase();

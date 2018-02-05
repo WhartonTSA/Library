@@ -12,7 +12,6 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
-import org.whstsa.library.gui.components.Element;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,25 +91,20 @@ public class LibraryManagerUtils {
             }
         });
 
-        Map<Integer, IPerson> sortedScores = scores.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).collect(Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue,
-                (e1, e2) -> e1,
-                HashMap::new
-        ));
+        Optional<Map.Entry<Integer, IPerson>> personEntry = scores.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).findFirst();
+        if (personEntry.isPresent()) {
+            return personEntry.get().getValue();
+        }
 
-        return sortedScores.get(0);
+        return null;
     }
 
-    public static List<String> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the library referenced
-        List<IPerson> people = ObjectDelegate.getPeople();
-        ObjectDelegate.getAllMembers().forEach(person -> {
-            if (people.contains(person.getPerson())) {
-                people.remove(person.getPerson());
-            }
-        });
-        System.out.println(people.toString());
-        return getNamesFromPeople(people);
+    public static List<IPerson> getPeopleWithoutLibrary(ILibrary library) {
+        return ObjectDelegate.getPeople().stream().filter(person -> !library.hasMember(person)).collect(Collectors.toList());
+    }
+
+    public static List<IPerson> getPeopleWithoutLibrary(ObservableReference<ILibrary> libraryReference) {//returns a list of people that do not have a membership with the library referenced
+        return getPeopleWithoutLibrary(libraryReference.poll());
     }
 
     public static ObservableList<String>  getBookTitlesFromList(ObservableList<IBook> books) {

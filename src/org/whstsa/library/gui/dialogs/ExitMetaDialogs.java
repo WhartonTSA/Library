@@ -1,20 +1,15 @@
 package org.whstsa.library.gui.dialogs;
 
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import org.whstsa.library.api.Callback;
-import org.whstsa.library.api.exceptions.CannotDeregisterException;
-import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.factories.DialogBuilder;
-import org.whstsa.library.gui.factories.DialogUtils;
 
 public class ExitMetaDialogs {
 
-    public static void exitConfirm() {
+    public static void exitConfirm(boolean unsaved) {
         Dialog dialog = new DialogBuilder()
                 .setTitle("Quit?")
+                .addLabel(unsaved ? "Your data is unsaved.\n Do you still want to exit?" : "")
                 .addButton(ButtonType.YES, true, event -> {
                     System.out.println("Exiting");//TODO
                     System.exit(0);

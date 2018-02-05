@@ -9,7 +9,6 @@ import org.whstsa.library.api.DateUtils;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.LoadingException;
-import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.impl.library.Checkout;
@@ -18,7 +17,6 @@ import org.whstsa.library.api.impl.library.Member;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.util.Logger;
 
 import java.util.*;
 
@@ -208,7 +206,6 @@ public class Loader {
             String firstName = personObject.getString("firstName");
             String lastName = personObject.getString("lastName");
             boolean teacher = personObject.getBoolean("teacher");
-            double wallet = personObject.getDouble("wallet");
             String rawUUID = String.valueOf(personObject.get("uuid"));
 
             UUID uuid;
@@ -219,7 +216,6 @@ public class Loader {
             }
 
             Person person = new Person(firstName, lastName, teacher);
-            person.addMoney(wallet);
             person.impl_setID(uuid);
 
             Tester.print("Loaded person object");

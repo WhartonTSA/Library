@@ -10,7 +10,6 @@ import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.InCirculationException;
 import org.whstsa.library.api.impl.Book;
-import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
@@ -24,6 +23,8 @@ import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.util.BookStatus;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +108,7 @@ public class BookMetaDialogs {
     public static void listCopies(Callback<IBook> callback, IBook book, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Copies")
-                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + " available copie(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
+                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + " available copy(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();
@@ -118,14 +119,14 @@ public class BookMetaDialogs {
 
         DialogUtils.getDialogResults(dialog, (results) -> {
         });
-
     }
 
     private static Table<BookStatusRow> copiesManagerTable(Table<BookStatusRow> mainTable, IBook book, ObservableReference<ILibrary> libraryReference) {
+        DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
         mainTable.addColumn("Copy", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCopy() + ""), true, TableColumn.SortType.DESCENDING, 25);
-        mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
         mainTable.addColumn("Owner Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getOwnerName()), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate() == null ?  "N/A" : cellData.getValue().getDueDate().toString()), true, TableColumn.SortType.DESCENDING, 1000);
+        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getDueDate() == null ?  "N/A" : formattedDate.format(cellData.getValue().getDueDate())), true, TableColumn.SortType.DESCENDING, 50);
+        mainTable.addColumn("Status", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getStatus().getString()), true, TableColumn.SortType.DESCENDING, 55);
 
         List<BookStatusRow> tableItems = FXCollections.observableArrayList();
         List<ICheckout> library = libraryReference.poll().getCheckouts().get(book);
@@ -151,7 +152,7 @@ public class BookMetaDialogs {
                     setStyle("");
                 }
                 else {
-                    switch (item.getStatus()) {//If cell isn't blank, the status value will determine the color of the row
+                    switch (item.getStatus()) {
                         case AVAILABLE: setStyle("-fx-background-color: #95edaf;"); break;
                         case CHECKED_OUT: setStyle("-fx-background-color: #ebff89;"); break;
                         case RESERVED: setStyle("-fx-background-color: #ffba75;"); break;

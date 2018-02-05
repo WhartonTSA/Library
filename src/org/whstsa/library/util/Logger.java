@@ -33,12 +33,12 @@ public class Logger {
 		public final String[] decoration;
 		public final String[] tags;
 		
-		private Level(String[] decoration, String[] tags) {
+		Level(String[] decoration, String[] tags) {
 			this.decoration = decoration;
 			this.tags = tags;
 		}
 		
-		private Level(String[] decoration, String tag) {
+		Level(String[] decoration, String tag) {
 			this(decoration, new String[] {tag});
 		}
 	}

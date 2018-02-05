@@ -2,7 +2,6 @@ package org.whstsa.library.gui.api;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ToolBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.whstsa.library.World;
+import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.factories.GuiUtils;
 
@@ -20,16 +20,25 @@ import java.util.Date;
 
 public class GuiStatusBar extends HBox {
 
-    private Image icon;
     private LabelElement statusLabel;
     private LabelElement dateLabel;
+    private boolean saved;
+    private boolean statusOverride;//Used to override the normal status and replace with more urgent message
+
+    private String currentStatus = "";
+
+    private static final String LIBRARY_SAVED = "The library is saved.";
+    private static final String LIBRARY_UNSAVED = "The library is unsaved. Exiting will erase all progress since last save.";
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
     public GuiStatusBar() {
-        this.icon = new Image("file:LibraryManagerIcon.png");
-        ImageView imageView = new ImageView(this.icon);
+        Image icon = new Image("file:LibraryManagerIcon.png");
+        ImageView imageView = new ImageView(icon);
         imageView.setFitHeight(10);
         imageView.setPreserveRatio(true);
 
+        this.statusOverride = false;
+        this.saved = true;
         this.statusLabel = GuiUtils.createLabel("");
         this.statusLabel.setFont(Font.font(12));
         this.statusLabel.setTextFill(Color.web("#3d3d3d"));
@@ -51,56 +60,52 @@ public class GuiStatusBar extends HBox {
         liveDate();
     }
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-
     private void liveDate() {
-        Runnable runnable = () -> {
-            while (true) {
-                String dateString = simpleDateFormat.format(World.getDate());
-                this.dateLabel.setText(dateString);
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {
+            String dateString = SIMPLE_DATE_FORMAT.format(World.getDate());
+            this.dateLabel.setText(dateString);
 
-                if (!World.getDate().equals(new Date())) {
-                    this.dateLabel.setTextFill(Color.web("#0056ad"));
-                    this.dateLabel.setTooltip(new Tooltip("This is the date simulated by the Library Manager, not today's date."));
-                }
-                try {
-                    Thread.sleep(1000);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            if (!SIMPLE_DATE_FORMAT.format(World.getDate())
+                    .equals(SIMPLE_DATE_FORMAT.format(new Date()))) {//Check if today's date matches simulated date
+                this.dateLabel.setTextFill(Color.web("#0056ad"));
+                this.dateLabel.setTooltip(new Tooltip("This is the date simulated by the Library Manager, not today's date."));
+
+                this.statusOverride = true;
+                this.statusLabel.setTextFill(Color.web("#0056ad"));
+                this.statusLabel.setText("The data you are seeing has been simulated. You may not want to save this data.");
+            } else {
+                this.dateLabel.setTextFill(Color.web("#3d3d3d"));
+                this.dateLabel.setTooltip(null);
+                this.statusOverride = false;
+                this.statusLabel.setTextFill(Color.web("#3d3d3d"));
             }
-        };
-
-        Thread t = new Thread(runnable);
-        t.start();
+        });
     }
 
     private void liveSavedStatus() {
-        Runnable runnable = () -> {
-            while (true) {
-                String savedString = isSaved() ? "The library is saved." : "The library is unsaved. Exiting will erase all progress since last save.";
-                this.statusLabel.setText(savedString);
-                try {
-                    Thread.sleep(5000);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {
+            if (this.statusOverride) {
+                return;
             }
-        };
-
-        Thread t = new Thread(runnable);
-        t.start();
+            String newValue = this.saved ? LIBRARY_SAVED : LIBRARY_UNSAVED;
+            if (this.statusLabel.getID().equals(newValue)) {
+                return;
+            }
+            setStatusLabel(newValue);
+        });
     }
 
-    public void setStatusLabel(String newLabel) {
-        this.statusLabel = GuiUtils.createLabel(newLabel);
+    private void setStatusLabel(String newLabel) {
+        this.statusLabel.setID(newLabel);
+        this.statusLabel.setText(newLabel);
     }
 
-    private boolean isSaved() {
-        return false;//TODO Check if JSON file has been changed
+    public void setSaved(boolean saved) {
+        this.saved = saved;
     }
 
+    public boolean getSaved() {
+        return this.saved;
+    }
 
 }

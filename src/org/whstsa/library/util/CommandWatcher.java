@@ -8,11 +8,9 @@ import org.whstsa.library.commands.api.ICommandSender;
 import org.whstsa.library.commands.api.impl.ConsoleSender;
 import org.whstsa.library.commands.functional.*;
 import org.whstsa.library.commands.getters.*;
-import org.whstsa.library.commands.patchers.UpdateWalletCommand;
 import org.whstsa.library.commands.setters.*;
 
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -95,7 +93,6 @@ public class CommandWatcher implements InputListener {
         commands.add(new GetPersonCommand());
         commands.add(new NewPersonCommand());
         commands.add(new ListPeopleCommand());
-        commands.add(new UpdateWalletCommand());
 
         commands.add(new GetBookCommand());
         commands.add(new ListBooksCommand());

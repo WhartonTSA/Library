@@ -103,9 +103,8 @@ public interface IMember extends IBookHolder, Serializable, Unique {
      * Checks a checkout back in, paying any fines that it may have
      *
      * @param checkout The checkout to return
-     * @throws NotEnoughMoneyException if {@code fine > balance}
      * @throws MemberMismatchException if {@code checkout.member != this}
      * @throws CheckedInException      if {@code checkout.isReturned()}
      */
-    void checkInAndPayFines(ICheckout checkout) throws NotEnoughMoneyException, MemberMismatchException, CheckedInException;
+    void checkInAndPayFines(ICheckout checkout) throws MemberMismatchException, CheckedInException;
 }
