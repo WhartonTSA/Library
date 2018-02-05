@@ -30,7 +30,7 @@ public class SimulateMetaDialogs {
 
     private static String SIMULATE = "Days";
 
-    public static void simulateDay() {
+    public static void simulateDay(Callback<Integer> callback) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Simulate Days")
                 .addTextField(SIMULATE)
@@ -39,6 +39,7 @@ public class SimulateMetaDialogs {
         DialogUtils.getDialogResults(dialog, (results) -> {
             int days = Integer.parseInt(results.get(SIMULATE).getString());
             displaySimulateTable(days);
+            callback.callback(days);
         }, SIMULATE);
     }
 
@@ -69,7 +70,7 @@ public class SimulateMetaDialogs {
         Table<String> simulateTable =  new Table<>();
         simulateTable = simulateTable(simulateTable, days);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        dialogPane.addRow(0, GuiUtils.createLabel("MORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXTMORETEXT"));
+        dialogPane.addRow(0, GuiUtils.createLabel("Simulated " + days + " days in all libraries."));
         dialogPane.addRow(1, simulateTable.getTable());
         DialogUtils.getDialogResults(dialog, (results) -> {
 

@@ -53,7 +53,7 @@ public class GuiMenuBar {
         barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(statusBar != null && !statusBar.getSaved()), null);
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "_Edit JSON... (Dev)");
-        barElement.addMenuItem(1, "Simulate", event -> SimulateMetaDialogs.simulateDay(), KeyCombination.keyCombination("CTRL+SHIFT+S"));
+        barElement.addMenuItem(1, "Simulate", event -> SimulateMetaDialogs.simulateDay(days -> {bookTable.refresh(); memberTable.refresh();}), KeyCombination.keyCombination("CTRL+SHIFT+S"));
         barElement.addMenu("_Help");
         barElement.addMenuItem(2, "_About...", event -> libraryDB.getInterfaceManager().display(new GuiAbout(libraryDB, libraryReference)), null);
         barElement.addMenuItem(2, "_Help...", event -> libraryDB.getInterfaceManager().display(new GuiHelp(libraryDB, libraryReference)), null);
