@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import org.whstsa.library.World;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
@@ -21,8 +22,10 @@ import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.util.BookStatus;
+import org.whstsa.library.util.DayGenerator;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -30,37 +33,49 @@ public class SimulateMetaDialogs {
 
     private static String SIMULATE = "Days";
 
-    public static void simulateDay(ObservableReference<ILibrary> libraryReference) {
+    public static void simulateDay() {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Simulate Days")
                 .addTextField(SIMULATE)
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
         DialogUtils.getDialogResults(dialog, (results) -> {
-            int days = (int) results.get(SIMULATE).getResult();
-            displaySimulateTable(libraryReference , days);
+            int days = Integer.parseInt(results.get(SIMULATE).getString());
+            displaySimulateTable(days);
         }, SIMULATE);
     }
 
-    public static Table<BookStatusRow> simulateTable (Table<BookStatusRow> table, ObservableReference<ILibrary> libraryReference, int days) {
-        List<BookStatusRow> tableItems = FXCollections.observableArrayList();
+    public static Table<String> simulateTable (Table<String> table, int days) {
+        table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()) , true, TableColumn.SortType.DESCENDING, 25);
+        List<String> tableItems = FXCollections.observableArrayList();
         for (int index = 0; index < days;index++) {
-
+            tableItems.add(World.getDate().toString());
+            List<String> actions = DayGenerator.simulateDay();
+            actions.forEach(action -> {
+                tableItems.add(action);
+            });
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(World.getDate());
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            World.setDate(cal.getTime());
         }
-        return null;
+        ObservableReference<List<String>> observableReference = () -> tableItems;
+        table.setReference(observableReference);
+        table.getTable().setSelectionModel(null);
+        return table;
     }
 
-    public static void displaySimulateTable(ObservableReference<ILibrary> libraryReference, int days) {
+    public static void displaySimulateTable(int days) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Simulate Days")
-                .addTextField(SIMULATE)
+                .setTitle("Results")
                 .build();
-        Table<BookStatusRow> simulateTable =  new Table<>();
-        simulateTable = simulateTable(simulateTable, libraryReference, days);
+        Table<String> simulateTable =  new Table<>();
+        simulateTable = simulateTable(simulateTable, days);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
+        dialogPane.addRow(1, simulateTable.getTable());
         DialogUtils.getDialogResults(dialog, (results) -> {
 
-        }, SIMULATE);
+        });
     }
 
 }
