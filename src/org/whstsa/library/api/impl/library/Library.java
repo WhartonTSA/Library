@@ -163,6 +163,11 @@ public class Library implements ILibrary {
     }
 
     @Override
+    public List<IPerson> getPeople() {
+        return this.members.stream().map(IMember::getPerson).collect(Collectors.toList());
+    }
+
+    @Override
     public IMember getMember(IPerson person) {
         return this.getPersonMemberMap().get(person);
     }

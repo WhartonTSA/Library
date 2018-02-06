@@ -33,6 +33,13 @@ public interface ILibrary extends IBookContainer, Loadable {
     IMember addMember(IPerson person);
 
     /**
+     * Returns a list of people at this library
+     *
+     * @return the person list
+     */
+    List<IPerson> getPeople();
+
+    /**
      * Adds an already-created member to this library
      *
      * @param member the member to track
