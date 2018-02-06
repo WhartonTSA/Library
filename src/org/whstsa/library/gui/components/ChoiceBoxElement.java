@@ -1,13 +1,9 @@
 package org.whstsa.library.gui.components;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import org.whstsa.library.api.Callback;
-import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.util.ChoiceBoxProperty;
@@ -16,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{/**DISCLAIMER I probably definitely did this wrong. Help me eric*/
+public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{
 
     private Label label;
     private String id;

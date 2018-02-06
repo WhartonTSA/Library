@@ -2,6 +2,7 @@ package org.whstsa.library.gui.components.tables;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -298,13 +299,6 @@ public class DatabaseManagementTables {
                 GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
         );
 
-//        Button refreshButton = GuiUtils.createButton("Refresh (debug)", true, event -> {
-//            mainBookTable.refresh();
-//            mainMemberTable.refresh();
-//            viewBooks.setDisable(false);
-//            viewMembers.setDisable(false);
-//        });
-
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             checkout.setDisable(newSelection == null);
             checkin.setDisable(newSelection == null);
@@ -346,10 +340,27 @@ public class DatabaseManagementTables {
             }
         });
 
-        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {//checks if both buttons are disabled at the same time and re-enables them, fixing annoying issues
             if (viewBooks.isDisabled() && viewMembers.isDisabled()) {
                 viewMembers.setDisable(false);
                 viewBooks.setDisable(false);
+            }
+        });
+
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {//Diables checkout/in buttons when in checkout/in interface
+            if (((VBox) mainContainer.getTop()).getChildren().get(1).getId() != null) {
+                if (((VBox) mainContainer.getTop()).getChildren().get(1).getId().equals("toolbar")) {
+                    checkout.setDisable(true);
+                    checkin.setDisable(true);
+                }
+                else {
+                    checkout.setDisable(false);
+                    checkin.setDisable(false);
+                }
+            }
+            else {
+                checkout.setDisable(false);
+                checkin.setDisable(false);
             }
         });
 

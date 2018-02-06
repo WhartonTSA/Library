@@ -227,8 +227,8 @@ public class CheckoutMetaDialogs {
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
             ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
             mainContainer.setCenter(bookTable.getTable());
-            viewBooks.setDisable(true);
-            viewMembers.setDisable(false);
+            viewBooks.setDisable(false);
+            viewMembers.setDisable(true);
         });
 
         ToolBar toolBar = new ToolBar();
@@ -249,8 +249,8 @@ public class CheckoutMetaDialogs {
         }
         toolBar.setId("toolbar");
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
-        toolBar.setStyle("-fx-base: #d1e3ff;");
-        checkinButton.setStyle("fx-base: #dddddd;");
+        toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
+        checkinButton.setStyle("-fx-base: #dddddd;");
 
         mainTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -266,7 +266,8 @@ public class CheckoutMetaDialogs {
         checkinButton.setOnMouseClicked(event -> {
             viewBooks.setDisable(true);
             viewMembers.setDisable(false);
-            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
+            viewBooks.setSelected(true);
+            viewMembers.setSelected(false);
             ObservableList<IBook> selectedBooks = mainTable.getTable().getSelectionModel().getSelectedItems();
             if (member.getFine() > 0) {
                 try {
@@ -291,7 +292,7 @@ public class CheckoutMetaDialogs {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             });
-            mainTable.refresh();
+            mainContainer.setCenter(bookTable.getTable());
             ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
         });
     }
