@@ -54,6 +54,7 @@ public class GuiMenuBar {
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "_Edit JSON... (Dev)");
         barElement.addMenuItem(1, "Simulate", event -> SimulateMetaDialogs.simulateDay(days -> {if (libraryReference != null) {bookTable.refresh(); memberTable.refresh();}}), KeyCombination.keyCombination("CTRL+SHIFT+S"));
+        barElement.addMenuItem(1, "Auto-Populate _People/Books", event -> {PopulateMetaDialogs.populateMenu(amount -> {if (libraryReference != null) {bookTable.refresh(); memberTable.refresh();}});}, KeyCombination.keyCombination("CTRL+SHIFT+P"));
         barElement.addMenuItem(1, "_Refresh", event -> {if (libraryReference != null) {
             memberTable.refresh();
             bookTable.refresh();}

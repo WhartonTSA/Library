@@ -34,7 +34,7 @@ public class BookMetaDialogs {
     private static final String TITLE = "Title";
     private static final String AUTHOR = "Author";
     private static final String GENRE = "Genre";
-    private static String QUANTITY = "Quantity";
+    private static final String QUANTITY = "Quantity";
 
 
     public static void createBook(Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
@@ -105,10 +105,11 @@ public class BookMetaDialogs {
         dialog.show();
     }
 
-    public static void listCopies(Callback<IBook> callback, IBook book, ObservableReference<ILibrary> libraryReference) {
+    public static void listCopies(Callback<IBook> callback, IBook book, ObservableReference<ILibrary> libraryReference) { //TODO double check available copies
+        int availableCopies = libraryReference.poll().getCheckouts().get(book) != null ? libraryReference.poll().getCheckouts().get(book).size() : 0;
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Copies")
-                .addLabel("There are " + libraryReference.poll().getQuantity(book.getID()) + " available copy(s) of \"" + book.getTitle() + ".\"")//TODO Add getQuantity (And add a ternary for copy/copies)
+                .addLabel("There are " + (libraryReference.poll().getQuantity(book.getID()) - availableCopies >= 0 ? availableCopies : 0 + " available copy(s) of \"" + book.getTitle() + ".\""))
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();

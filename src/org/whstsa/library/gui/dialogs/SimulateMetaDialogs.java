@@ -28,19 +28,19 @@ import java.util.Map;
 
 public class SimulateMetaDialogs {
 
-    private static String SIMULATE = "Days";
+    private static final String SIMULATE = "Days";
 
     public static void simulateDay(Callback<Integer> callback) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Simulate Days")
                 .addTextField(SIMULATE)
                 .build();
-        GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
         DialogUtils.getDialogResults(dialog, (results) -> {
             int days;
             try {
                 days = Integer.parseInt(results.get(SIMULATE).getString());
                 if (days > 365) {
+                    DialogUtils.createDialog("Error: Too Many Days", "You have exceeded the amount of days allowed to simulate at once, reducing to one year.").show();
                     days = 365;
                 }
             } catch (NumberFormatException ex) {
@@ -78,7 +78,7 @@ public class SimulateMetaDialogs {
         Table<String> simulateTable =  new Table<>();
         simulateTable = simulateTable(simulateTable, days);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        dialogPane.addRow(0, GuiUtils.createLabel("Simulated " + days + " days in all libraries."));
+        dialogPane.addRow(0, GuiUtils.createLabel("Simulated " + days + " days in all libraries.                                   "));
         dialogPane.addRow(1, simulateTable.getTable());
         DialogUtils.getDialogResults(dialog, (results) -> {
 
