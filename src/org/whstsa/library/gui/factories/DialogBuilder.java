@@ -26,6 +26,7 @@ public class DialogBuilder {
     private List<ButtonType> buttons;
     private Map<ButtonType, Callback<Event>> buttonActionMap;
     private List<ButtonType> closingButtons;
+    private Integer width = null;
 
     private Operator<GridPane, List<Element>, GridPane> gridPaneOperator;
 
@@ -74,6 +75,11 @@ public class DialogBuilder {
 
     public DialogBuilder addTextField(String prompt, String placeholder, boolean inline) {
         return this.addElement(GuiUtils.createTextField(prompt, inline, placeholder));
+    }
+
+    public DialogBuilder setWidth(int width) {
+        this.width = width;
+        return this;
     }
 
     public DialogBuilder addTextField(String prompt, String placeholder) {
@@ -172,6 +178,10 @@ public class DialogBuilder {
 
         dialog.getDialogPane().setContent(grid);
 
+        if (this.width != null) {
+            dialog.getDialogPane().setMinWidth(this.width);
+        }
+
         Platform.runLater(() -> {
             if (grid.getChildren().size() == 0) {
                 return;
@@ -186,7 +196,6 @@ public class DialogBuilder {
             if (buttonNode != null) {
                 buttonNode.addEventFilter(ActionEvent.ACTION, event -> {
                     if (isCancelled.get()) {
-                        System.out.println("YOU BEEN STRUCK BY A SMOOTH CRIMINAL");
                         return;
                     }
                     action.callback(event);
