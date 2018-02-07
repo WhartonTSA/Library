@@ -396,39 +396,42 @@ public class DatabaseManagementTables {
         }, true, TableColumn.SortType.DESCENDING, 30);
         mainTable.addColumn("Due Date", (cellData) -> {
             ILibrary library = libraryReference.poll();
-            TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(5);
-            dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
-                @Override
-                public void updateItem(String item, boolean empty) {
-                if (!(item == null) || !empty) {
-                    List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
-                    boolean hasBeenCheckedOut = checkouts != null;
-                    if (hasBeenCheckedOut) {
-                        DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
-                        // Sorts the checkouts by date to get the nearest due date
-                        List<ICheckout> sortedCheckouts = checkouts.stream()
-                                .sorted(Comparator.comparing(ICheckout::getDueDate))
-                                .collect(Collectors.toList());
-                        // Display N/A if there are no checkouts
-                        if (sortedCheckouts.size() == 0 || sortedCheckouts.get(0) == null) {
-                            setText("N/A");
-                            return;
-                        }
-                        ICheckout checkout = sortedCheckouts.get(0);
-                        Date nearestDate = checkout.getDueDate();
-                        setText(formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : ""));
-                        setTextFill(checkout.isOverdue() ? Color.RED : Color.GREEN);
-                    }
-                    else {
-                        setText("N/A");
-                    }
-                } else {
-                    setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
+            List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
+            boolean hasBeenCheckedOut = checkouts != null;
+            if (hasBeenCheckedOut) {
+                DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
+                // Sorts the checkouts by date to get the nearest due date
+                List<ICheckout> sortedCheckouts = checkouts.stream()
+                        .sorted(Comparator.comparing(ICheckout::getDueDate))
+                        .collect(Collectors.toList());
+                // Display N/A if there are no checkouts
+                if (sortedCheckouts.size() == 0 || sortedCheckouts.get(0) == null) {
+                    return new ReadOnlyStringWrapper("N/A");
                 }
-                }
-            });
+                ICheckout checkout = sortedCheckouts.get(0);
+                Date nearestDate = checkout.getDueDate();
+                return new ReadOnlyStringWrapper((formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : "") + (checkout.isOverdue() ? "o" : "")));
+            }
+
             return new ReadOnlyStringWrapper("N/A");
         }, true, TableColumn.SortType.DESCENDING, 40);
+
+        ILibrary library = libraryReference.poll();
+
+        TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(5);
+        dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                if (!(item == null) || !empty) {
+                    setTextFill(item.contains("o") ? Color.RED : Color.GREEN);
+                    setText(item.replace("o", ""));
+                }
+                else {
+                    setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
+                }
+            }
+        });
+
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {

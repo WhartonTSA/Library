@@ -93,8 +93,8 @@ public class CheckoutMetaDialogs {
         }
         toolBar.setId("toolbar");
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
-        toolBar.setStyle("-fx-base: #d1e3ff;");
-        checkoutButton.setStyle("fx-base: #dddddd;");
+        toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
+        checkoutButton.setStyle("-fx-base: #91c4e2;");
         bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         bookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
@@ -250,7 +250,7 @@ public class CheckoutMetaDialogs {
         toolBar.setId("toolbar");
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
-        checkinButton.setStyle("-fx-base: #dddddd;");
+        checkinButton.setStyle("-fx-base: #91c4e2;");
 
         mainTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 

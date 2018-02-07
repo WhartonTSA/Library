@@ -92,7 +92,7 @@ public class MemberMetaDialogs {
     }
 
 
-        public static void listBooks(Callback<IMember> callback, IMember member) {
+    public static void listBooks(Callback<IMember> callback, IMember member) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle(member.getName() + "'s books")
                 .build();
