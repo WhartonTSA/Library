@@ -2,7 +2,6 @@ package org.whstsa.library.gui.components.tables;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -248,7 +247,7 @@ public class DatabaseManagementTables {
         });
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
-                GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable, "")
+                GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainMemberTable, "")
         );
         Button memberDelete = GuiUtils.createButton("Remove", event ->
                 MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
@@ -296,7 +295,7 @@ public class DatabaseManagementTables {
         });
         bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event ->
-                GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
+                GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainBookTable)
         );
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -384,7 +383,7 @@ public class DatabaseManagementTables {
     }
 
     private static void bookManagerTable(Table<IBook> mainTable, ObservableReference<ILibrary> libraryReference) {
-        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
+        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 200);
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
         mainTable.addColumn("Copies", (cellData) -> new ReadOnlyStringWrapper(libraryReference.poll().getQuantity(cellData.getValue().getID()) + ""), true, TableColumn.SortType.DESCENDING, 25);
@@ -396,39 +395,42 @@ public class DatabaseManagementTables {
         }, true, TableColumn.SortType.DESCENDING, 30);
         mainTable.addColumn("Due Date", (cellData) -> {
             ILibrary library = libraryReference.poll();
-            TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(5);
-            dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
-                @Override
-                public void updateItem(String item, boolean empty) {
-                if (!(item == null) || !empty) {
-                    List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
-                    boolean hasBeenCheckedOut = checkouts != null;
-                    if (hasBeenCheckedOut) {
-                        DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
-                        // Sorts the checkouts by date to get the nearest due date
-                        List<ICheckout> sortedCheckouts = checkouts.stream()
-                                .sorted(Comparator.comparing(ICheckout::getDueDate))
-                                .collect(Collectors.toList());
-                        // Display N/A if there are no checkouts
-                        if (sortedCheckouts.size() == 0 || sortedCheckouts.get(0) == null) {
-                            setText("N/A");
-                            return;
-                        }
-                        ICheckout checkout = sortedCheckouts.get(0);
-                        Date nearestDate = checkout.getDueDate();
-                        setText(formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : ""));
-                        setTextFill(checkout.isOverdue() ? Color.RED : Color.GREEN);
-                    }
-                    else {
-                        setText("N/A");
-                    }
-                } else {
-                    setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
+            List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
+            boolean hasBeenCheckedOut = checkouts != null;
+            if (hasBeenCheckedOut) {
+                DateFormat formattedDate = new SimpleDateFormat("MM/dd/yyyy");
+                // Sorts the checkouts by date to get the nearest due date
+                List<ICheckout> sortedCheckouts = checkouts.stream()
+                        .sorted(Comparator.comparing(ICheckout::getDueDate))
+                        .collect(Collectors.toList());
+                // Display N/A if there are no checkouts
+                if (sortedCheckouts.size() == 0 || sortedCheckouts.get(0) == null) {
+                    return new ReadOnlyStringWrapper("N/A");
                 }
-                }
-            });
+                ICheckout checkout = sortedCheckouts.get(0);
+                Date nearestDate = checkout.getDueDate();
+                return new ReadOnlyStringWrapper((formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : "") + (checkout.isOverdue() ? "o" : "")));
+            }
+
             return new ReadOnlyStringWrapper("N/A");
         }, true, TableColumn.SortType.DESCENDING, 40);
+
+        ILibrary library = libraryReference.poll();
+
+        TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(5);
+        dateColumn.setCellFactory(param -> new TableCell<IBook, String>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                if (!(item == null) || !empty) {
+                    setTextFill(item.contains("o") ? Color.RED : Color.GREEN);
+                    setText(item.replace("o", ""));
+                }
+                else {
+                    setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
+                }
+            }
+        });
+
         ObservableReference<List<IBook>> observableReference = () -> libraryReference.poll().getBooks();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {
