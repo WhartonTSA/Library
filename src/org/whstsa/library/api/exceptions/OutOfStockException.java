@@ -15,7 +15,7 @@ public class OutOfStockException extends Exception {
 
     @Override
     public String getMessage() {
-        return library.getName() + " does not have any more copies of " + book.getTitle();
+        return library.getName() + " does not have any more copies of " + book.getName();
     }
 
 }

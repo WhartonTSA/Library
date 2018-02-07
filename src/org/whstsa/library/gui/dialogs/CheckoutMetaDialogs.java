@@ -122,7 +122,7 @@ public class CheckoutMetaDialogs {
             selectedBooks.forEach(book -> {
                 try {
                     libraryReference.poll().reserveBook(member, book, 5);
-                    Logger.DEFAULT_LOGGER.debug("Checking out " + book.getTitle() + " to " + member.getName() + ".");
+                    Logger.DEFAULT_LOGGER.debug("Checking out " + book.getName() + " to " + member.getName() + ".");
                 } catch (Exception ex) {
                     DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
@@ -137,7 +137,7 @@ public class CheckoutMetaDialogs {
     public static void checkOutPreMenu(Callback<IMember> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Choose a member to checkout")
-                .addChoiceBox(CHECKOUT, LibraryManagerUtils.getMemberNames(libraryReference), true, 0)
+                .addChoiceBox(CHECKOUT, LibraryManagerUtils.getMemberNames(libraryReference.poll()), true, 0)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(CHECKOUT).getResult() != null) {
@@ -151,7 +151,7 @@ public class CheckoutMetaDialogs {
     private static void checkoutMemberDialog(Callback<IMember> callback, IMember member,  ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Checking out " + member.getName() + ".")
-                .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)
+                .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference.poll()), true, -1)
                 .addCheckBox(PAYFINE, false, true, member.getFine() <= 0)
                 .build();
         if (member.getFine() > 0) {
@@ -215,7 +215,7 @@ public class CheckoutMetaDialogs {
 
         LibraryManagerUtils.addTooltip(mainTable.getTable(), "CTRL + Click to select multiple books");
 
-        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
+        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 200);
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);//TODO needs better fields for table columns
         ObservableReference<List<IBook>> observableReference = member::getBooks;
@@ -301,7 +301,7 @@ public class CheckoutMetaDialogs {
 
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Choose a member to checkin")
-                .addChoiceBox(RETURN, LibraryManagerUtils.getMemberNames(libraryReference), true, 0)
+                .addChoiceBox(RETURN, LibraryManagerUtils.getMemberNames(libraryReference.poll()), true, 0)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {

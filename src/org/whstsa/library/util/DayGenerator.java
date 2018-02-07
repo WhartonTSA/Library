@@ -71,10 +71,10 @@ public class DayGenerator {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
 						member.checkIn(checkout);
-						actions.add(member.getName() + " returned " + checkout.getBook().getTitle() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
+						actions.add(member.getName() + " returned " + checkout.getBook().getName() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
 						member.removeBook(checkout.getBook());
 					} catch (CheckedInException e) {
-						actions.add(member.getName() + " tried to return " + checkout.getBook().getTitle() + " but was already returned.");
+						actions.add(member.getName() + " tried to return " + checkout.getBook().getName() + " but was already returned.");
 					} catch (OutstandingFinesException e) {
 						actions.add(e.getMessage());
 					}
@@ -90,7 +90,7 @@ public class DayGenerator {
 					if (book != null) {
 						try {
 							library.reserveBook(member, book, RANDOM.nextInt(10));
-							actions.add(member.getName() + " took " + book.getTitle() + " (" + library.getQuantity(book.getID()) + " books remaining )");
+							actions.add(member.getName() + " took " + book.getName() + " (" + library.getQuantity(book.getID()) + " books remaining )");
 						}
 						catch (OutOfStockException e) {
 							actions.add(e.getMessage());
@@ -108,7 +108,7 @@ public class DayGenerator {
 				double fine = checkout.getFine();
 				if (fine != 0.0) {
 					checkout.payFine();
-					actions.add(String.format("Payed off fee for %s for %s of $%s", checkout.getBook().getTitle(), checkout.getOwner().getName(), fine));
+					actions.add(String.format("Payed off fee for %s for %s of $%s", checkout.getBook().getName(), checkout.getOwner().getName(), fine));
 				}
 			}
 		});
@@ -132,7 +132,7 @@ public class DayGenerator {
 		ILibrary library = randomLibrary();
 		Loader.getLoader().loadBook(book);
 		library.addBook(book, RANDOM.nextInt(9) + 1);
-		return (String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getTitle(), book.getAuthorName(), library.getName()));
+		return (String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getName(), book.getAuthorName(), library.getName()));
 	}
 
 	public static String generateFirstName() {

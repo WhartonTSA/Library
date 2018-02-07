@@ -1,6 +1,7 @@
 package org.whstsa.library.api.library;
 
 import org.whstsa.library.api.IPerson;
+import org.whstsa.library.api.Identifiable;
 import org.whstsa.library.api.Serializable;
 import org.whstsa.library.api.Unique;
 import org.whstsa.library.api.books.IBook;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface IMember extends IBookHolder, Serializable, Unique {
+public interface IMember extends IBookHolder, Serializable, Unique, Identifiable {
 
     /**
      * Returns the library this member belongs to
@@ -25,13 +26,6 @@ public interface IMember extends IBookHolder, Serializable, Unique {
      * @return the person
      */
     IPerson getPerson();
-
-    /**
-     * Convenience method. Returns the name of the person
-     *
-     * @return the name of the person
-     */
-    String getName();
 
     /**
      * Returns the list of checkouts this member has made for a given book
