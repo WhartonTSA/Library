@@ -1,6 +1,7 @@
 package org.whstsa.library.api.library;
 
 import org.whstsa.library.api.IPerson;
+import org.whstsa.library.api.Identifiable;
 import org.whstsa.library.api.Loadable;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.books.IBookContainer;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface ILibrary extends IBookContainer, Loadable {
+public interface ILibrary extends IBookContainer, Loadable, Identifiable {
 
     /**
      * Creates a checkout object for a member and book
@@ -124,13 +125,6 @@ public interface ILibrary extends IBookContainer, Loadable {
      * @return the list of people
      */
     List<IPerson> getPeople();
-
-    /**
-     * Returns the name of this library
-     *
-     * @return the name of this library
-     */
-    String getName();
 
     /**
      * Returns a map that maps books to a list of checkouts for that book

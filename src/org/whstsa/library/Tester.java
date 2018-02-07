@@ -155,7 +155,7 @@ public class Tester {
     }
 
     private void checkin(IMember member, ICheckout checkout) {
-        System.out.format("Checking in %s", checkout.getBook().getTitle());
+        System.out.format("Checking in %s", checkout.getBook().getName());
         try {
             member.checkInAndPayFines(checkout);
             System.out.println("Successfully checked-in the book");

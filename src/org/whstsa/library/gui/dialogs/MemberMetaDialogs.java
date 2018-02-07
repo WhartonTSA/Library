@@ -30,10 +30,10 @@ public class MemberMetaDialogs {
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
-                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNamesFromPeople(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference))), true, -1)
+                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference.poll()))), true, -1)
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference).size() < 1) {
+        if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference.poll()).size() < 1) {
             dialogPane.add(GuiUtils.createLabel("There are no people to create a member from.\n Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
         }
         DialogUtils.getDialogResults(dialog, (results) -> {
@@ -92,14 +92,14 @@ public class MemberMetaDialogs {
     }
 
 
-        public static void listBooks(Callback<IMember> callback, IMember member) {
+    public static void listBooks(Callback<IMember> callback, IMember member) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle(member.getName() + "'s books")
                 .build();
             GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
             if (member.getBooks().size() > 0) {
                 for (int i = 0; i < member.getBooks().size(); i++) {
-                    dialogPane.add(GuiUtils.createLabel(member.getBooks().get(i).getTitle()), 0, i);
+                    dialogPane.add(GuiUtils.createLabel(member.getBooks().get(i).getName()), 0, i);
                 }
             }
             else {

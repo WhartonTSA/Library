@@ -7,14 +7,7 @@ import org.whstsa.library.api.library.IMember;
 
 import java.util.List;
 
-public interface IPerson extends IBookContainerReadonly, Loadable, Serializable, Unique {
-
-    /**
-     * Returns the full name of this person
-     *
-     * @return the full name
-     */
-    String getName();
+public interface IPerson extends IBookContainerReadonly, Loadable, Serializable, Unique, Identifiable {
 
     /**
      * Returns the first name of this person

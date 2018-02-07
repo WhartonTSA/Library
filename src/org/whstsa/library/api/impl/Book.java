@@ -51,7 +51,7 @@ public class Book implements IBook {
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return this.title;
     }
 
