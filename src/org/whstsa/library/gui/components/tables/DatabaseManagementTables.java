@@ -434,7 +434,7 @@ public class DatabaseManagementTables {
         mainTable.getTable().setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && mainTable.getSelected() != null) {
                 LibraryDB.LOGGER.debug("Listing member's books");
-                BookMetaDialogs.listCopies(t -> {}, mainTable.getSelected(), libraryReference);
+                BookMetaDialogs.listCopies(mainTable.getSelected(), libraryReference);
             }
         });
     }
