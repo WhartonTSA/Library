@@ -1,23 +1,33 @@
 package org.whstsa.library.gui.dialogs;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TableColumn;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
+import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
+import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
+import org.whstsa.library.gui.components.Table;
+import org.whstsa.library.gui.components.tables.BookStatusRow;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
+import org.whstsa.library.util.BookStatus;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MemberMetaDialogs {
@@ -72,7 +82,7 @@ public class MemberMetaDialogs {
                         return;
                     }
                     try {
-                        member.getPerson().getMemberships().stream().map(person -> person.getLibrary()).forEach(library -> {
+                        member.getPerson().getMemberships().stream().map(IMember::getLibrary).forEach(library -> {
                             library.removeMember(member);
                         });
                     } catch (CannotDeregisterException ex) {
@@ -92,19 +102,29 @@ public class MemberMetaDialogs {
     }
 
 
-    public static void listBooks(Callback<IMember> callback, IMember member) {
+    public static void listBooks(IMember member) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle(member.getName() + "'s books")
+                .setTitle(member.getName() + "'s Books")
                 .build();
             GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
             if (member.getBooks().size() > 0) {
-                for (int i = 0; i < member.getBooks().size(); i++) {
-                    dialogPane.add(GuiUtils.createLabel(member.getBooks().get(i).getName()), 0, i);
-                }
+                dialogPane.add(booksTable(member.getBooks()).getTable(), 0, 0);
             }
             else {
                 dialogPane.add(GuiUtils.createLabel(member.getName() + " has no checked-out books."), 0, 0);
             }
         DialogUtils.getDialogResults(dialog, (results) -> {});
+    }
+
+    private static Table<IBook> booksTable(List<IBook> books) {
+        Table<IBook> mainTable = new Table<>();
+
+        mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 50);
+        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 25);
+
+        ObservableReference<List<IBook>> observableReference = () -> books;
+        mainTable.setReference(observableReference);
+        mainTable.getTable().setSelectionModel(null);
+        return mainTable;
     }
 }
