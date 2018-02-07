@@ -378,7 +378,7 @@ public class DatabaseManagementTables {
         mainTable.getTable().setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && mainTable.getSelected() != null) {
                 LibraryDB.LOGGER.debug("Listing member's books");
-                MemberMetaDialogs.listBooks(t -> {}, mainTable.getSelected());
+                MemberMetaDialogs.listBooks(mainTable.getSelected());
             }
         });
     }
@@ -415,7 +415,6 @@ public class DatabaseManagementTables {
 
             return new ReadOnlyStringWrapper("N/A");
         }, true, TableColumn.SortType.DESCENDING, 40);
-
         ILibrary library = libraryReference.poll();
 
         TableColumn<IBook, String> dateColumn = (TableColumn<IBook, String>) mainTable.getTable().getColumns().get(5);
@@ -428,6 +427,7 @@ public class DatabaseManagementTables {
                 }
                 else {
                     setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
+                    setText("");
                 }
             }
         });
