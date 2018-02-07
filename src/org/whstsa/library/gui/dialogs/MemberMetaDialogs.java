@@ -40,10 +40,10 @@ public class MemberMetaDialogs {
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Add Member")
-                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNamesFromPeople(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference))), true, -1)
+                .addChoiceBox(EXISTING, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference.poll()))), true, -1)
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference).size() < 1) {
+        if (LibraryManagerUtils.getPeopleWithoutLibrary(libraryReference.poll()).size() < 1) {
             dialogPane.add(GuiUtils.createLabel("There are no people to create a member from.\n Create a new person before trying to make a new member", 16, Color.RED), 0, 1);
         }
         DialogUtils.getDialogResults(dialog, (results) -> {
@@ -119,8 +119,8 @@ public class MemberMetaDialogs {
     private static Table<IBook> booksTable(List<IBook> books) {
         Table<IBook> mainTable = new Table<>();
 
-        mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 25);
+        mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 50);
+        mainTable.addColumn("Due Date", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 25);
 
         ObservableReference<List<IBook>> observableReference = () -> books;
         mainTable.setReference(observableReference);

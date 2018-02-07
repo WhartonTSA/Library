@@ -20,7 +20,7 @@ public class InCirculationException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "Cannot pull " + book.getTitle() + " from " + this.library.getName() + " registry as it is still in circulation.";
+        return "Cannot pull " + book.getName() + " from " + this.library.getName() + " registry as it is still in circulation.";
     }
 
 }

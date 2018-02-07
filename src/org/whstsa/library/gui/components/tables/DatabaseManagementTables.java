@@ -2,7 +2,6 @@ package org.whstsa.library.gui.components.tables;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -248,7 +247,7 @@ public class DatabaseManagementTables {
         });
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
-                GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainMemberTable, "")
+                GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainMemberTable, "")
         );
         Button memberDelete = GuiUtils.createButton("Remove", event ->
                 MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
@@ -296,7 +295,7 @@ public class DatabaseManagementTables {
         });
         bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event ->
-                GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference), mainContainer, libraryReference, mainBookTable)
+                GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainBookTable)
         );
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -384,7 +383,7 @@ public class DatabaseManagementTables {
     }
 
     private static void bookManagerTable(Table<IBook> mainTable, ObservableReference<ILibrary> libraryReference) {
-        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
+        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 200);
         mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
         mainTable.addColumn("Copies", (cellData) -> new ReadOnlyStringWrapper(libraryReference.poll().getQuantity(cellData.getValue().getID()) + ""), true, TableColumn.SortType.DESCENDING, 25);
@@ -437,7 +436,7 @@ public class DatabaseManagementTables {
         mainTable.getTable().setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && mainTable.getSelected() != null) {
                 LibraryDB.LOGGER.debug("Listing member's books");
-                BookMetaDialogs.listCopies(t -> {}, mainTable.getSelected(), libraryReference);
+                BookMetaDialogs.listCopies(mainTable.getSelected(), libraryReference);
             }
         });
     }

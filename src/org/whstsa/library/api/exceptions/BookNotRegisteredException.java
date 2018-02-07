@@ -19,7 +19,7 @@ public class BookNotRegisteredException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return this.book.getTitle() + " is not in the \"" + this.library.getName() + "\" book registry.";
+        return this.book.getName() + " is not in the \"" + this.library.getName() + "\" book registry.";
     }
 
 }

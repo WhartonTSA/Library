@@ -16,7 +16,9 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.util.ClickHandlerCheckBox;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class DialogBuilder {
 
@@ -26,6 +28,8 @@ public class DialogBuilder {
     private List<ButtonType> buttons;
     private Map<ButtonType, Callback<Event>> buttonActionMap;
     private List<ButtonType> closingButtons;
+    private Integer width = null;
+    private Integer height = null;
 
     private Operator<GridPane, List<Element>, GridPane> gridPaneOperator;
 
@@ -74,6 +78,16 @@ public class DialogBuilder {
 
     public DialogBuilder addTextField(String prompt, String placeholder, boolean inline) {
         return this.addElement(GuiUtils.createTextField(prompt, inline, placeholder));
+    }
+
+    public DialogBuilder setWidth(Integer width) {
+        this.width = width;
+        return this;
+    }
+
+    public DialogBuilder setHeight(Integer height) {
+        this.height = height;
+        return this;
     }
 
     public DialogBuilder addTextField(String prompt, String placeholder) {
@@ -171,6 +185,14 @@ public class DialogBuilder {
         GridPane grid = this.gridPaneOperator.mutate(DialogUtils.buildGridPane(), this.elementList);
 
         dialog.getDialogPane().setContent(grid);
+
+        if (this.height != null) {
+            dialog.setHeight(this.height);
+        }
+
+        if (this.width != null) {
+            dialog.setWidth(this.width);
+        }
 
         Platform.runLater(() -> {
             if (grid.getChildren().size() == 0) {

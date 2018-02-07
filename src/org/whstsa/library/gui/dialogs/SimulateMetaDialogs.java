@@ -2,26 +2,19 @@ package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
-import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import org.whstsa.library.World;
 import org.whstsa.library.api.Callback;
-import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
-import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.Table;
-import org.whstsa.library.gui.components.tables.BookStatusRow;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
-import org.whstsa.library.gui.factories.LibraryManagerUtils;
-import org.whstsa.library.util.BookStatus;
 import org.whstsa.library.util.DayGenerator;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +33,7 @@ public class SimulateMetaDialogs {
             try {
                 days = Integer.parseInt(results.get(SIMULATE).getString());
                 if (days > 365) {
-                    DialogUtils.createDialog("Error: Too Many Days", "You have exceeded the amount of days allowed to simulate at once, reducing to one year.").show();
+                    DialogUtils.createDialog("Error: Too Many Days", "You have exceeded the amount of days allowed to simulate at once, reducing to one year.", null, Alert.AlertType.ERROR).show();
                     days = 365;
                 }
             } catch (NumberFormatException ex) {
