@@ -369,7 +369,7 @@ public class DatabaseManagementTables {
     private static void memberManagerTable(Table<IMember> mainTable, ObservableReference<ILibrary> libraryReference) {
         mainTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getFirstName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getLastName()), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Teacher", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().isTeacher() + ""), true, TableColumn.SortType.DESCENDING, 50);
+        mainTable.addColumn("Role", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().isTeacher() ? "Teacher" : "Student"), true, TableColumn.SortType.DESCENDING, 50);
         mainTable.addColumn("Fines", (cellData) -> new ReadOnlyStringWrapper("$" + cellData.getValue().getFine()), true, TableColumn.SortType.DESCENDING, 25);
         mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBooks().size() + ""), true, TableColumn.SortType.DESCENDING, 25);
         ObservableReference<List<IMember>> observableReference = () -> libraryReference.poll().getMembers();

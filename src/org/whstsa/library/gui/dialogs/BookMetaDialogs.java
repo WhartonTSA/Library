@@ -109,7 +109,7 @@ public class BookMetaDialogs {
         int availableCopies = libraryReference.poll().getCheckouts().get(book) != null ? libraryReference.poll().getQuantity(book.getID()) - libraryReference.poll().getCheckouts().get(book).size() : libraryReference.poll().getQuantity(book.getID());
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Copies")
-                .addLabel("There are " + (libraryReference.poll().getQuantity(book.getID()) - availableCopies >= 0 ? availableCopies : 0 + " available copy(s) of \"" + book.getName() + ".\""))
+                .addLabel("There are " + (availableCopies > 0 ? availableCopies : 0) + " available copy(s) of \"" + book.getName() + ".\"")
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();
