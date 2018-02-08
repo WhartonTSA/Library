@@ -43,7 +43,7 @@ public class BookMetaDialogs {
                 .addTextField(TITLE)
                 .addTextField(AUTHOR)
                 .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, -1)
-                .addTextField(QUANTITY, "1")
+                .addSpinner(QUANTITY, true,0,100,5)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String title = results.get(TITLE).getString();
@@ -66,12 +66,13 @@ public class BookMetaDialogs {
         }, TITLE, AUTHOR, GENRE);
     }
 
-    public static void updateBook(IBook book, Callback<IBook> callback) {
+    public static void updateBook(IBook book, Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Update Person")
                 .addTextField(TITLE, book.getName())
                 .addTextField(AUTHOR, book.getAuthorName())
                 .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, BookType.getGenreIndex(book.getType().getGenre()))
+                .addSpinner(QUANTITY,true,0,100, libraryReference.poll().getQuantity(book.getID()))
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String title = results.get(TITLE).getString();

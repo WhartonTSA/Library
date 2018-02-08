@@ -111,7 +111,7 @@ public class Member implements IMember {
             throw new OutstandingFinesException(this, OutstandingFinesException.Actions.CHECK_IN, checkout.getFine());
         }
         checkout.checkIn();
-        library.setQuantity(checkout.getBook().getID(), library.getQuantity(checkout.getBook().getID()) + 1);
+        library.setQuantity(checkout.getBook().getID(), library.getQuantity(checkout.getBook().getID()));
     }
 
     @Override

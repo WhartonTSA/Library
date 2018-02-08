@@ -156,4 +156,12 @@ public interface ILibrary extends IBookContainer, Loadable, Identifiable {
      */
     void setQuantity(UUID id, int amount);
 
+    /**
+     * Returns true/false if the book IS out of stock
+     *
+     * @param book
+     * @return true if out of stock, false if in stock
+     */
+    boolean checkOutOfStock(IBook book);
+
 }

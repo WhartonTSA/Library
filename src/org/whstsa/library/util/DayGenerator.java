@@ -90,7 +90,7 @@ public class DayGenerator {
 					if (book != null) {
 						try {
 							library.reserveBook(member, book, RANDOM.nextInt(10));
-							actions.add(member.getName() + " took " + book.getName() + " (" + library.getQuantity(book.getID()) + " books remaining )");
+							actions.add(member.getName() + " took " + book.getName() + " (" + (library.getQuantity(book.getID()) - (library.getCheckouts() != null ? library.getCheckouts().get(book).size() : 0)) + " books remaining )");
 						}
 						catch (OutOfStockException e) {
 							actions.add(e.getMessage());

@@ -147,12 +147,12 @@ public class Library implements ILibrary {
         if (!this.bookQuantity.containsKey(book.getID())) {
             this.bookQuantity.put(book.getID(), 5);
         }
-        if (this.bookQuantity.get(book.getID()) == null || this.bookQuantity.get(book.getID()) == 0) {
+        if (this.bookQuantity.get(book.getID()) == null || checkOutOfStock(book)) {
             throw new OutOfStockException(book, this);
         }
         ICheckout checkout = new Checkout(member, book);
         member.checkout(checkout);
-        this.bookQuantity.put(book.getID(), bookQuantity.get(book.getID()) - 1);
+        this.bookQuantity.put(book.getID(), bookQuantity.get(book.getID()));
         return checkout;
     }
 
@@ -310,5 +310,8 @@ public class Library implements ILibrary {
     public void setQuantity(UUID id, int amount) {
         this.bookQuantity.put(id, amount);
     }
+
+    @Override
+    public boolean checkOutOfStock(IBook book) { return getQuantity(book.getID()) == (getCheckouts().get(book) != null ? getCheckouts().get(book).size() : 0); }
 
 }
