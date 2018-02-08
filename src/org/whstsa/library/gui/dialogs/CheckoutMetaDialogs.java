@@ -95,8 +95,9 @@ public class CheckoutMetaDialogs {
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
         checkoutButton.setStyle("-fx-base: #91c4e2;");
-        bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        closeButton.setStyle("-fx-base: #ff8787;");
 
+        bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         bookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
                 toolBar.getItems().set(1, GuiUtils.createTextFlow("checkout", 15, "-fx-base: #000000;",
                         "Checking out ",
@@ -251,6 +252,7 @@ public class CheckoutMetaDialogs {
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
         checkinButton.setStyle("-fx-base: #91c4e2;");
+        closeButton.setStyle("-fx-base: #ff8787;");
 
         mainTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
