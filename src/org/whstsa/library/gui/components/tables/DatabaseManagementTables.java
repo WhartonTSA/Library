@@ -410,8 +410,9 @@ public class DatabaseManagementTables {
                 ICheckout checkout = sortedCheckouts.get(0);
                 Date nearestDate = checkout.getDueDate();
                 return new ReadOnlyStringWrapper((formattedDate.format(nearestDate) + (checkouts.size() > 1 ? "..." : "") + (checkout.isOverdue() ? "o" : "")));
+                //Return date and add "..." if more than one book is checked out
+                //the "o" addition indicates to the cellFactory that the book is overdue, and that the date should be displayed in red. The "o" is removed by cell factory
             }
-
             return new ReadOnlyStringWrapper("N/A");
         }, true, TableColumn.SortType.DESCENDING, 40);
         ILibrary library = libraryReference.poll();
