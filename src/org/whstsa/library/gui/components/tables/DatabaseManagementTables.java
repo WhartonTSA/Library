@@ -279,7 +279,7 @@ public class DatabaseManagementTables {
             BookMetaDialogs.updateBook(selectedBook, book -> {
                 mainBookTable.refresh();
                 statusBar.setSaved(false);
-            });
+            }, libraryReference);
         });
         bookEdit.setDisable(true);
         Button bookDelete = GuiUtils.createButton("Delete", event -> {
