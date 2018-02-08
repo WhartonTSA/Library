@@ -118,8 +118,12 @@ public class DialogBuilder {
         return this.addCheckBox(prompt, false);
     }
 
+    public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected, boolean disabled) {
+        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected, disabled));
+    }
+
     public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
-        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected));
+        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected, false));
     }
 
     public DialogBuilder addChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
@@ -127,7 +131,15 @@ public class DialogBuilder {
     }
 
     public DialogBuilder addChoiceBox(ObservableList<String> items) {
-        return addChoiceBox("", items, false, -1);
+        return addChoiceBox("", items, false, -1, false);
+    }
+
+    public DialogBuilder addSpinner(String label, boolean useLabel, int start, int end, int selectedIndex) {
+        return this.addElement(GuiUtils.createSpinner(label, useLabel, start, end, selectedIndex));
+    }
+
+    public DialogBuilder addSpinner(String label, boolean useLabel, int start, int end) {
+        return this.addSpinner(label, useLabel, start, end, start);
     }
 
     public DialogBuilder setIsCancellable(boolean cancellable) {

@@ -20,7 +20,7 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{
     private Map<T, U> items;
     private boolean map;
 
-    public ChoiceBoxElement(String id, String label, ObservableList<T> items, boolean useLabel, int selected) {
+    public ChoiceBoxElement(String id, String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
         super();
         this.id = id;
         this.label = useLabel ? GuiUtils.createLabel(label) : null;
@@ -29,6 +29,7 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{
         if (selected != -1) {
             super.getSelectionModel().select(selected);
         }
+        this.setDisable(disabled);
     }
 
     public ChoiceBoxElement(String id, String label, Map<T, U> items, ChoiceBoxProperty<T> property, boolean useLabel, int selected) {

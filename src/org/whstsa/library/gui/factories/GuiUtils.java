@@ -219,8 +219,8 @@ public class GuiUtils {
 
     public static CheckBoxElement createCheckBox(String prompt) { return createCheckBox(prompt, false); }
 
-	public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
-		return new ChoiceBoxElement(label, label, items, useLabel, selected);
+	public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected, boolean disabled) {
+		return new ChoiceBoxElement(label, label, items, useLabel, selected, disabled);
 	}
 
 	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, ChoiceBoxProperty<String> property, boolean useLabel, int selected) {
@@ -232,8 +232,16 @@ public class GuiUtils {
     }
 
     public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
-        return new ChoiceBoxElement("", "", items, false, -1);
+        return new ChoiceBoxElement("", "", items, false, -1, false);
     }
+
+    public static SpinnerElement createSpinner(String label, boolean useLabel, int start, int end, int selectedIndex) {
+		return new SpinnerElement(label, label, useLabel, start, end, selectedIndex);
+	}
+
+	public static SpinnerElement createSpinner(String label, boolean useLabel, int start, int end) {
+		return new SpinnerElement(label, label, useLabel, start, end, start);
+	}
 
 	public static ComboBox createComboBox(ObservableList<String> items, boolean editable) {
 		ComboBox comboBox = new ComboBox();

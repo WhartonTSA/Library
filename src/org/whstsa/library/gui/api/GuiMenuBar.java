@@ -28,11 +28,11 @@ public class GuiMenuBar {
     public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
 
         MenuBarElement barElement = new MenuBarElement();
-
+        //Ignore IDE warnings about NullPointers, they are handled
         barElement.addMenu("_File");
         barElement.addSubMenu(0, MenuBarElement.createMenu("_New"));
         barElement.addSubMenuItem(0, 0, "New _Person...", event -> PersonMetaDialogs.createPerson(person -> {if (personTable != null) {personTable.refresh();}}), KeyCombination.keyCombination("CTRL+P"));
-        barElement.addSubMenuItem(0, 0, "New _Library...", event -> LibraryMetaDialogs.createLibrary(library -> {if (libraryTable != null) {libraryTable.refresh();}}), null, false);
+        barElement.addSubMenuItem(0, 0, "New _Library...", event -> LibraryMetaDialogs.createLibrary(library -> {if (libraryTable != null) {libraryTable.refresh();}}), KeyCombination.keyCombination("CTRL+L"));
         barElement.addSubMenuItem(0, 0, "New _Book...", event -> BookMetaDialogs.createBook(book -> bookTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+B"), bookTable == null);
         barElement.addSubMenuItem(0, 0, "New _Membership...", event -> MemberMetaDialogs.createMember(member -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+M"), memberTable == null);
         barElement.addSubMenuItem(0, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
@@ -53,8 +53,25 @@ public class GuiMenuBar {
         barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(statusBar != null && !statusBar.getSaved()), null);
         barElement.addMenu("_Edit");
         barElement.addMenuItem(1, "_Edit JSON... (Dev)");
-        barElement.addMenuItem(1, "Simulate", event -> SimulateMetaDialogs.simulateDay(days -> {if (libraryReference != null) {bookTable.refresh(); memberTable.refresh();}}), KeyCombination.keyCombination("CTRL+SHIFT+S"));
-        barElement.addMenuItem(1, "Auto-Populate _People/Books", event -> {PopulateMetaDialogs.populateMenu(amount -> {if (libraryReference != null) {bookTable.refresh(); memberTable.refresh();}});}, KeyCombination.keyCombination("CTRL+SHIFT+P"));
+        barElement.addSubMenu(1, MenuBarElement.createMenu("_Simulate"));
+        barElement.addSubMenuItem(1, 1, "_Simulate Days", event -> SimulateMetaDialogs.simulateDay(days -> {
+            if (libraryReference != null) {
+                bookTable.refresh();
+                memberTable.refresh();
+            }
+        }), KeyCombination.keyCombination("CTRL+SHIFT+S"));
+        barElement.addSubMenuItem(1, 1, "Populate _Members", event -> PopulateMetaDialogs.populateMemberMenu(amount -> {
+            if (libraryReference != null) {
+                bookTable.refresh();
+                memberTable.refresh();
+            }
+        }), KeyCombination.keyCombination("CTRL+SHIFT+M"));
+        barElement.addSubMenuItem(1, 1, "Populate _Books", event -> PopulateMetaDialogs.populateBookMenu(amount -> {
+            if (libraryReference != null) {
+                bookTable.refresh();
+                memberTable.refresh();
+            }
+        }), KeyCombination.keyCombination("CTRL+SHIFT+B"));
         barElement.addMenuItem(1, "_Refresh", event -> {if (libraryReference != null) {
             memberTable.refresh();
             bookTable.refresh();}

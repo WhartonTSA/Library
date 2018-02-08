@@ -74,12 +74,16 @@ public class LibraryManagerUtils {
         return toObservableList(bookContainer.getBooks().stream().map(IBook::getName).collect(Collectors.toList()));
     }
 
+    public static ILibrary getLibraryFromName(String name) {
+        return ObjectDelegate.getLibraries().stream().filter(library -> library.getName().equals(name)).collect(Collectors.toList()).get(0);
+    }
+
     public static ObservableList<String> toObservableList(Collection<String> list) {
         return FXCollections.observableArrayList(list);
     }
 
     public static <T> List<T> fromObservableList(ObservableList<T> list) {
-        return list.stream().collect(Collectors.toList());
+        return new ArrayList<>(list);
     }
 
 }
