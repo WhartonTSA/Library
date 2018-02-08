@@ -63,7 +63,7 @@ public class DayGenerator {
 			}
 		});
 		while (chance(4)) {
-			actions.add(generateBook());
+			actions.add(generateBook(randomLibrary()));
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
 			if (chance(5)) {
@@ -123,13 +123,12 @@ public class DayGenerator {
 		return (String.format("Added %s %s to %s (%s)", person.getFirstName(), person.getLastName(), library.getName(), person.isTeacher()));
 	}
 
-	public static String generateBook() {
+	public static String generateBook(ILibrary library) {
 		// Creating a new book and adding it to a random library
 		String bookName = generateBookTitle();
 		String authorName = generateName();
 		BookType bookType = randomBookType();
 		IBook book = new Book(bookName, authorName, bookType);
-		ILibrary library = randomLibrary();
 		Loader.getLoader().loadBook(book);
 		library.addBook(book, RANDOM.nextInt(9) + 1);
 		return (String.format("Added a %s book named %s by %s to %s", bookType.name(), book.getName(), book.getAuthorName(), library.getName()));

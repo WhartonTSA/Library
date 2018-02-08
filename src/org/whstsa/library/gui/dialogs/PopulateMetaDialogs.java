@@ -64,8 +64,10 @@ public class PopulateMetaDialogs {
                 library = LibraryManagerUtils.getLibraryFromName((String) choiceBox.getResult());
                 System.out.println("A wild library appeared!");
             }
-            //IMPLEMENT LIBRARY HERE
-            displayPopulateTable(amount, false);
+            else {
+                library = null;
+            }
+            displayPopulateTable(amount, false, library);
             callback.callback(amount);
             }, MEMBERS);
     }
@@ -102,17 +104,19 @@ public class PopulateMetaDialogs {
                 library = LibraryManagerUtils.getLibraryFromName((String) choiceBox.getResult());
                 System.out.println("A wild library appeared!");
             }
-            //IMPLEMENT LIBRARY HERE
-            displayPopulateTable(amount, true);
+            else {
+                library = null;
+            }
+            displayPopulateTable(amount, true, library);
             callback.callback(amount);
         }, BOOKS);
     }
 
-    public static Table<String> populateTable(Table<String> table, int amount, boolean forBook) {
+    public static Table<String> populateTable(Table<String> table, int amount, boolean forBook, ILibrary library) {
         table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()) , false, TableColumn.SortType.DESCENDING, 2500);
         List<String> tableItems = FXCollections.observableArrayList();
         for (int index = 0; index < amount;index++) {
-            tableItems.add(forBook ? DayGenerator.generateBook() : DayGenerator.generateMember(DayGenerator.randomLibrary()));
+            tableItems.add(forBook ? DayGenerator.generateBook(library == null ? DayGenerator.randomLibrary() : library) : DayGenerator.generateMember(library == null ? DayGenerator.randomLibrary() : library));
         }
         ObservableReference<List<String>> observableReference = () -> tableItems;
         table.setReference(observableReference);
@@ -120,14 +124,14 @@ public class PopulateMetaDialogs {
         return table;
     }
 
-    public static void displayPopulateTable(int amount, boolean forBook) {
+    public static void displayPopulateTable(int amount, boolean forBook, ILibrary library) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Results")
                 .build();
         Table<String> populateTable =  new Table<>();
-        populateTable = populateTable(populateTable, amount, forBook);
+        populateTable = populateTable(populateTable, amount, forBook, library);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        dialogPane.addRow(0, GuiUtils.createLabel("Added " + amount + (forBook ? " books" : " members") + " in all libraries."));
+        dialogPane.addRow(0, GuiUtils.createLabel("Added " + amount + (forBook ? " books" : " members") + (library == null ? " in all libraries." : " in " + library.getName() + ".")));
         dialogPane.addRow(1, populateTable.getTable());
         DialogUtils.getDialogResults(dialog, (results) -> {
 

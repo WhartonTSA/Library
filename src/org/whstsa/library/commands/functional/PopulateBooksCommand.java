@@ -26,7 +26,7 @@ public class PopulateBooksCommand implements ICommand {
             return null;
         }
         for (int person = 0; person < totalBooksAdded; person++) {
-            DayGenerator.generateBook();
+            DayGenerator.generateBook(DayGenerator.randomLibrary());
         }
         commandSender.sendMessage("Successfully added " + totalBooksAdded + " books to random libraries.");
         return null;
