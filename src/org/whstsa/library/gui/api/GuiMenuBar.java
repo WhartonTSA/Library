@@ -1,5 +1,7 @@
 package org.whstsa.library.gui.api;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCombination;
 import org.whstsa.library.LibraryDB;
@@ -15,6 +17,7 @@ import org.whstsa.library.gui.dialogs.*;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.util.Logger;
 
+import java.awt.*;
 import java.io.IOException;
 
 public class GuiMenuBar {
@@ -52,7 +55,7 @@ public class GuiMenuBar {
         barElement.addMenuSeparator(0);
         barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(statusBar != null && !statusBar.getSaved()), null);
         barElement.addMenu("_Edit");
-        barElement.addMenuItem(1, "_Edit JSON... (Dev)");
+        barElement.addMenuItem(1, "_Edit JSON... (Dev)", event -> EditJSONMetaDialogs.editConfirm(libraryDB.getJsonRawFile()), null);
         barElement.addSubMenu(1, MenuBarElement.createMenu("_Simulate"));
         barElement.addSubMenuItem(1, 1, "_Simulate Days", event -> SimulateMetaDialogs.simulateDay(days -> {
             if (libraryReference != null) {

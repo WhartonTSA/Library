@@ -19,6 +19,7 @@ import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -32,6 +33,7 @@ public class LibraryDB extends Application {
     private Stage stage;
     private InterfaceManager interfaceManager;
     private IOFileSelection jsonFileBrowser;
+    private File jsonRawFile;
 
     public void start(Stage stage) {
         BackgroundWorker.getBackgroundWorker().start();
@@ -65,6 +67,7 @@ public class LibraryDB extends Application {
     private void loadJSON(Callback<Object> callback) {
         LOGGER.debug("Splashing JSON GUI");
         File rawJSON = this.jsonFileBrowser.getFile();
+        this.jsonRawFile = rawJSON;
         try {
             FILE_DELEGATE = new IOFileDelegate(rawJSON);
             JSONObject root = FILE_DELEGATE.parse();
@@ -92,6 +95,10 @@ public class LibraryDB extends Application {
 
     public static IOFileDelegate getFileDelegate() {
         return FILE_DELEGATE;
+    }
+
+    public File getJsonRawFile() {
+        return this.jsonRawFile;
     }
 
     private static JSONObject getJSONCommandLine() throws IOException, JSONException {
