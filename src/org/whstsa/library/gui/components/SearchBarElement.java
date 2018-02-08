@@ -6,10 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -70,7 +68,8 @@ public class SearchBarElement extends ToolBar implements Element{
         });
 
         super.getItems().addAll(searchLabel, searchField, filteredLabel, mainSpacer, closeButton);
-        super.setStyle("-fx-base: #abdec8;");
+        super.setBackground(new Background(new BackgroundFill(Color.web("#abdec8"), null, null)));
+        closeButton.setStyle("-fx-base: #ff8787;");
     }
 
     public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane mainContainer, Table<IMember> table, String literallyPutAnyStringHereIDCYoureFavoriteWordMaybe) {
@@ -124,7 +123,8 @@ public class SearchBarElement extends ToolBar implements Element{
         });
 
         super.getItems().addAll(searchLabel, searchField, filteredLabel, mainSpacer, closeButton);
-        super.setStyle("-fx-base: #abdec8;");
+        super.setBackground(new Background(new BackgroundFill(Color.web("#abdec8"), null, null)));
+        closeButton.setStyle("-fx-base: #ff8787;");
     }
 
     public Node getComputedElement() {

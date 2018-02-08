@@ -72,6 +72,10 @@ public class DialogBuilder {
         return this.addAllElements(Arrays.asList(elements));
     }
 
+    public DialogBuilder addLabel(String text, int size) {
+        return this.addElement(GuiUtils.createLabel(text, size));
+    }
+
     public DialogBuilder addLabel(String text) {
         return this.addElement(GuiUtils.createLabel(text));
     }

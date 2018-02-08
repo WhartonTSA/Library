@@ -63,17 +63,19 @@ public class GuiUtils {
 		return root;
 	}
 
-    public static HBox createHBox(double padding, String css, Node ...nodes) {
+    public static HBox createHBox(double padding, String css, double spacing, Node ...nodes) {
         HBox container = new HBox(nodes);
         container.setPadding(new Insets(padding, padding, padding, padding));
         container.setAlignment(Pos.CENTER);
         container.setStyle(css);
+        container.setSpacing(spacing);
         return container;
     }
 
     public static HBox createHBox(double padding, Node ...nodes) {
-	    return createHBox(padding, "", nodes);
+	    return createHBox(padding, "", 5, nodes);
     }
+
     public static HBox createHBox(Node ...nodes) {
         return createHBox(5.0, nodes);
     }

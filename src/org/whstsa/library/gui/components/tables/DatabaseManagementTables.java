@@ -327,8 +327,7 @@ public class DatabaseManagementTables {
         VBox buttonGroup = GuiUtils.createVBox(15, back,
                 GuiUtils.createSeparator(), viewButtons,
                 GuiUtils.createSeparator(), membersLabel, checkout, checkin, GuiUtils.createSeparator(), memberNew, memberEdit, memberSearch, memberDelete,
-                GuiUtils.createSeparator(), booksLabel, bookAdd, bookEdit, bookDelete, bookSearch,
-                GuiUtils.createSeparator());
+                GuiUtils.createSeparator(), booksLabel, bookAdd, bookEdit, bookSearch, bookDelete);
         buttonGroup.setSpacing(5.0);
 
         mainContainer.setLeft(buttonGroup);

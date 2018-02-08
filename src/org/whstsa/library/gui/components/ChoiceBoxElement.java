@@ -23,7 +23,7 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{
     public ChoiceBoxElement(String id, String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
         super();
         this.id = id;
-        this.label = useLabel ? GuiUtils.createLabel(label) : null;
+        this.label = useLabel ? GuiUtils.createLabel(label, 14) : null;
         this.map = false;
         this.setItems(items);
         if (selected != -1) {
