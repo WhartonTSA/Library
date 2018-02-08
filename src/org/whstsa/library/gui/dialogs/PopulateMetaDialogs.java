@@ -33,7 +33,7 @@ public class PopulateMetaDialogs {
     public static void populateMemberMenu(Callback<Integer> callback) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Auto-Populate Members")
-                .addLabel("Populate all libraries or a selected library")
+                .addLabel("Populate all libraries or a selected library", 16)
                 .addSpinner(MEMBERS, true, 1, 500)
                 .build();
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
@@ -41,10 +41,8 @@ public class PopulateMetaDialogs {
         LabelElement choiceBoxLabel = GuiUtils.createLabel("Selected library:");
         CheckBoxElement checkBox = GuiUtils.createCheckBox("All libraries", true, true);
         ChoiceBoxElement choiceBox = GuiUtils.createChoiceBox(LIBRARY, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(ObjectDelegate.getLibraries())), true, -1, true);
-        dialogPane.add(checkBoxLabel, 0, 2);//I'll fix formatting later
-        dialogPane.add(checkBox, 1, 2);
-        dialogPane.add(choiceBoxLabel, 0, 3);
-        dialogPane.add(choiceBox, 1, 3);
+        dialogPane.add(GuiUtils.createHBox(2, "", 5, checkBoxLabel, checkBox), 0, 2);
+        dialogPane.add(GuiUtils.createHBox(2, "", 5, choiceBoxLabel, choiceBox), 0, 3);
         //New code: Separates Member and Book populate dialogs, replaces text fields with spinners (User can only select ints, and it will never be null)
         //Creates checkbox and choicebox to choose whether or not to populate all libraries, or select a specific library to populate. STILL NEED TO IMPLEMENT LIBRARY INTO GENERATOR
         checkBox.setOnAction(event -> {
@@ -83,10 +81,8 @@ public class PopulateMetaDialogs {
         LabelElement choiceBoxLabel = GuiUtils.createLabel("Selected library:");
         CheckBoxElement checkBox = GuiUtils.createCheckBox("All libraries", true, true);
         ChoiceBoxElement choiceBox = GuiUtils.createChoiceBox(LIBRARY, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(ObjectDelegate.getLibraries())), true, -1, true);
-        dialogPane.add(checkBoxLabel, 0, 2);//I'll fix formatting later
-        dialogPane.add(checkBox, 1, 2);
-        dialogPane.add(choiceBoxLabel, 0, 3);
-        dialogPane.add(choiceBox, 1, 3);
+        dialogPane.add(GuiUtils.createHBox(2, "", 5, checkBoxLabel, checkBox), 0, 2);
+        dialogPane.add(GuiUtils.createHBox(2, "", 5, choiceBoxLabel, choiceBox), 0, 3);
         checkBox.setOnAction(event -> {
             if (checkBox.selectedProperty().get()) {
                 choiceBox.setDisable(true);

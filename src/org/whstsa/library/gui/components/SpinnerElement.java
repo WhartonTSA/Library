@@ -15,7 +15,7 @@ public class SpinnerElement extends Spinner implements Element{//Only ints for n
         super();
         this.id = id;
         if (useLabel) {
-            this.label = GuiUtils.createLabel(label);
+            this.label = GuiUtils.createLabel(label, 14);
         }
         this.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(start, end, selectedIndex));
         this.setEditable(true);

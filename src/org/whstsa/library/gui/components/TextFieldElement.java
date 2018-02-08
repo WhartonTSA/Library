@@ -16,7 +16,7 @@ public class TextFieldElement extends TextField implements Element {
             this.setPromptText(label);
             this.label = null;
         } else {
-            this.label = GuiUtils.createLabel(label);
+            this.label = GuiUtils.createLabel(label, 14);
         }
         this.id = id;
     }
@@ -25,7 +25,7 @@ public class TextFieldElement extends TextField implements Element {
         if (this.label == null) {
             return this;
         }
-        return GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, this.label, this);
+        return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, this.label, this);
     }
 
     public Integer getNumber() {
