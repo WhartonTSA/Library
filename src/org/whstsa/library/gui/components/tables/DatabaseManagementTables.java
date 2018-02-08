@@ -161,7 +161,6 @@ public class DatabaseManagementTables {
 
     public static BorderPane libraryManagerTable(ObservableReference<ILibrary> libraryReference, LibraryDB libraryDB) {
 
-
         BorderPane mainContainer = new BorderPane();
         GuiStatusBar statusBar = new GuiStatusBar();
         mainContainer.setBottom(statusBar);
@@ -299,6 +298,21 @@ public class DatabaseManagementTables {
         );
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (((VBox) mainContainer.getTop()).getChildren().get(1).getId() != null) {
+                if (((VBox) mainContainer.getTop()).getChildren().get(1).getId().equals("toolbar") || newSelection == null) {
+                    checkout.setDisable(true);
+                    checkin.setDisable(true);
+                }
+                else {
+                    checkout.setDisable(false);
+                    checkin.setDisable(false);
+                }
+            }
+            else {
+                checkout.setDisable(false);
+                checkin.setDisable(false);
+            }
+
             checkout.setDisable(newSelection == null);
             checkin.setDisable(newSelection == null);
             memberEdit.setDisable(newSelection == null);
@@ -346,21 +360,8 @@ public class DatabaseManagementTables {
             }
         });
 
-        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {//Diables checkout/in buttons when in checkout/in interface
-            if (((VBox) mainContainer.getTop()).getChildren().get(1).getId() != null) {
-                if (((VBox) mainContainer.getTop()).getChildren().get(1).getId().equals("toolbar")) {
-                    checkout.setDisable(true);
-                    checkin.setDisable(true);
-                }
-                else {
-                    checkout.setDisable(false);
-                    checkin.setDisable(false);
-                }
-            }
-            else {
-                checkout.setDisable(false);
-                checkin.setDisable(false);
-            }
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {//Disables checkout/in buttons when in checkout/in interface
+
         });
 
         return mainContainer;
