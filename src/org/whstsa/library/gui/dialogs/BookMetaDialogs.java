@@ -14,7 +14,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
-import org.whstsa.library.gui.components.TextFieldElement;
+import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.Table;
@@ -34,7 +34,7 @@ public class BookMetaDialogs {
     private static final String TITLE = "Title";
     private static final String AUTHOR = "Author";
     private static final String GENRE = "Genre";
-    private static final String QUANTITY = "Quantity";
+    private static final String QUANTITY = "Copies";
 
 
     public static void createBook(Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
@@ -52,15 +52,7 @@ public class BookMetaDialogs {
             BookType genre = BookType.getGenre(type);
             IBook book = new Book(title, author, genre);
             Loader.getLoader().loadBook(book);
-            Integer quantity = null;
-            Element quantityElement = results.get(QUANTITY);
-            if (quantityElement instanceof TextFieldElement) {
-                TextFieldElement textFieldQuantityElement = (TextFieldElement) quantityElement;
-                quantity = textFieldQuantityElement.getNumber();
-            }
-            if (quantity == null) {
-                quantity = 1;
-            }
+            int quantity = (int) results.get(QUANTITY).getResult();
             libraryReference.poll().addBook(book, quantity);
             callback.callback(book);
         }, TITLE, AUTHOR, GENRE);
@@ -98,9 +90,7 @@ public class BookMetaDialogs {
                     }
                     Loader.getLoader().unloadBook(book.getID());
                 })
-                .addButton(ButtonType.NO, true, event -> {
-                    callback.callback(null);
-                })
+                .addButton(ButtonType.NO, true, event -> callback.callback(null))
                 .setIsCancellable(false)
                 .build();
         dialog.show();
@@ -165,6 +155,9 @@ public class BookMetaDialogs {
                         case RESERVED: setStyle("-fx-background-color: #ffba75;"); break;
                         case OVERDUE: setStyle("-fx-background-color: #ff7575;"); break;
                     }
+                    setTooltip(GuiUtils.createToolTip("Green indicates a book is available.\n " +
+                            "Yellow indicates a book is checked out. \n" +
+                            "Red indicates a book is overdue."));
                 }
             }
         });
