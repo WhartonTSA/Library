@@ -124,12 +124,12 @@ public class GuiUtils {
 		return new TextFlowElement(id, size, css, Arrays.asList(fields));
 	}
 
-	public static void createSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IBook> table) {
-		((VBox) container.getTop()).getChildren().set(1, new SearchBarElement(id, label, items, container, table));
+	public static void createBookSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IBook> table) {
+		((VBox) container.getTop()).getChildren().set(2, new SearchBarElement<>(id, label, items, container, table));
     }
 
-    public static void createSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IMember> table, String whatever) {
-		((VBox) container.getTop()).getChildren().set(1, new SearchBarElement(id, label, items, container, table, whatever));
+    public static void createMemberSearchBar(String id, String label, ObservableList<String> items, BorderPane container, ObservableReference<ILibrary> libraryReference, Table<IMember> table) {
+		((VBox) container.getTop()).getChildren().set(2, new SearchBarElement<>(id, label, items, container, table));
     }
 
     public static Separator createSeparator() {
@@ -140,6 +140,10 @@ public class GuiUtils {
 		HBox spacer = new HBox(new Label(""));
 		HBox.setHgrow(spacer, Priority.ALWAYS);
 		return spacer;
+	}
+
+	public static Tooltip createToolTip(String text) {
+		return new Tooltip(text);
 	}
 
     public static ToggleButton createToggleButton(String title) {
@@ -222,7 +226,7 @@ public class GuiUtils {
     public static CheckBoxElement createCheckBox(String prompt) { return createCheckBox(prompt, false); }
 
 	public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected, boolean disabled) {
-		return new ChoiceBoxElement(label, label, items, useLabel, selected, disabled);
+		return new ChoiceBoxElement<>(label, label, items, useLabel, selected, disabled);
 	}
 
 	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, ChoiceBoxProperty<String> property, boolean useLabel, int selected) {
@@ -230,11 +234,11 @@ public class GuiUtils {
 	}
 
     public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
-        return new ChoiceBoxElement(label, label, items, null, useLabel, selected);
+        return new ChoiceBoxElement<>(label, label, items, null, useLabel, selected);
     }
 
     public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
-        return new ChoiceBoxElement("", "", items, false, -1, false);
+        return new ChoiceBoxElement<>("", "", items, false, -1, false);
     }
 
     public static SpinnerElement createSpinner(String label, boolean useLabel, int start, int end, int selectedIndex) {

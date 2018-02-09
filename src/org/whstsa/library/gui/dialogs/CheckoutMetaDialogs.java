@@ -68,11 +68,13 @@ public class CheckoutMetaDialogs {
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             mainContainer.setCenter(bookTable.getTable());
-            viewBooks.setDisable(true);
-            viewMembers.setDisable(false);
+            viewBooks.setDisable(false);
+            viewBooks.setSelected(false);
+            viewMembers.setDisable(true);
+            viewMembers.setSelected(true);
         });
 
         ToolBar toolBar = new ToolBar();
@@ -94,7 +96,7 @@ public class CheckoutMetaDialogs {
         toolBar.setId("toolbar");
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
-        checkoutButton.setStyle("-fx-base: #91c4e2;");
+        checkoutButton.setStyle("-fx-base: #4fa9dd;");
         closeButton.setStyle("-fx-base: #ff8787;");
 
         bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -111,7 +113,6 @@ public class CheckoutMetaDialogs {
         checkoutButton.setOnMouseClicked(event -> {
             viewBooks.setDisable(true);
             viewMembers.setDisable(false);
-            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
             ObservableList<IBook> selectedBooks = bookTable.getTable().getSelectionModel().getSelectedItems();
             if (member.getFine() > 0) {
                 try {
@@ -226,10 +227,12 @@ public class CheckoutMetaDialogs {
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             mainContainer.setCenter(bookTable.getTable());
             viewBooks.setDisable(false);
+            viewBooks.setSelected(false);
             viewMembers.setDisable(true);
+            viewMembers.setSelected(true);
         });
 
         ToolBar toolBar = new ToolBar();
@@ -251,7 +254,7 @@ public class CheckoutMetaDialogs {
         toolBar.setId("toolbar");
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
         toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
-        checkinButton.setStyle("-fx-base: #91c4e2;");
+        checkinButton.setStyle("-fx-base: #4fa9dd;");
         closeButton.setStyle("-fx-base: #ff8787;");
 
         mainTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -263,6 +266,7 @@ public class CheckoutMetaDialogs {
                         " books from ",
                         member.getName() + "."))
         );
+        mainTable.getTable().setId("returnTable");
         mainContainer.setCenter(mainTable.getTable());
 
         checkinButton.setOnMouseClicked(event -> {
@@ -295,7 +299,7 @@ public class CheckoutMetaDialogs {
                 }
             });
             mainContainer.setCenter(bookTable.getTable());
-            ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
         });
     }
 

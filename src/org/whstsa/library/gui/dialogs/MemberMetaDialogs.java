@@ -132,6 +132,8 @@ public class MemberMetaDialogs {
                 if (!(item == null) || !empty) {
                     setTextFill(item.contains("o") ? Color.RED : Color.GREEN);
                     setText(item.replace("o", ""));
+                    setTooltip(GuiUtils.createToolTip("Green text indicates a book is checked out. \n" +
+                            "Red text indicates a book is past due."));
                 }
                 else {
                     setTextFill(Color.WHITE);//There are no bugs if you can't see them

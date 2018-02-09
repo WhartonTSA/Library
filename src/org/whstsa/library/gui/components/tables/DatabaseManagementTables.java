@@ -21,6 +21,7 @@ import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.api.GuiMenuBar;
 import org.whstsa.library.gui.api.GuiStatusBar;
+import org.whstsa.library.gui.components.SearchBarElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -164,7 +165,7 @@ public class DatabaseManagementTables {
         BorderPane mainContainer = new BorderPane();
         GuiStatusBar statusBar = new GuiStatusBar();
         mainContainer.setBottom(statusBar);
-        mainContainer.setTop(new VBox(new MenuBar(), LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members")));
+        mainContainer.setTop(new VBox(new MenuBar(), new HBox(), new HBox(), LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members", "membersTitle")));
 
         Table<IMember> mainMemberTable = new Table<>();
         memberManagerTable(mainMemberTable, libraryReference);
@@ -186,6 +187,7 @@ public class DatabaseManagementTables {
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
                 libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
         );
+        back.setTooltip(GuiUtils.createToolTip("Return to the main menu"));
 
         ToggleGroup viewToggleGroup = new ToggleGroup();
 
@@ -193,10 +195,12 @@ public class DatabaseManagementTables {
         viewMembers.setUserData(true);
         viewMembers.setToggleGroup(viewToggleGroup);
         viewMembers.setSelected(true);
+        viewMembers.setTooltip(GuiUtils.createToolTip("View the Members table"));
         ToggleButton viewBooks = GuiUtils.createToggleButton("Books");
         viewBooks.setToggleGroup(viewToggleGroup);
         viewBooks.setUserData(false);
         viewMembers.setDisable(true);
+        viewMembers.setTooltip(GuiUtils.createToolTip("View the Books table"));
 
         HBox viewButtons = GuiUtils.createHBox(0, viewMembers, viewBooks);
 
@@ -212,7 +216,9 @@ public class DatabaseManagementTables {
                 statusBar.setSaved(false);
 
             }, selectedMember, mainContainer, mainBookTable, viewBooks, viewMembers, libraryReference);
+            mainMemberTable.getTable().getSelectionModel().clearSelection();
         });
+        checkout.setTooltip(GuiUtils.createToolTip("Checkout books to a member"));
         checkout.setDisable(true);
         checkout.setStyle("-fx-base:#91c4e2;");
 
@@ -223,7 +229,9 @@ public class DatabaseManagementTables {
                 mainBookTable.refresh();
                 statusBar.setSaved(false);
             }, selectedMember, mainContainer, mainBookTable, viewBooks, viewMembers, libraryReference);
+            mainMemberTable.getTable().getSelectionModel().clearSelection();
         });
+        checkin.setTooltip(GuiUtils.createToolTip("Return a member's library books"));
         checkin.setDisable(true);
         checkin.setStyle("-fx-base: #91c4e2;");
 
@@ -234,6 +242,7 @@ public class DatabaseManagementTables {
                     statusBar.setSaved(false);
                 }, libraryReference)
         );
+        memberNew.setTooltip(GuiUtils.createToolTip("Add a new member to the library"));
         Button memberEdit = GuiUtils.createButton("Edit", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
             if (selectedMember == null) {
@@ -244,10 +253,12 @@ public class DatabaseManagementTables {
                 statusBar.setSaved(false);
             });
         });
+        memberEdit.setTooltip(GuiUtils.createToolTip("Edit a member's name and role"));
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
-                GuiUtils.createSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainMemberTable, "")
+                GuiUtils.createMemberSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainMemberTable)
         );
+        memberSearch.setTooltip(GuiUtils.createToolTip("Filter through library members"));
         Button memberDelete = GuiUtils.createButton("Remove", event ->
                 MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
                     if (member == null) {
@@ -257,6 +268,7 @@ public class DatabaseManagementTables {
                     statusBar.setSaved(false);
                 })
         );
+        memberDelete.setTooltip(GuiUtils.createToolTip("Remove a member from the library"));
         memberDelete.setDisable(true);
 
 
@@ -271,6 +283,7 @@ public class DatabaseManagementTables {
                     statusBar.setSaved(false);
                 }, libraryReference)
         );
+        bookAdd.setTooltip(GuiUtils.createToolTip("Add a book to the library"));
         Button bookEdit = GuiUtils.createButton("Edit", event -> {
             IBook selectedBook = mainBookTable.getSelected();
             if (selectedBook == null) {
@@ -281,6 +294,7 @@ public class DatabaseManagementTables {
                 statusBar.setSaved(false);
             }, libraryReference);
         });
+        bookEdit.setTooltip(GuiUtils.createToolTip("Edit a book's title or author"));
         bookEdit.setDisable(true);
         Button bookDelete = GuiUtils.createButton("Delete", event -> {
             IBook selectedBook = mainBookTable.getSelected();
@@ -292,10 +306,12 @@ public class DatabaseManagementTables {
                 statusBar.setSaved(false);
             });
         });
+        bookDelete.setTooltip(GuiUtils.createToolTip("Remove book from library"));
         bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event ->
-                GuiUtils.createSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainBookTable)
+                GuiUtils.createBookSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainBookTable)
         );
+        bookSearch.setTooltip(GuiUtils.createToolTip("Filter through library books"));
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (((VBox) mainContainer.getTop()).getChildren().get(1).getId() != null) {
@@ -337,30 +353,37 @@ public class DatabaseManagementTables {
                 if ((boolean) viewToggleGroup.getSelectedToggle().getUserData()) {
                     LibraryDB.LOGGER.debug("Switching to Member table");
                     mainContainer.setCenter(memberTableView);
-                    ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members"));
+                    ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members", "membersTitle"));
                     viewMembers.setDisable(true);
                     viewBooks.setDisable(false);
+                    mainBookTable.getTable().getSelectionModel().clearSelection();
 
                 }
                 else {
                     LibraryDB.LOGGER.debug("Switching to Book table");
                     mainContainer.setCenter(bookTableView);
-                    ((VBox) mainContainer.getTop()).getChildren().set(1, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books"));
+                    ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books", "booksTitle"));
                     viewMembers.setDisable(false);
                     viewBooks.setDisable(true);
+                    mainMemberTable.getTable().getSelectionModel().clearSelection();
                 }
             }
         });
 
         BackgroundWorker.getBackgroundWorker().registerOperation(() -> {//checks if both buttons are disabled at the same time and re-enables them, fixing annoying issues
-            if (viewBooks.isDisabled() && viewMembers.isDisabled()) {
+            if (viewBooks.isDisabled() && viewMembers.isDisabled() && !((VBox) mainContainer.getTop()).getChildren().get(1).getId().equals("toolbar")) {
                 viewMembers.setDisable(false);
                 viewBooks.setDisable(false);
             }
         });
 
         BackgroundWorker.getBackgroundWorker().registerOperation(() -> {//Disables checkout/in buttons when in checkout/in interface
-
+            if (mainContainer.getCenter().getId().equals("memberTable") && !((VBox) mainContainer.getTop()).getChildren().get(3).getId().equals("membersTitle")) {
+                ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Members", "membersTitle"));
+            }
+            if (mainContainer.getCenter().getId().equals("bookTable") && !((VBox) mainContainer.getTop()).getChildren().get(3).getId().equals("booksTitle")) {
+                ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books", "booksTitle"));
+            }
         });
 
         return mainContainer;
@@ -424,6 +447,10 @@ public class DatabaseManagementTables {
                 if (!(item == null) || !empty) {
                     setTextFill(item.contains("o") ? Color.RED : Color.GREEN);
                     setText(item.replace("o", ""));
+                    setTooltip(GuiUtils.createToolTip("Due date of a book. Green if not overdue, red if past due. \nDouble-click to see info for each copy"));
+                    if (item.equals("N/A")) {
+                        setTextFill(Color.BLACK);
+                    }
                 }
                 else {
                     setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
