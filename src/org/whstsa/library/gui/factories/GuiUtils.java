@@ -84,6 +84,7 @@ public class GuiUtils {
         VBox container = new VBox(nodes);
         container.setPadding(new Insets(padding, padding, padding, padding));
         container.setAlignment(Pos.TOP_CENTER);
+        container.setSpacing(5);
         return container;
     }
 
