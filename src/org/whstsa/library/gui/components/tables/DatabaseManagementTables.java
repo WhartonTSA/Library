@@ -19,9 +19,8 @@ import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
-import org.whstsa.library.gui.api.GuiMenuBar;
+import org.whstsa.library.gui.api.MainMenuBar;
 import org.whstsa.library.gui.api.GuiStatusBar;
-import org.whstsa.library.gui.components.SearchBarElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -181,7 +180,7 @@ public class DatabaseManagementTables {
         LibraryManagerUtils.addTooltip(mainBookTable.getTable(), "Double-click to see the status of the copies of this book.");
         mainBookTable.refresh();
 
-        GuiMenuBar mainMenuBar = new GuiMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null, libraryDB, null);
+        MainMenuBar mainMenuBar = new MainMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null, libraryDB, null);
         ((VBox) mainContainer.getTop()).getChildren().set(0, mainMenuBar.getMenu());
 
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
@@ -236,7 +235,7 @@ public class DatabaseManagementTables {
         checkin.setStyle("-fx-base: #91c4e2;");
 
         Label membersLabel = GuiUtils.createLabel("Members", 16);
-        Button memberNew = GuiUtils.createButton("New", event ->
+        Button memberNew = GuiUtils.createButton("Add", event ->
                 MemberMetaDialogs.createMember(member -> {
                     mainMemberTable.refresh();
                     statusBar.setSaved(false);
@@ -296,7 +295,7 @@ public class DatabaseManagementTables {
         });
         bookEdit.setTooltip(GuiUtils.createToolTip("Edit a book's title or author"));
         bookEdit.setDisable(true);
-        Button bookDelete = GuiUtils.createButton("Delete", event -> {
+        Button bookDelete = GuiUtils.createButton("Remove", event -> {
             IBook selectedBook = mainBookTable.getSelected();
             if (selectedBook == null) {
                 return;

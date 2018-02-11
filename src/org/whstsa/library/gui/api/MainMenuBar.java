@@ -20,15 +20,15 @@ import org.whstsa.library.util.Logger;
 import java.awt.*;
 import java.io.IOException;
 
-public class GuiMenuBar {
+public class MainMenuBar {
 
     private MenuBar mainMenuBar;
 
-    public GuiMenuBar() {
+    public MainMenuBar() {
         this(null, null, null, null, null, null, null);
     }
 
-    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
+    public MainMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
 
         MenuBarElement barElement = new MenuBarElement();
         //Ignore IDE warnings about NullPointers, they are handled

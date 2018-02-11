@@ -18,6 +18,7 @@ public class IOFileSelection {
 		this.filter = new FileChooser.ExtensionFilter("JSON pls", acceptedFiletypes);
 		this.libraryDB = libraryDB;
 		dialog.setSelectedExtensionFilter(this.filter);
+		this.dialog.setTitle("Open a JSON data file");
 	}
 	
 	public IOFileSelection(LibraryDB libraryDB) {
