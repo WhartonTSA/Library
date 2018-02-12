@@ -76,6 +76,10 @@ public class LibraryDB extends Application {
     private void loadJSON(Callback<Object> callback) {
         LOGGER.debug("Splashing JSON GUI");
         File rawJSON = this.jsonFileBrowser.getFile();
+        if (rawJSON == null) {
+            LOGGER.debug("User did not provide a file. Terminating.");
+            System.exit(0);
+        }
         this.jsonRawFile = rawJSON;
         setDirectory(this.jsonRawFile.getPath());
         try {
@@ -83,13 +87,9 @@ public class LibraryDB extends Application {
             JSONObject root = FILE_DELEGATE.parse();
             Loader.getLoader().load(root);
         } catch (UncheckedIOException | IOException | NullPointerException | JSONException ex) {
-            ex.printStackTrace();
-            Alert alert = DialogUtils.createDialog("Invalid file", "You have provided an invalid file. Please check that you chose the correct file, or try a new database.", null, Alert.AlertType.ERROR, (Callback<Boolean> arg1) -> {
-                arg1.callback(true);
-                LOGGER.debug("Prompting for new JSON GUI");
-                this.loadJSON(callback);
-            });
-            alert.show();
+            Alert alert = DialogUtils.createDialog("Invalid file", "You have provided an invalid file. Please check that you chose the correct file, or try a new database.", null, Alert.AlertType.ERROR);
+            alert.showAndWait();
+            loadJSON(callback);
             return;
         }
         callback.callback(null);

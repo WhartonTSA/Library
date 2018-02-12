@@ -15,7 +15,7 @@ public class IOFileSelection {
 	private final FileChooser dialog = new FileChooser();
 	
 	public IOFileSelection(LibraryDB libraryDB, String ...acceptedFiletypes) {
-		this.filter = new FileChooser.ExtensionFilter("JSON pls", acceptedFiletypes);
+		this.filter = new FileChooser.ExtensionFilter("JSON files", acceptedFiletypes);
 		this.libraryDB = libraryDB;
 		dialog.setSelectedExtensionFilter(this.filter);
 		this.dialog.setTitle("Open a JSON data file");
@@ -33,7 +33,7 @@ public class IOFileSelection {
             LibraryDB.LOGGER.debug("Directory " + libraryDB.getConfig().getProperty("initialDirectory") + " couldn't be found, switching to home.");
 		    this.dialog.setInitialDirectory(new File(System.getProperty("user.home")));
 		    libraryDB.getConfig().setProperty("initialDirectory", System.getProperty("user.home"));
-            return dialog.showOpenDialog(this.libraryDB.getStage());
+            return getFile();
         }
 	}
 	
