@@ -96,6 +96,12 @@ public class DatabaseManagementTables {
 
         StackPane libraryButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newLibraryButton, editLibraryButton, deleteLibraryButton, openLibraryButton);
 
+        if (Boolean.parseBoolean(libraryDB.getConfig().getProperty("tooltips"))) {
+            newLibraryButton.setTooltip(GuiUtils.createToolTip("Create a new library"));
+            editLibraryButton.setTooltip(GuiUtils.createToolTip("Edit a library's name"));
+            editLibraryButton.setTooltip(GuiUtils.createToolTip("Remove a library,"));
+        }
+
         return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, libraryButtonContainer, libraryTable.getTable());
     }
 
