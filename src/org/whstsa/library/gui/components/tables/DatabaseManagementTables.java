@@ -170,14 +170,12 @@ public class DatabaseManagementTables {
         memberManagerTable(mainMemberTable, libraryReference);
         TableView<IMember> memberTableView = mainMemberTable.getTable();
         memberTableView.setId("memberTable");
-        LibraryManagerUtils.addTooltip(mainMemberTable.getTable(), "Double-click to see a member's checked-out books.");
         mainMemberTable.refresh();
 
         Table<IBook> mainBookTable = new Table<>();
         bookManagerTable(mainBookTable, libraryReference);
         TableView<IBook> bookTableView = mainBookTable.getTable();
         bookTableView.setId("bookTable");
-        LibraryManagerUtils.addTooltip(mainBookTable.getTable(), "Double-click to see the status of the copies of this book.");
         mainBookTable.refresh();
 
         MainMenuBar mainMenuBar = new MainMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null, libraryDB, null);
@@ -186,7 +184,6 @@ public class DatabaseManagementTables {
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
                 libraryDB.getInterfaceManager().display(new GuiMain(libraryDB))
         );
-        back.setTooltip(GuiUtils.createToolTip("Return to the main menu"));
 
         ToggleGroup viewToggleGroup = new ToggleGroup();
 
@@ -194,12 +191,10 @@ public class DatabaseManagementTables {
         viewMembers.setUserData(true);
         viewMembers.setToggleGroup(viewToggleGroup);
         viewMembers.setSelected(true);
-        viewMembers.setTooltip(GuiUtils.createToolTip("View the Members table"));
         ToggleButton viewBooks = GuiUtils.createToggleButton("Books");
         viewBooks.setToggleGroup(viewToggleGroup);
         viewBooks.setUserData(false);
         viewMembers.setDisable(true);
-        viewMembers.setTooltip(GuiUtils.createToolTip("View the Books table"));
 
         HBox viewButtons = GuiUtils.createHBox(0, viewMembers, viewBooks);
 
@@ -217,7 +212,6 @@ public class DatabaseManagementTables {
             }, selectedMember, mainContainer, mainBookTable, viewBooks, viewMembers, libraryReference);
             mainMemberTable.getTable().getSelectionModel().clearSelection();
         });
-        checkout.setTooltip(GuiUtils.createToolTip("Checkout books to a member"));
         checkout.setDisable(true);
         checkout.setStyle("-fx-base:#91c4e2;");
 
@@ -230,7 +224,6 @@ public class DatabaseManagementTables {
             }, selectedMember, mainContainer, mainBookTable, viewBooks, viewMembers, libraryReference);
             mainMemberTable.getTable().getSelectionModel().clearSelection();
         });
-        checkin.setTooltip(GuiUtils.createToolTip("Return a member's library books"));
         checkin.setDisable(true);
         checkin.setStyle("-fx-base: #91c4e2;");
 
@@ -241,7 +234,6 @@ public class DatabaseManagementTables {
                     statusBar.setSaved(false);
                 }, libraryReference)
         );
-        memberNew.setTooltip(GuiUtils.createToolTip("Add a new member to the library"));
         Button memberEdit = GuiUtils.createButton("Edit", event -> {
             IMember selectedMember = mainMemberTable.getSelected();
             if (selectedMember == null) {
@@ -252,12 +244,10 @@ public class DatabaseManagementTables {
                 statusBar.setSaved(false);
             });
         });
-        memberEdit.setTooltip(GuiUtils.createToolTip("Edit a member's name and role"));
         memberEdit.setDisable(true);
         Button memberSearch = GuiUtils.createButton("Search", event ->
                 GuiUtils.createMemberSearchBar("memberSearch", "Search for Member:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainMemberTable)
         );
-        memberSearch.setTooltip(GuiUtils.createToolTip("Filter through library members"));
         Button memberDelete = GuiUtils.createButton("Remove", event ->
                 MemberMetaDialogs.deleteMember(mainMemberTable.getSelected(), member -> {
                     if (member == null) {
@@ -267,7 +257,6 @@ public class DatabaseManagementTables {
                     statusBar.setSaved(false);
                 })
         );
-        memberDelete.setTooltip(GuiUtils.createToolTip("Remove a member from the library"));
         memberDelete.setDisable(true);
 
 
@@ -282,7 +271,6 @@ public class DatabaseManagementTables {
                     statusBar.setSaved(false);
                 }, libraryReference)
         );
-        bookAdd.setTooltip(GuiUtils.createToolTip("Add a book to the library"));
         Button bookEdit = GuiUtils.createButton("Edit", event -> {
             IBook selectedBook = mainBookTable.getSelected();
             if (selectedBook == null) {
@@ -293,7 +281,6 @@ public class DatabaseManagementTables {
                 statusBar.setSaved(false);
             }, libraryReference);
         });
-        bookEdit.setTooltip(GuiUtils.createToolTip("Edit a book's title or author"));
         bookEdit.setDisable(true);
         Button bookDelete = GuiUtils.createButton("Remove", event -> {
             IBook selectedBook = mainBookTable.getSelected();
@@ -305,12 +292,10 @@ public class DatabaseManagementTables {
                 statusBar.setSaved(false);
             });
         });
-        bookDelete.setTooltip(GuiUtils.createToolTip("Remove book from library"));
         bookDelete.setDisable(true);
         Button bookSearch = GuiUtils.createButton("Search", event ->
                 GuiUtils.createBookSearchBar("bookSearch", "Search for Book:", LibraryManagerUtils.getMemberNames(libraryReference.poll()), mainContainer, libraryReference, mainBookTable)
         );
-        bookSearch.setTooltip(GuiUtils.createToolTip("Filter through library books"));
 
         mainMemberTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (((VBox) mainContainer.getTop()).getChildren().get(1).getId() != null) {
@@ -384,6 +369,24 @@ public class DatabaseManagementTables {
                 ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books", "booksTitle"));
             }
         });
+
+        if (Boolean.parseBoolean(libraryDB.getConfig().getProperty("tooltips"))) {
+            LibraryManagerUtils.addTooltip(mainMemberTable.getTable(), "Double-click to see a member's checked-out books.");
+            LibraryManagerUtils.addTooltip(mainBookTable.getTable(), "Double-click to see the status of the copies of this book.");
+            back.setTooltip(GuiUtils.createToolTip("Return to the main menu"));
+            viewMembers.setTooltip(GuiUtils.createToolTip("View the Members table"));
+            viewMembers.setTooltip(GuiUtils.createToolTip("View the Books table"));
+            checkout.setTooltip(GuiUtils.createToolTip("Checkout books to a member"));
+            checkin.setTooltip(GuiUtils.createToolTip("Return a member's library books"));
+            memberNew.setTooltip(GuiUtils.createToolTip("Add a new member to the library"));
+            memberEdit.setTooltip(GuiUtils.createToolTip("Edit a member's name and role"));
+            memberDelete.setTooltip(GuiUtils.createToolTip("Remove a member from the library"));
+            memberSearch.setTooltip(GuiUtils.createToolTip("Filter through library members"));
+            bookAdd.setTooltip(GuiUtils.createToolTip("Add a book to the library"));
+            bookEdit.setTooltip(GuiUtils.createToolTip("Edit a book's title or author"));
+            bookDelete.setTooltip(GuiUtils.createToolTip("Remove book from library"));
+            bookSearch.setTooltip(GuiUtils.createToolTip("Filter through library books"));
+        }
 
         return mainContainer;
     }

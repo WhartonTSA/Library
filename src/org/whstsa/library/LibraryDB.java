@@ -11,6 +11,7 @@ import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
+import org.whstsa.library.gui.Config;
 import org.whstsa.library.gui.InterfaceManager;
 import org.whstsa.library.gui.api.GuiMain;
 import org.whstsa.library.gui.factories.DialogUtils;
@@ -34,6 +35,8 @@ public class LibraryDB extends Application {
     private InterfaceManager interfaceManager;
     private IOFileSelection jsonFileBrowser;
     private File jsonRawFile;
+    private Config config;
+    private String jsonPath;
 
     public void start(Stage stage) {
         BackgroundWorker.getBackgroundWorker().start();
@@ -41,6 +44,9 @@ public class LibraryDB extends Application {
         this.stage = stage;
         stage.setTitle("Library Manager 1.0");
         stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
+        File configFile = new File("src/org/whstsa/library/config.properties");
+        LOGGER.debug("Found config at " + configFile.getAbsolutePath());
+        this.config = new Config(configFile);
         this.stage.setResizable(true);
         this.interfaceManager = new InterfaceManager(this);
         this.jsonFileBrowser = new IOFileSelection(this, "json");
@@ -48,12 +54,15 @@ public class LibraryDB extends Application {
             try {
                 new Tester();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         this.loadJSON((arg0) -> {
             LOGGER.debug("JSON Loaded.");
             this.interfaceManager.display(new GuiMain(this));
         });
+        this.config.setProperty("initialDirectory", this.jsonPath);
+        this.config.save();
     }
 
     public Stage getStage() {
@@ -68,6 +77,7 @@ public class LibraryDB extends Application {
         LOGGER.debug("Splashing JSON GUI");
         File rawJSON = this.jsonFileBrowser.getFile();
         this.jsonRawFile = rawJSON;
+        setDirectory(this.jsonRawFile.getPath());
         try {
             FILE_DELEGATE = new IOFileDelegate(rawJSON);
             JSONObject root = FILE_DELEGATE.parse();
@@ -99,6 +109,15 @@ public class LibraryDB extends Application {
 
     public File getJsonRawFile() {
         return this.jsonRawFile;
+    }
+
+    public Config getConfig() {
+        return config;
+    }
+
+    private void setDirectory(String path) {
+        int slashIndex = path.lastIndexOf("\\");
+        this.jsonPath = path.substring(0, slashIndex);
     }
 
     private static JSONObject getJSONCommandLine() throws IOException, JSONException {

@@ -17,7 +17,6 @@ import org.whstsa.library.gui.dialogs.*;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.util.Logger;
 
-import java.awt.*;
 import java.io.IOException;
 
 public class MainMenuBar {
@@ -51,7 +50,7 @@ public class MainMenuBar {
                 ex.printStackTrace();
             }
         }, KeyCombination.keyCombination("CTRL+S"));
-        barElement.addMenuItem(0, "_Settings...");
+        barElement.addMenuItem(0, "_Preferences...", event -> libraryDB.getInterfaceManager().display(new GuiPreferences(libraryDB, libraryReference)), null);
         barElement.addMenuSeparator(0);
         barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(statusBar != null && !statusBar.getSaved()), null);
         barElement.addMenu("_Edit");
