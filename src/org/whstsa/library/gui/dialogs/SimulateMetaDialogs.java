@@ -56,6 +56,7 @@ public class SimulateMetaDialogs {
     private static void displaySimulateTable(int days) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Results")
+                .setWidth(500)
                 .build();
         Table<String> simulateTable =  new Table<>();
         simulateTable = simulateTable(simulateTable, days);

@@ -202,14 +202,6 @@ public class DialogBuilder {
 
         dialog.getDialogPane().setContent(grid);
 
-        if (this.height != null) {
-            dialog.setHeight(this.height);
-        }
-
-        if (this.width != null) {
-            dialog.setWidth(this.width);
-        }
-
         Platform.runLater(() -> {
             if (grid.getChildren().size() == 0) {
                 return;
@@ -250,6 +242,14 @@ public class DialogBuilder {
                 dialog.getDialogPane().getScene().getWindow().hide();
                 event.consume();
             });
+        }
+
+        if (this.height != null) {
+            ((GridPane) dialog.getDialogPane().getContent()).setMinHeight(this.height);
+        }
+
+        if (this.width != null) {
+            ((GridPane) dialog.getDialogPane().getContent()).setMinWidth(this.width);
         }
 
         return dialog;

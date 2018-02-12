@@ -72,6 +72,12 @@ public class GuiUtils {
         return container;
     }
 
+    public static HBox createStretchHBox(double width) {
+		HBox container = new HBox();
+		container.setMinWidth(width);
+		return container;
+	}
+
     public static HBox createHBox(double padding, Node ...nodes) {
 	    return createHBox(padding, "", 5, nodes);
     }
