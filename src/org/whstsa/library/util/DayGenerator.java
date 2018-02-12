@@ -9,10 +9,7 @@ import java.util.stream.Collectors;
 import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.CannotDeregisterException;
-import org.whstsa.library.api.exceptions.CheckedInException;
-import org.whstsa.library.api.exceptions.OutstandingFinesException;
-import org.whstsa.library.api.exceptions.OutOfStockException;
+import org.whstsa.library.api.exceptions.*;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.library.ICheckout;
@@ -25,7 +22,7 @@ public class DayGenerator {
 	private static final Random RANDOM = new Random();
 
 
-	/* List of things needed to randomize (brainstorm)
+	/* List of things needed to randomize
 	 * Adding Members 1/4 pd
 	 * Removing Members (more rare-ish) 1/50 per person, MUST NOT HAVE FINE/BOOK, if cannot remove, will remove as soon as possible
 	 * Adding New Books (names) 1/4 pd
@@ -33,7 +30,6 @@ public class DayGenerator {
 	 * Pay Fine  1/5 per person with fine, IF THEY HAVE ENOUGH
 	 **/
 
-	private static Logger LOGGER = new Logger("DayGenerator");
 	private static List<UUID> deregisterPendingPeople = new ArrayList<>();
 	private static List<String> actions = new ArrayList<>();
 
@@ -92,7 +88,7 @@ public class DayGenerator {
 							library.reserveBook(member, book, RANDOM.nextInt(10));
 							actions.add(member.getName() + " took " + book.getName() + " (" + (library.getQuantity(book.getID()) - (library.getCheckouts() != null ? library.getCheckouts().get(book).size() : 0)) + " books remaining )");
 						}
-						catch (OutOfStockException e) {
+						catch (OutOfStockException | MaximumCheckoutsException e) {
 							actions.add(e.getMessage());
 						}
 					}

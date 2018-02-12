@@ -396,7 +396,7 @@ public class DatabaseManagementTables {
         mainTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getLastName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Role", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().isTeacher() ? "Teacher" : "Student"), true, TableColumn.SortType.DESCENDING, 50);
         mainTable.addColumn("Fines", (cellData) -> new ReadOnlyStringWrapper("$" + cellData.getValue().getFine()), true, TableColumn.SortType.DESCENDING, 25);
-        mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBooks().size() + ""), true, TableColumn.SortType.DESCENDING, 25);
+        mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCheckouts().size() + ""), true, TableColumn.SortType.DESCENDING, 25);
         ObservableReference<List<IMember>> observableReference = () -> libraryReference.poll().getMembers();
         mainTable.setReference(observableReference);
         mainTable.getTable().setOnMouseClicked(event -> {
@@ -415,7 +415,7 @@ public class DatabaseManagementTables {
         mainTable.addColumn("Checked out", (cellData) -> {
             ILibrary library = libraryReference.poll();
             List<ICheckout> checkouts = library.getCheckouts().get(cellData.getValue());
-            boolean isCheckedOut = checkouts != null && checkouts.size() > 0;
+            boolean isCheckedOut = checkouts != null && checkouts.size() == library.getQuantity(cellData.getValue().getID());
             return new ReadOnlyStringWrapper(isCheckedOut ? "True" : "False");
         }, true, TableColumn.SortType.DESCENDING, 30);
         mainTable.addColumn("Due Date", (cellData) -> {

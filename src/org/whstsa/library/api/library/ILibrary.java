@@ -26,7 +26,7 @@ public interface ILibrary extends IBookContainer, Loadable, Identifiable {
      * @throws BookNotRegisteredException if {@code !books.contain(book)}
      * @throws OutOfStockException if there are no more copies available to book
      */
-    ICheckout reserveBook(IMember member, IBook book, int quantity) throws BookNotRegisteredException, OutOfStockException;
+    ICheckout reserveBook(IMember member, IBook book, int quantity, int blarf) throws BookNotRegisteredException, OutOfStockException;
 
     /**
      * Creates a member object and adds them to this library
