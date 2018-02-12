@@ -30,6 +30,7 @@ import org.whstsa.library.util.Logger;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CheckoutMetaDialogs {
 
@@ -52,15 +53,14 @@ public class CheckoutMetaDialogs {
         LabelElement spacer = null;
         TextFlow fineLabel = null;
         CheckBox payFine = null;
-        boolean fine = false;
+        final boolean fine = member.getFine() > 0;
 
         if (member.getFine() > 0) {//If member has an outstanding fine, will give user option to pay fine
-            fine = true;
             spacer = GuiUtils.createLabel("      ");
             fineLabel = GuiUtils.createTextFlow("Fine", 14, "", "Outstanding fine of ", "$" + member.getFine(), ". Pay fine?");
             ((Text) fineLabel.getChildren().get(1)).setFill(Color.RED);
             payFine = GuiUtils.createCheckBox("", false);
-            payFine.selectedProperty().addListener((observable, oldValue, newValue) -> checkoutButton.setDisable(false));
+            payFine.selectedProperty().addListener((observable, oldValue, newValue) -> checkoutButton.setDisable(!newValue));
             checkoutButton.setDisable(true);
         }
 
@@ -114,12 +114,9 @@ public class CheckoutMetaDialogs {
             viewBooks.setDisable(true);
             viewMembers.setDisable(false);
             ObservableList<IBook> selectedBooks = bookTable.getTable().getSelectionModel().getSelectedItems();
-            if (member.getFine() > 0) {
-                try {
-                    member.getCheckouts().forEach(ICheckout::getFine);
-                } catch (Exception ex) {
-                    DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
-                }
+            if (fine) {
+                Stream<ICheckout> checkouts = member.getCheckouts().stream().filter(ICheckout::isOverdue).filter(checkout -> !checkout.isReturned());
+                checkouts.forEach(ICheckout::payFine);
             }
             selectedBooks.forEach(book -> {
                 try {
@@ -203,10 +200,9 @@ public class CheckoutMetaDialogs {
         LabelElement spacer = null;
         TextFlow fineLabel = null;
         CheckBox payFine = null;
-        boolean fine = false;
+        final boolean fine = member.getFine() > 0;
 
         if (member.getFine() > 0) {//If member has an outstanding fine, will give user option to pay fine
-            fine = true;
             spacer = GuiUtils.createLabel("      ");
             fineLabel = GuiUtils.createTextFlow("Fine", 14, "", "Outstanding fine of ", "$" + member.getFine(), ". Pay fine?");
             ((Text) fineLabel.getChildren().get(1)).setFill(Color.RED);
@@ -275,12 +271,9 @@ public class CheckoutMetaDialogs {
             viewBooks.setSelected(true);
             viewMembers.setSelected(false);
             ObservableList<IBook> selectedBooks = mainTable.getTable().getSelectionModel().getSelectedItems();
-            if (member.getFine() > 0) {
-                try {
-                    member.getCheckouts().forEach(ICheckout::getFine);
-                } catch (Exception ex) {
-                    DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
-                }
+            if (fine) {
+                Stream<ICheckout> checkouts = member.getCheckouts().stream().filter(ICheckout::isOverdue).filter(checkout -> !checkout.isReturned());
+                checkouts.forEach(ICheckout::payFine);
             }
             selectedBooks.forEach(returnBook -> {
                 List<ICheckout> checkouts = member.getCheckouts(true);
