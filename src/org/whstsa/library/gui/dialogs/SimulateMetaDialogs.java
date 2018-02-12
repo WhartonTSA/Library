@@ -60,7 +60,7 @@ public class SimulateMetaDialogs {
         Table<String> simulateTable =  new Table<>();
         simulateTable = simulateTable(simulateTable, days);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-        dialogPane.addRow(0, GuiUtils.createLabel("Simulated " + days + " days in all libraries.                                   "));
+        dialogPane.addRow(0, GuiUtils.createLabel("Simulated " + days + " days in all libraries."));
         dialogPane.addRow(1, simulateTable.getTable());
         DialogUtils.getDialogResults(dialog, (results) -> {
 

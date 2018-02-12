@@ -51,10 +51,8 @@ public class BookMetaDialogs {
             String type = results.get(GENRE).getString();
             BookType genre = BookType.getGenre(type);
             IBook book = new Book(title, author, genre);
-            Loader.getLoader().loadBook(book);//TODO quantity  CAST OBJECT TO INT
-            if (quantity == null) {
-                quantity = 1;
-            }
+            int quantity = (int) results.get(QUANTITY).getResult();
+            Loader.getLoader().loadBook(book);
             libraryReference.poll().addBook(book, quantity);
             callback.callback(book);
         }, TITLE, AUTHOR, GENRE);
