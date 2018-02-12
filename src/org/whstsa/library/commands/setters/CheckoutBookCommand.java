@@ -2,6 +2,7 @@ package org.whstsa.library.commands.setters;
 
 import org.json.JSONObject;
 import org.whstsa.library.api.books.IBook;
+import org.whstsa.library.api.exceptions.MaximumCheckoutsException;
 import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.IMember;
@@ -42,8 +43,8 @@ public class CheckoutBookCommand implements ICommand {
         }
         try {
             result = member.getLibrary().reserveBook(member, book, 5).toJSON();
-        } catch (OutOfStockException ex) {
-            return CommandUtil.createErrorResponse("There are no more books that can be checked out");
+        } catch (OutOfStockException | MaximumCheckoutsException ex) {
+            return CommandUtil.createErrorResponse(ex.getMessage());
         }
         return result;
     }

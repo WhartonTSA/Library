@@ -45,12 +45,12 @@
         },
         {
             "firstName": "Cameron",
-            "lastName": "Newborn",
+            "lastName": "Newb",
             "teacher": false,
             "uuid": "a266892e-2e45-4cec-b19d-2bec43f1e61c"
         },
         {
-            "firstName": "M.",
+            "firstName": "Micheal",
             "lastName": "Sawyer",
             "teacher": true,
             "uuid": "f111639b-dcc6-41d6-8ae8-8ed0ad3a8466"

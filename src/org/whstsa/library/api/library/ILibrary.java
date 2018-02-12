@@ -5,10 +5,7 @@ import org.whstsa.library.api.Identifiable;
 import org.whstsa.library.api.Loadable;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.books.IBookContainer;
-import org.whstsa.library.api.exceptions.BookNotRegisteredException;
-import org.whstsa.library.api.exceptions.CannotDeregisterException;
-import org.whstsa.library.api.exceptions.MemberMismatchException;
-import org.whstsa.library.api.exceptions.OutOfStockException;
+import org.whstsa.library.api.exceptions.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +23,7 @@ public interface ILibrary extends IBookContainer, Loadable, Identifiable {
      * @throws BookNotRegisteredException if {@code !books.contain(book)}
      * @throws OutOfStockException if there are no more copies available to book
      */
-    ICheckout reserveBook(IMember member, IBook book, int quantity, int blarf) throws BookNotRegisteredException, OutOfStockException;
+    ICheckout reserveBook(IMember member, IBook book, int quantity) throws BookNotRegisteredException, OutOfStockException, MaximumCheckoutsException;
 
     /**
      * Creates a member object and adds them to this library

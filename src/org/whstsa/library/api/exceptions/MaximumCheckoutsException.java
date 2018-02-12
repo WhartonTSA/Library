@@ -1,7 +1,5 @@
 package org.whstsa.library.api.exceptions;
 
-
-import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 
 public class MaximumCheckoutsException extends Exception {
@@ -13,7 +11,7 @@ public class MaximumCheckoutsException extends Exception {
 
     @Override
     public String getMessage() {
-        return member.getName() + " can not checkout any more books.";
+        return member.getName() + " has exceeded the number of books he can checkout.";
     }
 
 }
