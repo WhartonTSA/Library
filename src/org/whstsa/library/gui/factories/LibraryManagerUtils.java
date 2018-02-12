@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 
 public class LibraryManagerUtils {
 
-    public static HBox createTitleBar(String title) {
+    public static HBox createTitleBar(String title, String id) {
         HBox box = new HBox();
         box.getChildren().add(GuiUtils.createLabel(title, 20));
-        box.setId("titlebar");
+        box.setId(id);
         box.setAlignment(Pos.CENTER);
         return box;
     }

@@ -17,18 +17,17 @@ import org.whstsa.library.gui.dialogs.*;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.util.Logger;
 
-import java.awt.*;
 import java.io.IOException;
 
-public class GuiMenuBar {
+public class MainMenuBar {
 
     private MenuBar mainMenuBar;
 
-    public GuiMenuBar() {
+    public MainMenuBar() {
         this(null, null, null, null, null, null, null);
     }
 
-    public GuiMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
+    public MainMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
 
         MenuBarElement barElement = new MenuBarElement();
         //Ignore IDE warnings about NullPointers, they are handled
@@ -51,7 +50,7 @@ public class GuiMenuBar {
                 ex.printStackTrace();
             }
         }, KeyCombination.keyCombination("CTRL+S"));
-        barElement.addMenuItem(0, "_Settings...");
+        barElement.addMenuItem(0, "_Preferences...", event -> libraryDB.getInterfaceManager().display(new GuiPreferences(libraryDB, libraryReference)), null);
         barElement.addMenuSeparator(0);
         barElement.addMenuItem(0, "_Exit", event -> ExitMetaDialogs.exitConfirm(statusBar != null && !statusBar.getSaved()), null);
         barElement.addMenu("_Edit");

@@ -2,40 +2,37 @@ package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
-import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.components.Table;
-import org.whstsa.library.gui.components.tables.BookStatusRow;
 import org.whstsa.library.gui.components.tables.MemberBookRow;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
-import org.whstsa.library.util.BookStatus;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class MemberMetaDialogs {
 
     private static final String FIRST_NAME = "First Name";
     private static final String LAST_NAME = "Last Name";
-    private static final String TEACHER = "Teacher?";
+    private static final String TEACHER = "Role";
     private static final String EXISTING = "Person:";
 
     public static void createMember(Callback<IPerson> callback, ObservableReference<ILibrary> libraryReference) {
@@ -56,16 +53,18 @@ public class MemberMetaDialogs {
     }
 
     public static void updateMember(IMember member, Callback<IMember> callback) {
+        ObservableList<String> roleSelectionItems = FXCollections.observableArrayList();
+        roleSelectionItems.addAll("Teacher", "Student");
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Edit Person")
                 .addTextField(FIRST_NAME, member.getPerson().getFirstName())
                 .addTextField(LAST_NAME, member.getPerson().getLastName())
-                .addCheckBox(TEACHER, member.getPerson().isTeacher())
+                .addChoiceBox(TEACHER, roleSelectionItems, true, member.getPerson().isTeacher() ? 0 : 1)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String firstName = results.get(FIRST_NAME).getString();
             String lastName = results.get(LAST_NAME).getString();
-            boolean teacher = results.get(TEACHER).getBoolean();
+            boolean teacher = results.get(TEACHER).getResult().toString().equals("Teacher");
             member.getPerson().setFirstName(firstName);
             member.getPerson().setLastName(lastName);
             member.getPerson().setTeacher(teacher);
@@ -132,6 +131,8 @@ public class MemberMetaDialogs {
                 if (!(item == null) || !empty) {
                     setTextFill(item.contains("o") ? Color.RED : Color.GREEN);
                     setText(item.replace("o", ""));
+                    setTooltip(GuiUtils.createToolTip("Green text indicates a book is checked out. \n" +
+                            "Red text indicates a book is past due."));
                 }
                 else {
                     setTextFill(Color.WHITE);//There are no bugs if you can't see them
