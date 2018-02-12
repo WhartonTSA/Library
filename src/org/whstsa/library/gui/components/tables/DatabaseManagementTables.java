@@ -178,7 +178,7 @@ public class DatabaseManagementTables {
         bookTableView.setId("bookTable");
         mainBookTable.refresh();
 
-        MainMenuBar mainMenuBar = new MainMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null, libraryDB, null);
+        MainMenuBar mainMenuBar = new MainMenuBar(mainBookTable, mainMemberTable, libraryReference, null, null, libraryDB, statusBar);
         ((VBox) mainContainer.getTop()).getChildren().set(0, mainMenuBar.getMenu());
 
         Button back = GuiUtils.createButton("Back to Main Menu", true, event ->
