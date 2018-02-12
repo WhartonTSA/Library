@@ -147,7 +147,7 @@ public class MemberMetaDialogs {
         }
         ObservableReference<List<MemberBookRow>> observableReference = () -> tableData;
         mainTable.setReference(observableReference);
-        mainTable.getTable().setSelectionModel(null);
+        mainTable.getTable().getSelectionModel().setCellSelectionEnabled(false);
         return mainTable;
     }
 }
