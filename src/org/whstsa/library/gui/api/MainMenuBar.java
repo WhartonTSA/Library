@@ -20,6 +20,9 @@ import org.whstsa.library.util.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.Arrays;
 
 public class MainMenuBar {
 

@@ -42,7 +42,7 @@ public class GuiPreferences implements Gui {
 
         prefs.add(new PreferenceFieldElement("Use tooltips:", FieldProperty.BOOLEAN, "tooltips", config));
         prefs.add(new PreferenceFieldElement("Use autosave:", FieldProperty.BOOLEAN, "autosave", config));
-        prefs.add(new PreferenceFieldElement("Autosave interval:", FieldProperty.INT, "autosaveInterval", config, 1, 60 * 5));
+        prefs.add(new PreferenceFieldElement("Autosave interval (minutes):", FieldProperty.INT, "autosaveInterval", config, 1, 60 * 5));
 
         VBox settingsPane = GuiUtils.createVBox(title, assemblePreferenceFields());
         settingsPane.setSpacing(10);
