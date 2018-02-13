@@ -286,11 +286,11 @@ public class CheckoutMetaDialogs {
                 try {
                     checkout.getOwner().checkIn(checkout);
                     member.removeBook(checkout.getBook());
-                    callback.callback(member);
                 } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             });
+            callback.callback(member);
             mainContainer.setCenter(bookTable.getTable());
             ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
         });
