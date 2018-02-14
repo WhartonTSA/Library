@@ -15,8 +15,8 @@ public class AboutText {
                 "If you are having trouble with the application, you can find assistance in the Help > Help... menu. \n" +
                 "\n" +
                 "This application was designed and programmed by the Wharton High School Technology Student Association Software " +
-                "Development Team (WHSTSASDT) of Eric Rabil, Cameron Newborn, and Andre Roberts. It is programmed entirely in java. \n" +
-                "This software uses the MIT license. ");
+                "Development Team (WHSTSASDT) of Eric Rabil, Cameron Newborn, and Andre Roberts. It is programmed in Java. \n" +
+                "This software is available under the M.I.T. license. ");
     }
 
     public TextFlow getTextFlow() {
