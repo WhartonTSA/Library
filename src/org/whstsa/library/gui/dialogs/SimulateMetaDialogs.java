@@ -35,6 +35,22 @@ public class SimulateMetaDialogs {
         }, SIMULATE);
     }
 
+    public static void advanceTime(Callback<Integer> callback) {
+        Dialog<Map<String, Element>> dialog = new DialogBuilder()
+                .setTitle("Advance Time")
+                .addSpinner(SIMULATE, true, 1, 365)
+                .build();
+        DialogUtils.getDialogResults(dialog, (results) -> {
+            int days;
+            days = (int) results.get(SIMULATE).getResult();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(World.getDate());
+            cal.add(Calendar.DAY_OF_MONTH, days);
+            World.setDate(cal.getTime());
+            callback.callback(days);
+        }, SIMULATE);
+    }
+
     private static Table<String> simulateTable(Table<String> table, int days) {
         table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()) , false, TableColumn.SortType.DESCENDING, 2500);
         List<String> tableItems = FXCollections.observableArrayList();

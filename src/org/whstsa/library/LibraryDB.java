@@ -45,8 +45,23 @@ public class LibraryDB extends Application {
         stage.setTitle("Library Manager 1.0");
         stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
         File configFile = new File("src/org/whstsa/library/config.properties");
-        LOGGER.debug("Found config at " + configFile.getAbsolutePath());
-        this.config = new Config(configFile);
+        if ( configFile.exists()) {
+            LOGGER.debug("Found config at " + configFile.getAbsolutePath());
+            this.config = new Config(configFile);
+        }
+        else {
+            try {
+                LOGGER.debug("Couldn't find config. Creating new one.");
+                configFile.createNewFile();
+                this.config = new Config(configFile);
+                this.config.setProperty("initialDirectory", "null");
+                this.config.setProperty("tooltips", "true");
+                this.config.setProperty("autosave", "true");
+                this.config.setProperty("autosaveInterval", "10");
+            } catch (Exception ex) {
+                DialogUtils.createDialog("There was an error", "Couldn't create file.", null, Alert.AlertType.ERROR).show();
+            }
+        }
         this.stage.setResizable(true);
         this.interfaceManager = new InterfaceManager(this);
         this.jsonFileBrowser = new IOFileSelection(this, "json");

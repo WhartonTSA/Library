@@ -6,6 +6,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import org.whstsa.library.LibraryDB;
+import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
@@ -20,6 +21,9 @@ import org.whstsa.library.util.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.Arrays;
 
 public class MainMenuBar {
 
@@ -84,6 +88,12 @@ public class MainMenuBar {
                 memberTable.refresh();
             }
         }), KeyCombination.keyCombination("CTRL+SHIFT+S"));
+        barElement.addSubMenuItem(1, 3, "_Advance Days", event -> SimulateMetaDialogs.advanceTime(days -> {
+            if (libraryReference != null) {
+                bookTable.refresh();
+                memberTable.refresh();
+            }
+        }), KeyCombination.keyCombination("CTRL+SHIFT+A"));
         barElement.addSubMenuItem(1, 3, "Populate _Members", event -> PopulateMetaDialogs.populateMemberMenu(amount -> {
             if (libraryReference != null) {
                 bookTable.refresh();

@@ -28,7 +28,7 @@ public class LibraryMetaDialogs {
                                                 .addTextField(LIBRARY_FIELD, null, true, true)
                                                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(LIBRARY_FIELD) == null) {
+            if (results.get(LIBRARY_FIELD).getString() == null) {
                 callback.callback(null);
                 return;
             }

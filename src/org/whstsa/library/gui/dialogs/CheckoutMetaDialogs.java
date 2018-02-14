@@ -71,10 +71,10 @@ public class CheckoutMetaDialogs {
             ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             mainContainer.setCenter(bookTable.getTable());
-            viewBooks.setDisable(false);
-            viewBooks.setSelected(false);
-            viewMembers.setDisable(true);
-            viewMembers.setSelected(true);
+            viewBooks.setDisable(true);
+            viewBooks.setSelected(true);
+            viewMembers.setDisable(false);
+            viewMembers.setSelected(false);
         });
 
         ToolBar toolBar = new ToolBar();
@@ -225,10 +225,10 @@ public class CheckoutMetaDialogs {
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
             ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             mainContainer.setCenter(bookTable.getTable());
-            viewBooks.setDisable(false);
-            viewBooks.setSelected(false);
-            viewMembers.setDisable(true);
-            viewMembers.setSelected(true);
+            viewBooks.setDisable(true);
+            viewBooks.setSelected(true);
+            viewMembers.setDisable(false);
+            viewMembers.setSelected(false);
         });
 
         ToolBar toolBar = new ToolBar();
@@ -286,11 +286,11 @@ public class CheckoutMetaDialogs {
                 try {
                     checkout.getOwner().checkIn(checkout);
                     member.removeBook(checkout.getBook());
-                    callback.callback(member);
                 } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             });
+            callback.callback(member);
             mainContainer.setCenter(bookTable.getTable());
             ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
         });

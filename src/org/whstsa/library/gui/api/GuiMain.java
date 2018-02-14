@@ -30,7 +30,7 @@ public class GuiMain implements Gui {
 
         StackPane libraryContainer = DatabaseManagementTables.libraryOverviewTable(this.libraryDB, libraryTable);
 
-        StackPane personContainer = DatabaseManagementTables.personOverviewTable(personTable);
+        StackPane personContainer = DatabaseManagementTables.personOverviewTable(libraryDB, personTable);
 
         StackPane tableContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, libraryContainer, personContainer);
 

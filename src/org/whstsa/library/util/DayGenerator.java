@@ -48,7 +48,7 @@ public class DayGenerator {
 			actions.add(generateMember(randomLibrary()));
 		}
 		ObjectDelegate.getAllMembers().forEach(member -> {
-			if (chance(50) && !deregisterPendingPeople.contains(member)) {
+			if (chance(50) && !deregisterPendingPeople.contains(member.getID())) {
 				try {
 					member.getLibrary().removeMember(member);
 					actions.add(String.format("%s has been deregistered ", member.getName()));
@@ -57,6 +57,18 @@ public class DayGenerator {
 					deregisterPendingPeople.add(member.getID());
 				}
 			}
+		});
+		ObjectDelegate.getLibraries().forEach(library -> {
+			library.getBooks().stream().filter(book -> library.getCheckouts().get(book) == null).collect(Collectors.toList()).forEach(book -> {
+				if (chance(50)) {
+					try {
+						library.removeBook(book);
+						actions.add(String.format("%s has been removed from %s", book.getName(), library.getName()));
+					} catch (InCirculationException ex) {
+						actions.add(ex.getMessage());
+					}
+				}
+			});
 		});
 		while (chance(4)) {
 			actions.add(generateBook(randomLibrary()));

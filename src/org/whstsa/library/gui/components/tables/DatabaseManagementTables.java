@@ -99,13 +99,14 @@ public class DatabaseManagementTables {
         if (Boolean.parseBoolean(libraryDB.getConfig().getProperty("tooltips"))) {
             newLibraryButton.setTooltip(GuiUtils.createToolTip("Create a new library"));
             editLibraryButton.setTooltip(GuiUtils.createToolTip("Edit a library's name"));
-            editLibraryButton.setTooltip(GuiUtils.createToolTip("Remove a library,"));
+            deleteLibraryButton.setTooltip(GuiUtils.createToolTip("Remove a library"));
+            openLibraryButton.setTooltip(GuiUtils.createToolTip("View a library in the Library Manager"));
         }
 
         return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, libraryButtonContainer, libraryTable.getTable());
     }
 
-    public static StackPane personOverviewTable(Table<IPerson> personTable) {
+    public static StackPane personOverviewTable(LibraryDB libraryDB, Table<IPerson> personTable) {
         personTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getFirstName()), true, TableColumn.SortType.DESCENDING, 50);
         personTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getLastName()), true, TableColumn.SortType.DESCENDING, 50);
         ObservableReference<List<IPerson>> observableReference = ObjectDelegate::getPeople;
@@ -161,6 +162,12 @@ public class DatabaseManagementTables {
         });
 
         StackPane personButtonContainer = GuiUtils.createSplitPane(GuiUtils.Orientation.VERTICAL, newPersonButton, editPersonButton, deletePersonButton);
+
+        if (Boolean.parseBoolean(libraryDB.getConfig().getProperty("tooltips"))) {
+            newPersonButton.setTooltip(GuiUtils.createToolTip("Create a new person"));
+            editPersonButton.setTooltip(GuiUtils.createToolTip("Edit a person's name or role"));
+            deletePersonButton.setTooltip(GuiUtils.createToolTip("Remove a person (Must have no memberships or books!)"));
+        }
 
         return GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, personTable.getTable(), personButtonContainer);
     }
@@ -386,11 +393,11 @@ public class DatabaseManagementTables {
             checkin.setTooltip(GuiUtils.createToolTip("Return a member's library books"));
             memberNew.setTooltip(GuiUtils.createToolTip("Add a new member to the library"));
             memberEdit.setTooltip(GuiUtils.createToolTip("Edit a member's name and role"));
-            memberDelete.setTooltip(GuiUtils.createToolTip("Remove a member from the library"));
+            memberDelete.setTooltip(GuiUtils.createToolTip("Remove a member from the library (Must have no books!)"));
             memberSearch.setTooltip(GuiUtils.createToolTip("Filter through library members"));
             bookAdd.setTooltip(GuiUtils.createToolTip("Add a book to the library"));
             bookEdit.setTooltip(GuiUtils.createToolTip("Edit a book's title or author"));
-            bookDelete.setTooltip(GuiUtils.createToolTip("Remove book from library"));
+            bookDelete.setTooltip(GuiUtils.createToolTip("Remove book from library (All copies must be in stock!)"));
             bookSearch.setTooltip(GuiUtils.createToolTip("Filter through library books"));
         }
 
@@ -401,7 +408,7 @@ public class DatabaseManagementTables {
         mainTable.addColumn("First Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getFirstName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Last Name", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().getLastName()), true, TableColumn.SortType.DESCENDING, 100);
         mainTable.addColumn("Role", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getPerson().isTeacher() ? "Teacher" : "Student"), true, TableColumn.SortType.DESCENDING, 50);
-        mainTable.addColumn("Fines", (cellData) -> new ReadOnlyStringWrapper("$" + cellData.getValue().getFine()), true, TableColumn.SortType.DESCENDING, 25);
+        mainTable.addColumn("Fines", (cellData) -> new ReadOnlyStringWrapper("$" + cellData.getValue().getFine() + "0"), true, TableColumn.SortType.DESCENDING, 25);
         mainTable.addColumn("Books", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getCheckouts().size() + ""), true, TableColumn.SortType.DESCENDING, 25);
         ObservableReference<List<IMember>> observableReference = () -> libraryReference.poll().getMembers();
         mainTable.setReference(observableReference);
