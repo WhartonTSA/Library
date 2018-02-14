@@ -1,24 +1,35 @@
 package org.whstsa.library.gui.factories;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.adapter.JavaBeanBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ICheckout;
+import org.whstsa.library.gui.components.ChoiceBoxElement;
 import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.gui.components.RequiredElement;
+import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandlerCheckBox;
+import org.whstsa.library.util.Logger;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class DialogBuilder {
 
@@ -80,8 +91,13 @@ public class DialogBuilder {
         return this.addElement(GuiUtils.createLabel(text));
     }
 
+    public DialogBuilder addTextField(String prompt, String placeholder, boolean inline, boolean required) {
+        TextFieldElement textFieldElement = GuiUtils.createTextField(prompt, inline, placeholder);
+        return required ? this.addRequiredElement(textFieldElement) : this.addElement(textFieldElement);
+    }
+
     public DialogBuilder addTextField(String prompt, String placeholder, boolean inline) {
-        return this.addElement(GuiUtils.createTextField(prompt, inline, placeholder));
+        return this.addTextField(prompt, placeholder, inline, false);
     }
 
     public DialogBuilder setWidth(Integer width) {
@@ -122,19 +138,34 @@ public class DialogBuilder {
         return this.addCheckBox(prompt, false);
     }
 
-    public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected, boolean disabled) {
+    public <T> DialogBuilder addChoiceBox(String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
         return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected, disabled));
     }
 
-    public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
+    public <T> DialogBuilder addChoiceBox(String label, ObservableList<T> items, boolean useLabel, int selected) {
         return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected, false));
     }
 
-    public DialogBuilder addChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
+    public <K, V> DialogBuilder addChoiceBox(String label, Map<K, V> items, boolean useLabel, int selected) {
         return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected));
     }
 
-    public DialogBuilder addChoiceBox(ObservableList<String> items) {
+    public <K, V> DialogBuilder addRequiredChoiceBox(String label, Map<K, V> items, boolean useLabel, int selected, boolean disabled) {
+        ChoiceBoxElement choiceBoxElement = GuiUtils.createChoiceBox(label, items, useLabel, selected);
+        choiceBoxElement.setDisable(disabled);
+        return this.addRequiredElement(choiceBoxElement);
+    }
+
+    public <T> DialogBuilder addRequiredChoiceBox(String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
+        return this.addRequiredElement(GuiUtils.createChoiceBox(label, items, useLabel, selected, disabled));
+    }
+
+    private DialogBuilder addRequiredElement(RequiredElement requiredElement) {
+        requiredElement.setRequired(true);
+        return this.addElement(requiredElement);
+    }
+
+    public <T> DialogBuilder addChoiceBox(ObservableList<T> items) {
         return addChoiceBox("", items, false, -1, false);
     }
 
@@ -235,6 +266,33 @@ public class DialogBuilder {
             }
         });
 
+        Consumer<Boolean> updateButtonState = disabled -> {
+            this.getRawButtonList().forEach(button -> {
+                Node buttonNode = dialog.getDialogPane().lookupButton(button);
+                if (buttonNode != null) {
+                    buttonNode.setDisable(disabled);
+                }
+            });
+        };
+
+        BooleanProperty isSubmittable = new SimpleBooleanProperty(true);
+
+        Runnable indexElements = () -> {
+            isSubmittable.set(true);
+            this.getRequiredElements().forEach(requiredElement -> {
+                if (!requiredElement.isSatisfied()) {
+                    isSubmittable.set(false);
+                }
+            });
+            updateButtonState.accept(!isSubmittable.get());
+        };
+
+        this.getRequiredElements().forEach(requiredElement -> {
+            requiredElement.setOnSatisfactionUpdate(satisfied -> indexElements.run());
+        });
+
+        indexElements.run();
+
         final Node cancelNode = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
         if (cancelNode != null) {
             cancelNode.addEventFilter(ActionEvent.ACTION, event -> {
@@ -271,6 +329,14 @@ public class DialogBuilder {
         buttonList.add(ButtonType.CANCEL);
         buttonList.addAll(this.getRawButtonList());
         return buttonList;
+    }
+
+    protected final List<RequiredElement> getRequiredElements() {
+        return this.elementList.stream()
+                .filter(element -> element instanceof RequiredElement)
+                .map(element -> (RequiredElement) element)
+                .filter(RequiredElement::isRequired)
+                .collect(Collectors.toList());
     }
 
 }

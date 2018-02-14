@@ -11,14 +11,16 @@ import org.whstsa.library.util.ChoiceBoxProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
-public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{
+public class ChoiceBoxElement<T, U> extends ChoiceBox implements RequiredElement {
 
     private Label label;
     private String id;
     private ObservableList<T> checkoutList;
     private Map<T, U> items;
     private boolean map;
+    private boolean required;
 
     public ChoiceBoxElement(String id, String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
         super();
@@ -80,5 +82,24 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements Element{
     @Override
     public void setID(String id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean isRequired() {
+        return this.required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    @Override
+    public boolean isSatisfied() {
+        return this.getResult() != null;
+    }
+
+    @Override
+    public void setOnSatisfactionUpdate(Consumer<Boolean> onSatisfactionUpdate) {
+        this.setOnMouseClicked(event -> onSatisfactionUpdate.accept(this.isSatisfied()));
     }
 }
