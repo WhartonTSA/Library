@@ -23,7 +23,7 @@ public class LibraryMetaDialogs {
     public static void createLibrary(Callback<ILibrary> callback) {
         Dialog<Map<String, Element>> dialog = DialogUtils.createInputDialog(ButtonType.FINISH, true, "Please provide a library name", GuiUtils.createTextField(LIBRARY_FIELD));
         DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(LIBRARY_FIELD) == null) {
+            if (results.get(LIBRARY_FIELD).getString() == null) {
                 callback.callback(null);
                 return;
             }

@@ -39,9 +39,11 @@ public class PersonMetaDialogs {
             String firstName = results.get(FIRST_NAME).getString();
             String lastName = results.get(LAST_NAME).getString();
             boolean teacher = results.get(TEACHER).getResult().toString().equals("Teacher");
-            IPerson person = new Person(firstName, lastName, teacher);
-            Loader.getLoader().loadPerson(person);
-            callback.callback(person);
+            if (firstName != null && lastName != null) {
+                IPerson person = new Person(firstName, lastName, teacher);
+                Loader.getLoader().loadPerson(person);
+                callback.callback(person);
+            }
         }, FIRST_NAME, LAST_NAME);
     }
 
