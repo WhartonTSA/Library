@@ -6,6 +6,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.FileChooser;
 import org.whstsa.library.LibraryDB;
+import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;

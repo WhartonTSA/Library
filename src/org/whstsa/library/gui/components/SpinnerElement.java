@@ -1,6 +1,5 @@
 package org.whstsa.library.gui.components;
 
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -8,8 +7,8 @@ import org.whstsa.library.gui.factories.GuiUtils;
 
 public class SpinnerElement extends Spinner implements Element{//Only ints for now
 
-    String id;
-    LabelElement label;
+    private String id;
+    private LabelElement label;
 
     public SpinnerElement(String id, String label, boolean useLabel, int start, int end, int selectedIndex) {
         super();
