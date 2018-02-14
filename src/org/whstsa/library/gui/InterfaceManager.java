@@ -94,7 +94,12 @@ public class InterfaceManager {
 	}
 	
 	public void show() {
-		this.getStage().setResizable(false);
+        if (this.currentGui.getUUID().contains("GUI_LIBRARY_MANAGER")) {
+            this.getStage().setResizable(true);
+        }
+        else {
+            this.getStage().setResizable(false);
+        }
 		this.getStage().centerOnScreen();
 		this.getStage().show();
 	}
