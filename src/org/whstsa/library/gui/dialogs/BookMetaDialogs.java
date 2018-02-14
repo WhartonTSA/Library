@@ -50,11 +50,13 @@ public class BookMetaDialogs {
             String author = results.get(AUTHOR).getString();
             String type = results.get(GENRE).getString();
             BookType genre = BookType.getGenre(type);
-            IBook book = new Book(title, author, genre);
-            int quantity = (int) results.get(QUANTITY).getResult();
-            Loader.getLoader().loadBook(book);
-            libraryReference.poll().addBook(book, quantity);
-            callback.callback(book);
+            if (title != null && author != null && type != null) {
+                IBook book = new Book(title, author, genre);
+                int quantity = (int) results.get(QUANTITY).getResult();
+                Loader.getLoader().loadBook(book);
+                libraryReference.poll().addBook(book, quantity);
+                callback.callback(book);
+            }
         }, TITLE, AUTHOR, GENRE);
     }
 
