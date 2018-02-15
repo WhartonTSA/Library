@@ -209,14 +209,14 @@ public class CheckoutMetaDialogs {
             payFine = GuiUtils.createCheckBox("", false);
         }
 
-        Table<IBook> mainTable = new Table<>();
+        Table<ICheckout> mainTable = new Table<>();
 
         LibraryManagerUtils.addTooltip(mainTable.getTable(), "CTRL + Click to select multiple books");
 
-        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getName()), true, TableColumn.SortType.DESCENDING, 200);
-        mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);//TODO needs better fields for table columns
-        ObservableReference<List<IBook>> observableReference = member::getBooks;
+        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getName()), true, TableColumn.SortType.DESCENDING, 200);
+        mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
+        mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);//TODO needs better fields for table columns
+        ObservableReference<List<ICheckout>> observableReference = member::getCheckouts;
         mainTable.setReference(observableReference);
 
         HBox mainSpacer = new HBox(new Label(""));
@@ -270,14 +270,14 @@ public class CheckoutMetaDialogs {
             viewMembers.setDisable(false);
             viewBooks.setSelected(true);
             viewMembers.setSelected(false);
-            ObservableList<IBook> selectedBooks = mainTable.getTable().getSelectionModel().getSelectedItems();
+            ObservableList<ICheckout> selectedBooks = mainTable.getTable().getSelectionModel().getSelectedItems();
             if (fine) {
                 Stream<ICheckout> checkouts = member.getCheckouts().stream().filter(ICheckout::isOverdue).filter(checkout -> !checkout.isReturned());
                 checkouts.forEach(ICheckout::payFine);
             }
             selectedBooks.forEach(returnBook -> {
                 List<ICheckout> checkouts = member.getCheckouts(true);
-                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(returnBook)).collect(Collectors.toList());
+                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getID().equals(returnBook.getID())).collect(Collectors.toList());
                 if (matches.size() == 0) {
                     DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
                     return;
