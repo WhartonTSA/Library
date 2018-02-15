@@ -232,19 +232,19 @@ public class GuiUtils {
 
     public static CheckBoxElement createCheckBox(String prompt) { return createCheckBox(prompt, false); }
 
-	public static ChoiceBoxElement createChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected, boolean disabled) {
+	public static <T> ChoiceBoxElement createChoiceBox(String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
 		return new ChoiceBoxElement<>(label, label, items, useLabel, selected, disabled);
 	}
 
-	public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, ChoiceBoxProperty<String> property, boolean useLabel, int selected) {
+	public static <K, V> ChoiceBoxElement createChoiceBox(String label, Map<K, V> items, ChoiceBoxProperty<String> property, boolean useLabel, int selected) {
 		return new ChoiceBoxElement(label, label, items, property, useLabel, selected);
 	}
 
-    public static ChoiceBoxElement createChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
+    public static <K, V> ChoiceBoxElement createChoiceBox(String label, Map<K, V> items, boolean useLabel, int selected) {
         return new ChoiceBoxElement<>(label, label, items, null, useLabel, selected);
     }
 
-    public static ChoiceBoxElement createChoiceBox(ObservableList<String> items) {
+    public static <T> ChoiceBoxElement createChoiceBox(ObservableList<T> items) {
         return new ChoiceBoxElement<>("", "", items, false, -1, false);
     }
 

@@ -38,37 +38,21 @@ public class BookMetaDialogs {
 
 
     public static void createBook(Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
-        Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("New Book")
-                .addTextField(TITLE)
-                .addTextField(AUTHOR)
-                .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, -1)
-                .addSpinner(QUANTITY, true,0,100,5)
-                .build();
-        DialogUtils.getDialogResults(dialog, (results) -> {
+        createBookInteractionDialog("New Book", 5, null, (results) -> {
             String title = results.get(TITLE).getString();
             String author = results.get(AUTHOR).getString();
             String type = results.get(GENRE).getString();
             BookType genre = BookType.getGenre(type);
-            if (title != null && author != null && type != null) {
-                IBook book = new Book(title, author, genre);
-                int quantity = (int) results.get(QUANTITY).getResult();
-                Loader.getLoader().loadBook(book);
-                libraryReference.poll().addBook(book, quantity);
-                callback.callback(book);
-            }
-        }, TITLE, AUTHOR, GENRE);
+            IBook book = new Book(title, author, genre);
+            int quantity = (int) results.get(QUANTITY).getResult();
+            Loader.getLoader().loadBook(book);
+            libraryReference.poll().addBook(book, quantity);
+            callback.callback(book);
+        });
     }
 
     public static void updateBook(IBook book, Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
-        Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Update Person")
-                .addTextField(TITLE, book.getName())
-                .addTextField(AUTHOR, book.getAuthorName())
-                .addChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, BookType.getGenreIndex(book.getType().getGenre()))
-                .addSpinner(QUANTITY,true,0,100, libraryReference.poll().getQuantity(book.getID()))
-                .build();
-        DialogUtils.getDialogResults(dialog, (results) -> {
+        createBookInteractionDialog("Update Person", libraryReference.poll().getQuantity(book.getID()), book, (results) -> {
             String title = results.get(TITLE).getString();
             String author = results.get(AUTHOR).getString();
             BookType type = BookType.getGenre((String) results.get(GENRE).getResult());
@@ -77,6 +61,17 @@ public class BookMetaDialogs {
             book.setType(type);
             callback.callback(book);
         });
+    }
+
+    private static void createBookInteractionDialog(String dialogTitle, int selectedIndex, IBook existingData, Callback<Map<String, Element>> callback) {
+        Dialog<Map<String, Element>> dialog = new DialogBuilder()
+                .setTitle(dialogTitle)
+                .addTextField(TITLE, existingData == null ? null : existingData.getName(), false, true)
+                .addTextField(AUTHOR, existingData == null ? null : existingData.getAuthorName(), false, true)
+                .addRequiredChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, existingData == null ? -1 : BookType.getGenreIndex(existingData.getType().getGenre()), false)
+                .addSpinner(QUANTITY,true,0,100, selectedIndex)
+                .build();
+        DialogUtils.getDialogResults(dialog, results -> callback.callback(results));
     }
 
     public static void deleteBook(IBook book, Callback<IBook> callback) {

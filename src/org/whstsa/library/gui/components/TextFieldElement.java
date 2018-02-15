@@ -5,10 +5,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.whstsa.library.gui.factories.GuiUtils;
 
-public class TextFieldElement extends TextField implements Element {
+import java.util.function.Consumer;
+
+public class TextFieldElement extends TextField implements RequiredElement {
 
     private Label label;
     private String id;
+    private boolean required = false;
 
     public TextFieldElement(String id, String label, boolean inline) {
         super();
@@ -19,6 +22,11 @@ public class TextFieldElement extends TextField implements Element {
             this.label = GuiUtils.createLabel(label, 14);
         }
         this.id = id;
+    }
+
+    public TextFieldElement(String id, String label, boolean inline, boolean required) {
+        this(id, label, inline);
+        this.required = true;
     }
 
     public Node getComputedElement() {
@@ -54,6 +62,28 @@ public class TextFieldElement extends TextField implements Element {
 
     public boolean getBoolean() {
         return false;
+    }
+
+    public boolean isRequired() {
+        return this.required;
+    }
+
+    public void setOnSatisfactionUpdate(Consumer<Boolean> onSatisfactionUpdate) {
+        this.setOnKeyReleased(event -> {
+            onSatisfactionUpdate.accept(this.isSatisfied());
+        });
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public final boolean isSatisfied() {
+        String result = this.getResult();
+        if (result == null) {
+            return false;
+        }
+        return result.length() > 0;
     }
 
 }
