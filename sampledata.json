@@ -45,8 +45,8 @@
         },
         {
             "firstName": "Cameron",
-            "lastName": "Newb",
-            "teacher": false,
+            "lastName": "Newborn",
+            "teacher": true,
             "uuid": "a266892e-2e45-4cec-b19d-2bec43f1e61c"
         },
         {

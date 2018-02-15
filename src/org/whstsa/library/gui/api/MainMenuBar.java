@@ -1,6 +1,5 @@
 package org.whstsa.library.gui.api;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCombination;
@@ -13,6 +12,7 @@ import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
+import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.MenuBarElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
@@ -20,10 +20,8 @@ import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.util.Logger;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.Arrays;
 
 public class MainMenuBar {
 
@@ -48,6 +46,11 @@ public class MainMenuBar {
             try {
                 if (file.createNewFile()) {
                     LibraryDB.LOGGER.debug("File saved at path " + file.getPath());
+                    FileOutputStream out = new FileOutputStream(file);
+                    byte[] init = "{}".getBytes();
+                    out.write(init);
+                    out.flush();
+                    out.close();
                 }
                 else {
                     DialogUtils.createDialog("There was an error", "File already exists.", null, Alert.AlertType.ERROR).show();
@@ -118,6 +121,12 @@ public class MainMenuBar {
         barElement.addMenu("_Help");
         barElement.addMenuItem(2, "_About...", event -> libraryDB.getInterfaceManager().display(new GuiAbout(libraryDB, libraryReference)), null);
         barElement.addMenuItem(2, "_Help...", event -> libraryDB.getInterfaceManager().display(new GuiHelp(libraryDB, libraryReference)), null);
+
+        BackgroundWorker.getBackgroundWorker().registerOperation(() -> {
+            mainMenuBar.getMenus().get(1).getItems().get(3).setDisable(
+                    ObjectDelegate.getLibraries().size() < 1
+            );
+        });
 
         this.mainMenuBar = barElement;
     }
