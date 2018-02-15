@@ -80,6 +80,7 @@ public class DatabaseManagementTables {
                     libraryTable.refresh()
             );
         });
+        deleteLibraryButton.setDisable(true);
         Button openLibraryButton = GuiUtils.createButton("Open Library", true, (event) -> {
             ILibrary selectedLibrary = libraryTable.getSelected();
             if (selectedLibrary == null) {
@@ -91,6 +92,7 @@ public class DatabaseManagementTables {
 
         libraryTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             editLibraryButton.setDisable(newSelection == null);
+            deleteLibraryButton.setDisable(newSelection == null);
             openLibraryButton.setDisable(newSelection == null);
         });
 
@@ -371,6 +373,20 @@ public class DatabaseManagementTables {
             if (viewBooks.isDisabled() && viewMembers.isDisabled() && !((VBox) mainContainer.getTop()).getChildren().get(1).getId().equals("toolbar")) {
                 viewMembers.setDisable(false);
                 viewBooks.setDisable(false);
+            }
+            switch (mainContainer.getCenter().getId()) {
+                case "memberTable":
+                    bookSearch.setDisable(true);
+                    memberSearch.setDisable(false);
+                    break;
+                case "bookTable":
+                    bookSearch.setDisable(false);
+                    memberSearch.setDisable(true);
+                    break;
+                default:
+                    bookSearch.setDisable(true);
+                    memberSearch.setDisable(true);
+                    break;
             }
         });
 

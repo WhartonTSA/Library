@@ -70,6 +70,7 @@ public class SearchBarElement<T> extends ToolBar implements Element{
         super.getItems().addAll(searchLabel, searchField, filteredLabel, mainSpacer, closeButton);
         super.setBackground(new Background(new BackgroundFill(Color.web("#abdec8"), null, null)));
         closeButton.setStyle("-fx-base: #ff8787;");
+        super.requestFocus();
     }
 
     public Node getComputedElement() {

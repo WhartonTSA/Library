@@ -38,7 +38,7 @@ public class BookMetaDialogs {
 
 
     public static void createBook(Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
-        createBookInteractionDialog("New Book", 5, null, (results) -> {
+        createBookInteractionDialog("Add Book", 5, null, (results) -> {
             String title = results.get(TITLE).getString();
             String author = results.get(AUTHOR).getString();
             String type = results.get(GENRE).getString();
@@ -52,7 +52,7 @@ public class BookMetaDialogs {
     }
 
     public static void updateBook(IBook book, Callback<IBook> callback, ObservableReference<ILibrary> libraryReference) {
-        createBookInteractionDialog("Update Person", libraryReference.poll().getQuantity(book.getID()), book, (results) -> {
+        createBookInteractionDialog("Edit Book", libraryReference.poll().getQuantity(book.getID()), book, (results) -> {
             String title = results.get(TITLE).getString();
             String author = results.get(AUTHOR).getString();
             BookType type = BookType.getGenre((String) results.get(GENRE).getResult());
@@ -71,12 +71,12 @@ public class BookMetaDialogs {
                 .addRequiredChoiceBox(GENRE, LibraryManagerUtils.toObservableList(BookType.getGenres()), true, existingData == null ? -1 : BookType.getGenreIndex(existingData.getType().getGenre()), false)
                 .addSpinner(QUANTITY,true,0,100, selectedIndex)
                 .build();
-        DialogUtils.getDialogResults(dialog, results -> callback.callback(results));
+        DialogUtils.getDialogResults(dialog, callback);
     }
 
     public static void deleteBook(IBook book, Callback<IBook> callback) {
         Dialog dialog = new DialogBuilder()
-                .setTitle("Delete Member")
+                .setTitle("Remove Book")
                 .addButton(ButtonType.YES, true, event -> {
                     try {
                         ObjectDelegate.getLibraries().get(0).removeBook(book);
@@ -97,7 +97,8 @@ public class BookMetaDialogs {
         int availableCopies = libraryReference.poll().getCheckouts().get(book) != null ? libraryReference.poll().getQuantity(book.getID()) - libraryReference.poll().getCheckouts().get(book).size() : libraryReference.poll().getQuantity(book.getID());
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Copies")
-                .addLabel("There are " + (availableCopies > 0 ? availableCopies : 0) + " available copy(s) of \"" + book.getName() + ".\"")
+                .addLabel(availableCopies > 1 ? "There are " + (availableCopies > 0 ? availableCopies : 0) + " available copies of \"" + book.getName() + ".\"" :
+                        "There is " + (availableCopies > 0 ? availableCopies : 0) + " available copy of \"" + book.getName() + ".\"")
                 .build();
 
         Table<BookStatusRow> copiesTable =  new Table<>();
@@ -135,7 +136,7 @@ public class BookMetaDialogs {
         }
         ObservableReference<List<BookStatusRow>> observableReference = () -> tableItems;
         mainTable.setReference(observableReference);
-        mainTable.getTable().setSelectionModel(null);
+        mainTable.getTable().getSelectionModel().setCellSelectionEnabled(false);
 
         mainTable.getTable().setRowFactory(row -> new TableRow<BookStatusRow>() {
             @Override
