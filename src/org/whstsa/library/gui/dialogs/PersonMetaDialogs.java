@@ -31,9 +31,9 @@ public class PersonMetaDialogs {
         roleSelectionItems.addAll("Teacher", "Student");
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("New Person")
-                .addTextField(FIRST_NAME)
-                .addTextField(LAST_NAME)
-                .addChoiceBox(TEACHER, roleSelectionItems, true, 1)
+                .addTextField(FIRST_NAME, null, false, true)
+                .addTextField(LAST_NAME, null, false, true)
+                .addRequiredChoiceBox(TEACHER, roleSelectionItems, true, 1, false)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String firstName = results.get(FIRST_NAME).getString();
@@ -52,9 +52,9 @@ public class PersonMetaDialogs {
         roleSelectionItems.addAll("Teacher", "Student");
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Update Person")
-                .addTextField(FIRST_NAME, person.getFirstName())
-                .addTextField(LAST_NAME, person.getLastName())
-                .addChoiceBox(TEACHER, roleSelectionItems, true, person.isTeacher() ? 0 : 1)
+                .addTextField(FIRST_NAME, person.getFirstName(), false, true)
+                .addTextField(LAST_NAME, person.getLastName(), false, true)
+                .addRequiredChoiceBox(TEACHER, roleSelectionItems, true, person.isTeacher() ? 0 : 1, false)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String firstName = results.get(FIRST_NAME).getString();
