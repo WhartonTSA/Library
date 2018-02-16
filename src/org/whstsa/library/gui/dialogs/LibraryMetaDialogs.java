@@ -38,9 +38,11 @@ public class LibraryMetaDialogs {
     }
 
     public static void updateLibrary(ILibrary library, Callback<ILibrary> callback) {
-        TextFieldElement libraryNameField = GuiUtils.createTextField(LIBRARY_FIELD);
-        libraryNameField.setText(library.getName());
-        Dialog<Map<String, Element>> dialog = DialogUtils.createInputDialog(ButtonType.FINISH, true, "Updating Library", libraryNameField);
+        Dialog<Map<String, Element>> dialog = new DialogBuilder().addButton(ButtonType.FINISH)
+                                                .setIsCancellable(true)
+                                                .setTitle("Updating Library")
+                                                .addTextField(LIBRARY_FIELD, null, library.getName(), true, true)
+                                                .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             String newName = (String) results.get(LIBRARY_FIELD).getResult();
             if (newName == null) {
