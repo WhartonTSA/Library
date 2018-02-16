@@ -78,11 +78,8 @@ public class DayGenerator {
 				if (member.getBooks().size() != 0 && (RANDOM.nextBoolean() || deregisterPendingPeople.contains(member.getID()))) {
 					ICheckout checkout = member.getCheckouts().get(0);
 					try {
-						member.checkIn(checkout);
 						actions.add(member.getName() + " returned " + checkout.getBook().getName() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
-						member.removeBook(checkout.getBook());
-					} catch (CheckedInException e) {
-						actions.add(member.getName() + " tried to return " + checkout.getBook().getName() + " but was already returned.");
+						member.removeBook(checkout);
 					} catch (OutstandingFinesException e) {
 						actions.add(e.getMessage());
 					}

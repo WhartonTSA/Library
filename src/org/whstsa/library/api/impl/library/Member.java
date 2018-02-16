@@ -11,6 +11,7 @@ import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public class Member implements IMember {
@@ -86,6 +87,24 @@ public class Member implements IMember {
     }
 
     @Override
+    public void removeBook(ICheckout checkout) throws OutstandingFinesException { //TODO check checkout for issue
+        if (this.getCheckouts().contains(checkout)) {
+            if (checkout.getFine() != 0) {
+                throw new OutstandingFinesException(this, OutstandingFinesException.Actions.REMOVE_BOOK, checkout.getFine());
+            }
+            try {
+                checkout.checkIn();
+            } catch (CheckedInException e) {
+                // The error is swallowed at the moment
+            }
+            this.getCheckoutMap().replace(checkout.getBook() , this.getCheckouts().stream().filter(checkouts -> !checkouts.equals(checkout)).collect(Collectors.toList()));
+            if (this.getCheckoutMap().get(checkout.getBook()).size() == 0) {
+                this.books.remove(checkout.getBook());
+            }
+        }
+    }
+
+    @Override //TODO ASK ERIC ABOUT INTENTION OF REMOVING ALL CHECKOUTS/BOOK
     public void removeBook(IBook book) throws OutstandingFinesException {
         if (this.books.containsKey(book)) {
             for (ICheckout checkout : this.books.get(book)) {
@@ -111,7 +130,6 @@ public class Member implements IMember {
             throw new OutstandingFinesException(this, OutstandingFinesException.Actions.CHECK_IN, checkout.getFine());
         }
         checkout.checkIn();
-        library.setQuantity(checkout.getBook().getID(), library.getQuantity(checkout.getBook().getID()));
     }
 
     @Override
