@@ -276,17 +276,9 @@ public class CheckoutMetaDialogs {
                 checkouts.forEach(ICheckout::payFine);
             }
             selectedBooks.forEach(returnBook -> {
-                List<ICheckout> checkouts = member.getCheckouts(true);
-                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getID().equals(returnBook.getID())).collect(Collectors.toList());
-                if (matches.size() == 0) {
-                    DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
-                    return;
-                }
-                ICheckout checkout = matches.get(0);
                 try {
-                    checkout.getOwner().checkIn(checkout);
-                    member.removeBook(checkout.getBook());
-                } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
+                    member.removeBook(returnBook);
+                } catch (OutstandingFinesException | MemberMismatchException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             });
@@ -335,10 +327,9 @@ public class CheckoutMetaDialogs {
                 }
                 ICheckout checkout = matches.get(0);
                 try {
-                    checkout.getOwner().checkIn(checkout);
-                    member.removeBook(checkout.getBook());
+                    member.removeBook(checkout);
                     callback.callback(member);
-                } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
+                } catch (OutstandingFinesException | MemberMismatchException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
             }
