@@ -3,6 +3,7 @@ package org.whstsa.library.gui.api;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.BackgroundWorker;
@@ -13,6 +14,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.Config;
 import org.whstsa.library.gui.components.MenuBarElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
@@ -32,7 +34,7 @@ public class MainMenuBar {
     }
 
     public MainMenuBar(Table<IBook> bookTable, Table<IMember> memberTable, ObservableReference<ILibrary> libraryReference, Table<ILibrary> libraryTable, Table<IPerson> personTable, LibraryDB libraryDB, GuiStatusBar statusBar) {
-
+        Config config = libraryDB.getConfig();
         MenuBarElement barElement = new MenuBarElement();
         //Ignore IDE warnings about NullPointers, they are handled by gui
         barElement.addMenu("_File");
@@ -40,7 +42,7 @@ public class MainMenuBar {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save New File");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON file", "json"));
-            fileChooser.setInitialDirectory(new File(libraryDB.getConfig().getProperty("initialDirectory")));
+            fileChooser.setInitialDirectory(new File(config.getProperty("initialDirectory")));
             fileChooser.setInitialFileName(".json");
             File file = fileChooser.showSaveDialog(libraryDB.getStage());//I'll probably make a class for this, or overhaul the IOFileSelection class
             try {
@@ -60,15 +62,7 @@ public class MainMenuBar {
             }
         }, KeyCombination.keyCombination("CTRL+N"));
         barElement.addMenuItem(0, "Save", event -> {
-            try {
-                LibraryDB.getFileDelegate().save(Loader.getLoader().computeJSON());
-                if (statusBar != null) {statusBar.setSaved(true);}
-                Logger.DEFAULT_LOGGER.debug("Saved a copy of the data");
-
-            } catch (IOException ex) {
-                DialogUtils.createDialog("Couldn't save", "Your data couldn't be saved. Error:\n" + ex.getLocalizedMessage()).show();
-                ex.printStackTrace();
-            }
+            save(statusBar);
         }, KeyCombination.keyCombination("CTRL+S"));
         barElement.addMenuItem(0, "_Preferences...", event -> libraryDB.getInterfaceManager().display(new GuiPreferences(libraryDB, libraryReference)), null);
         barElement.addMenuSeparator(0);
@@ -128,11 +122,39 @@ public class MainMenuBar {
             );
         });
 
+        System.out.println(Boolean.parseBoolean(config.getProperty("autosave")));
+
+        if (Boolean.parseBoolean(config.getProperty("autosave"))) {
+            Thread runnable = new Thread(() -> {
+                while(true) {
+                    try {
+                        save(statusBar);
+                        Thread.sleep(60000 * Integer.parseInt(config.getProperty("autosaveInterval")));//autosaveInterval property is in minutes, so need to multiply by 1 minute in milliseconds
+                    } catch (InterruptedException ex) {
+                        DialogUtils.createDialog("Autosave was interrupted", "Autosave has stopped. Error:\n" + ex.getLocalizedMessage()).show();
+                    }
+                }
+            });
+            runnable.start();
+        }
+
         this.mainMenuBar = barElement;
     }
 
     public MenuBar getMenu() {
         return this.mainMenuBar;
+    }
+
+    private void save(GuiStatusBar statusBar) {
+        try {
+            LibraryDB.getFileDelegate().save(Loader.getLoader().computeJSON());
+            if (statusBar != null) {statusBar.setSaved(true);}
+            Logger.DEFAULT_LOGGER.debug("Saved a copy of the data");
+
+        } catch (IOException ex) {
+            DialogUtils.createDialog("Couldn't save", "Your data couldn't be saved. Error:\n" + ex.getLocalizedMessage()).show();
+            ex.printStackTrace();
+        }
     }
 
 }
