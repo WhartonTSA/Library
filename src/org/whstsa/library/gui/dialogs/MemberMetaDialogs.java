@@ -55,23 +55,7 @@ public class MemberMetaDialogs {
     }
 
     public static void updateMember(IMember member, Callback<IMember> callback) {
-        ObservableList<String> roleSelectionItems = FXCollections.observableArrayList();
-        roleSelectionItems.addAll("Teacher", "Student");
-        Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Edit Person")
-                .addTextField(FIRST_NAME, member.getPerson().getFirstName())
-                .addTextField(LAST_NAME, member.getPerson().getLastName())
-                .addChoiceBox(TEACHER, roleSelectionItems, true, member.getPerson().isTeacher() ? 0 : 1)
-                .build();
-        DialogUtils.getDialogResults(dialog, (results) -> {
-            String firstName = results.get(FIRST_NAME).getString();
-            String lastName = results.get(LAST_NAME).getString();
-            boolean teacher = results.get(TEACHER).getResult().toString().equals("Teacher");
-            member.getPerson().setFirstName(firstName);
-            member.getPerson().setLastName(lastName);
-            member.getPerson().setTeacher(teacher);
-            callback.callback(member);
-        });
+        PersonMetaDialogs.updatePerson(member.getPerson(), person -> callback.callback(member));
     }
 
     public static void deleteMember(IMember member, Callback<IMember> callback) {
