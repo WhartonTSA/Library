@@ -73,19 +73,6 @@ public class DialogUtils {
 	public static Alert createDialog() {
 		return createDialog(null);
 	}
-
-	/**
-	 * @deprecated Use DialogBuilder
-	 */
-	@Deprecated
-	public static Dialog<Map<String, Element>> createInputDialog(ButtonType button, boolean cancelButton, String title, Element ...elements) {
-		return new DialogBuilder()
-					.setTitle(title)
-					.setIsCancellable(cancelButton)
-					.addButton(button)
-					.addAllElements(elements)
-					.build();
-	}
 	
 	public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback, String ...expectedKeys) {
 		Stage alertStage = (Stage) dialog.getDialogPane().getScene().getWindow();
