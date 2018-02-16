@@ -1,5 +1,6 @@
 package org.whstsa.library.gui.components;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
@@ -100,6 +101,6 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements RequiredElement
 
     @Override
     public void setOnSatisfactionUpdate(Consumer<Boolean> onSatisfactionUpdate) {
-        this.setOnMouseClicked(event -> onSatisfactionUpdate.accept(this.isSatisfied()));
+        this.setOnAction(event -> onSatisfactionUpdate.accept(this.isSatisfied()));
     }
 }
