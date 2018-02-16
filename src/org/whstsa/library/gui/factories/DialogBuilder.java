@@ -88,11 +88,20 @@ public class DialogBuilder {
     }
 
     public DialogBuilder addLabel(String text) {
+        if (text == null) {
+            return this;
+        }
         return this.addElement(GuiUtils.createLabel(text));
     }
 
     public DialogBuilder addTextField(String prompt, String placeholder, boolean inline, boolean required) {
         TextFieldElement textFieldElement = GuiUtils.createTextField(prompt, inline, placeholder);
+        return required ? this.addRequiredElement(textFieldElement) : this.addElement(textFieldElement);
+    }
+
+    public DialogBuilder addTextField(String prompt, String placeholder, String value, boolean inline, boolean required) {
+        TextFieldElement textFieldElement = GuiUtils.createTextField(prompt, inline, placeholder);
+        textFieldElement.setText(value);
         return required ? this.addRequiredElement(textFieldElement) : this.addElement(textFieldElement);
     }
 
