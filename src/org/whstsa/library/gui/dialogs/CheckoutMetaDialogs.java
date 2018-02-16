@@ -292,21 +292,20 @@ public class CheckoutMetaDialogs {
 
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Choose a member to checkin")
-                .addChoiceBox(RETURN, LibraryManagerUtils.getMemberNames(libraryReference.poll()), true, 0)
+                .addRequiredChoiceBox(RETURN, LibraryManagerUtils.getMemberNames(libraryReference.poll()), true, 0, false)
                 .build();
         DialogUtils.getDialogResults(dialog, (results) -> {
             if (results.get(RETURN).getResult() != null) {
                 IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(RETURN).getResult(), libraryReference.poll());
                 checkinMemberDialog(member -> callback.callback(selectedMember), selectedMember, libraryReference);
             }
-
         });
     }
 
     private static void checkinMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Returning " + member.getName() + "'s books.")
-                .addChoiceBox(RETURN, member.getCheckoutMap(), true, -1)
+                .addRequiredChoiceBox(RETURN, member.getCheckoutMap(), true, -1, false)
                 .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event ->
                         member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(ICheckout::payFine))
                 .build();
