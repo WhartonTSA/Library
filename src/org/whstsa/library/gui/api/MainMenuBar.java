@@ -122,8 +122,6 @@ public class MainMenuBar {
             );
         });
 
-        System.out.println(Boolean.parseBoolean(config.getProperty("autosave")));
-
         if (Boolean.parseBoolean(config.getProperty("autosave"))) {
             Thread runnable = new Thread(() -> {
                 while(true) {
