@@ -24,7 +24,8 @@ public class HelpText {
                 "Menu Bar",
                 "Library Manager",
                 "Member Table",
-                "Book Table"
+                "Book Table",
+                "Simulate"
         ));
         this.pages = createPages();
     }
@@ -127,6 +128,15 @@ public class HelpText {
                 "it's status, owner, and due date. The status will color the row of each copy. If available, the row will be green and, respectively, " +
                 "checked out as yellow, checked out and reserved as orange, and unavailable as red. The unavailable status is reserved for situations " +
                 "where a copy may be lost or damaged. \n")));
+        textFlows.add(toTextFlow(toText("" +
+                "The Simulate feature found inside the edit menu can be used for generating random data and actions for the library, such as members " +
+                "checking out or returning books, fines being paid, new members or books being added, or books or members being removed. This is great " +
+                "for testing as well as displaying the full potential of the application. NOTE: You may not want to save the simulated data, and there " +
+                "is no undo button, so be careful to keep you data unsaved or turn off autosave and restart the application before simulating data. \n" +
+                "\nSimulate Days\n" +
+                "The Simulate Days menu item is the general simulator, and conducts almost all actions available in the application randomly for a " +
+                "specified number of days. You can choose a library to simulate or simulate in all libraries. \n" +
+                "\nAdvance Days\n")));
 
         return textFlows;
     }
