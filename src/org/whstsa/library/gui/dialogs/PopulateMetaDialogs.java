@@ -54,20 +54,7 @@ public class PopulateMetaDialogs {
                 choiceBox.setDisable(false);
             }
         });
-        DialogUtils.getDialogResults(dialog , (results) -> {
-            int amount;
-            ILibrary library;
-            amount = (int) results.get(MEMBERS).getResult();//SPINNERS! THE BE-ALL END-ALL SOLUTION! NO NULLPOINTERS OR INTOVERFLOWS! BUY YOURS TODAY! CALL 1800-YOUREWELCOMEANDRE
-            if (choiceBox.getResult() != null) {
-                library = LibraryManagerUtils.getLibraryFromName((String) choiceBox.getResult());
-                System.out.println("A wild library appeared!");
-            }
-            else {
-                library = null;
-            }
-            displayPopulateTable(amount, false, library);
-            callback.callback(amount);
-            }, MEMBERS);
+        executePopulateDialog(dialog, callback, MEMBERS);
     }
 
     public static void populateBookMenu(Callback<Integer> callback) {//Same code as above, but using BOOKS instead of MEMBERS
@@ -92,20 +79,23 @@ public class PopulateMetaDialogs {
                 choiceBox.setDisable(false);
             }
         });
+        executePopulateDialog(dialog, callback, BOOKS);
+    }
+
+    private static void executePopulateDialog(Dialog<Map<String, Element>> dialog, Callback<Integer> callback, String resultKey) {
         DialogUtils.getDialogResults(dialog , (results) -> {
             int amount;
             ILibrary library;
-            amount = (int) results.get(BOOKS).getResult();
-            if (choiceBox.getResult() != null) {
-                library = LibraryManagerUtils.getLibraryFromName((String) choiceBox.getResult());
+            amount = (int) results.get(resultKey).getResult();
+            if (results.get(LIBRARY) != null) {
+                library = LibraryManagerUtils.getLibraryFromName(results.get(LIBRARY).getString());
                 System.out.println("A wild library appeared!");
-            }
-            else {
+            } else {
                 library = null;
             }
             displayPopulateTable(amount, true, library);
             callback.callback(amount);
-        }, BOOKS);
+        }, resultKey);
     }
 
     public static Table<String> populateTable(Table<String> table, int amount, boolean forBook, ILibrary library) {
