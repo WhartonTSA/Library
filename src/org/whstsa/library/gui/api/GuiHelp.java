@@ -47,7 +47,7 @@ public class GuiHelp implements Gui {
 
     @Override
     public Scene draw() {
-        return new Scene(window, 800, 512);
+        return new Scene(window, 800, 600);
     }
 
     @Override

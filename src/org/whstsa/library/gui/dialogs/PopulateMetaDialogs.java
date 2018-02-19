@@ -40,7 +40,7 @@ public class PopulateMetaDialogs {
         LabelElement checkBoxLabel = GuiUtils.createLabel("All Libraries:");
         LabelElement choiceBoxLabel = GuiUtils.createLabel("Selected library:");
         CheckBoxElement checkBox = GuiUtils.createCheckBox("All libraries", true, true);
-        ChoiceBoxElement choiceBox = GuiUtils.createChoiceBox(LIBRARY, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(ObjectDelegate.getLibraries())), true, -1, true);
+        ChoiceBoxElement choiceBox = GuiUtils.createChoiceBox(LIBRARY, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(ObjectDelegate.getLibraries())), true, 0, true);
         dialogPane.add(GuiUtils.createHBox(2, "", 5, checkBoxLabel, checkBox), 0, 2);
         dialogPane.add(GuiUtils.createHBox(2, "", 5, choiceBoxLabel, choiceBox), 0, 3);
         //New code: Separates Member and Book populate dialogs, replaces text fields with spinners (User can only select ints, and it will never be null)
@@ -48,7 +48,7 @@ public class PopulateMetaDialogs {
         checkBox.setOnAction(event -> {
             if (checkBox.selectedProperty().get()) {//Disables choicebox upon selecting
                 choiceBox.setDisable(true);
-                choiceBox.getSelectionModel().select(null);
+                choiceBox.getSelectionModel().select(0);
             }
             else {
                 choiceBox.setDisable(false);
@@ -67,13 +67,13 @@ public class PopulateMetaDialogs {
         LabelElement checkBoxLabel = GuiUtils.createLabel("All Libraries:");
         LabelElement choiceBoxLabel = GuiUtils.createLabel("Selected library:");
         CheckBoxElement checkBox = GuiUtils.createCheckBox("All libraries", true, true);
-        ChoiceBoxElement choiceBox = GuiUtils.createChoiceBox(LIBRARY, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(ObjectDelegate.getLibraries())), true, -1, true);
+        ChoiceBoxElement choiceBox = GuiUtils.createChoiceBox(LIBRARY, LibraryManagerUtils.toObservableList(LibraryManagerUtils.getNames(ObjectDelegate.getLibraries())), true, 0, true);
         dialogPane.add(GuiUtils.createHBox(2, "", 5, checkBoxLabel, checkBox), 0, 2);
         dialogPane.add(GuiUtils.createHBox(2, "", 5, choiceBoxLabel, choiceBox), 0, 3);
         checkBox.setOnAction(event -> {
             if (checkBox.selectedProperty().get()) {
                 choiceBox.setDisable(true);
-                choiceBox.getSelectionModel().select(null);
+                choiceBox.getSelectionModel().select(0);
             }
             else {
                 choiceBox.setDisable(false);
@@ -89,7 +89,6 @@ public class PopulateMetaDialogs {
             amount = (int) results.get(resultKey).getResult();
             if (results.get(LIBRARY) != null) {
                 library = LibraryManagerUtils.getLibraryFromName(results.get(LIBRARY).getString());
-                System.out.println("A wild library appeared!");
             } else {
                 library = null;
             }

@@ -135,8 +135,11 @@ public class HelpText {
                 "is no undo button, so be careful to keep you data unsaved or turn off autosave and restart the application before simulating data. \n" +
                 "\nSimulate Days\n" +
                 "The Simulate Days menu item is the general simulator, and conducts almost all actions available in the application randomly for a " +
-                "specified number of days. You can choose a library to simulate or simulate in all libraries. \n" +
-                "\nAdvance Days\n")));
+                "specified number of days. You can choose a library to simulate or simulate in all libraries. Simulate will never create new libraries. \n" +
+                "\nAdvance Days\n" +
+                "The advance days tool is mostly for simulating overdue dates and fee. Only the date will change, nothing else.\n" +
+                "\nPopulate Members/Books\n" +
+                "The populate tools can create a specified number of randomly generated members or books in a specified library.")));
 
         return textFlows;
     }
