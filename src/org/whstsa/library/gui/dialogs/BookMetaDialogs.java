@@ -56,9 +56,15 @@ public class BookMetaDialogs {
             String title = results.get(TITLE).getString();
             String author = results.get(AUTHOR).getString();
             BookType type = BookType.getGenre((String) results.get(GENRE).getResult());
+            int quantity = (int) results.get(QUANTITY).getResult();
             book.setTitle(title);
             book.setAuthor(author);
             book.setType(type);
+            if (libraryReference.poll().getCheckouts().get(book) != null && quantity < libraryReference.poll().getCheckouts().get(book).size()) {
+                DialogUtils.createDialog("Couldn't Edit Book.", String.format("You cannot change the copies to %s while there are still %s books checked out." , quantity , libraryReference.poll().getCheckouts().get(book).size()), null, Alert.AlertType.ERROR).show();
+                quantity = libraryReference.poll().getCheckouts().get(book).size();
+            }
+            libraryReference.poll().setQuantity(book.getID() , quantity);
             callback.callback(book);
         });
     }
@@ -80,6 +86,7 @@ public class BookMetaDialogs {
                 .addButton(ButtonType.YES, true, event -> {
                     try {
                         ObjectDelegate.getLibraries().get(0).removeBook(book);
+                        callback.callback(book);
                     } catch (InCirculationException ex) {
                         DialogUtils.createDialog("Couldn't Remove Book. Book is currently checked out.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
                         callback.callback(null);
