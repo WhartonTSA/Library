@@ -111,8 +111,6 @@ public class CommandWatcher implements InputListener {
         commands.add(new PopulateBooksCommand());
 
 
-
-
         commands.forEach(command -> this.commandMap.put(command.getName(), command));
     }
 }

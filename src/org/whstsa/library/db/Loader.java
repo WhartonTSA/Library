@@ -49,11 +49,11 @@ public class Loader {
      */
     public void load(JSONObject object) {
         Tester.print("Loading JSON into data stores");
-        
+
         this.validateObject(object, "books");
         this.validateObject(object, "libraries");
         this.validateObject(object, "people");
-        
+
         Object rawBooks = object.get("books");
         Object rawLibraries = object.get("libraries");
         Object rawPeople = object.get("people");
@@ -133,7 +133,7 @@ public class Loader {
 
     /**
      * Removes the book data from the database.
-     *
+     * <p>
      * Make sure that you have cleared all references to the book ID
      * or the program will error out on next run.
      *
@@ -145,7 +145,7 @@ public class Loader {
 
     /**
      * Removes the person data from the database.
-     *
+     * <p>
      * Make sure that you have cleared all references to the person ID
      * or the program will error out on next run.
      *
@@ -381,7 +381,7 @@ public class Loader {
 
             Member member = new Member(person, library);
             member.impl_setID(uuid);
-            
+
             Map<IBook, List<ICheckout>> bookList = new HashMap<>();
 
             JSONObject checkoutsObjectMap = memberObject.getJSONObject("checkouts");
@@ -391,7 +391,7 @@ public class Loader {
                     try {
                         ICheckout checkout = this.loadCheckout(rawCheckout, member);
                         if (!bookList.containsKey(checkout.getBook())) {
-                        	bookList.put(checkout.getBook(), new ArrayList<>());
+                            bookList.put(checkout.getBook(), new ArrayList<>());
                         }
                         bookList.get(checkout.getBook()).add(checkout);
                     } catch (LoadingException ex) {
@@ -399,7 +399,7 @@ public class Loader {
                     }
                 });
             });
-            
+
             member.impl_setBooks(bookList);
 
             Tester.print("Loaded member object");
@@ -566,10 +566,10 @@ public class Loader {
 
         return object;
     }
-    
+
     private void validateObject(JSONObject object, String key) {
-    	if (!object.has(key) || !(object.get(key) instanceof JSONArray)) {
-        	object.put(key, new JSONArray());
+        if (!object.has(key) || !(object.get(key) instanceof JSONArray)) {
+            object.put(key, new JSONArray());
         }
     }
 

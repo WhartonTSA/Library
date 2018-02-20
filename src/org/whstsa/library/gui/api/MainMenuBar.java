@@ -3,7 +3,6 @@ package org.whstsa.library.gui.api;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.BackgroundWorker;
@@ -53,8 +52,7 @@ public class MainMenuBar {
                     out.write(init);
                     out.flush();
                     out.close();
-                }
-                else {
+                } else {
                     DialogUtils.createDialog("There was an error", "File already exists.", null, Alert.AlertType.ERROR).show();
                 }
             } catch (Exception ex) {
@@ -70,8 +68,16 @@ public class MainMenuBar {
 
         barElement.addMenu("_Edit");
         barElement.addSubMenu(1, MenuBarElement.createMenu("_Create"));
-        barElement.addSubMenuItem(1, 0, "New _Person...", event -> PersonMetaDialogs.createPerson(person -> {if (personTable != null) {personTable.refresh();}}), KeyCombination.keyCombination("CTRL+P"));
-        barElement.addSubMenuItem(1, 0, "New _Library...", event -> LibraryMetaDialogs.createLibrary(library -> {if (libraryTable != null) {libraryTable.refresh();}}), KeyCombination.keyCombination("CTRL+L"));
+        barElement.addSubMenuItem(1, 0, "New _Person...", event -> PersonMetaDialogs.createPerson(person -> {
+            if (personTable != null) {
+                personTable.refresh();
+            }
+        }), KeyCombination.keyCombination("CTRL+P"));
+        barElement.addSubMenuItem(1, 0, "New _Library...", event -> LibraryMetaDialogs.createLibrary(library -> {
+            if (libraryTable != null) {
+                libraryTable.refresh();
+            }
+        }), KeyCombination.keyCombination("CTRL+L"));
         barElement.addSubMenuItem(1, 0, "New _Book...", event -> BookMetaDialogs.createBook(book -> bookTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+B"), bookTable == null);
         barElement.addSubMenuItem(1, 0, "New _Membership...", event -> MemberMetaDialogs.createMember(member -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+M"), memberTable == null);
         barElement.addSubMenuItem(1, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
@@ -103,12 +109,13 @@ public class MainMenuBar {
                 memberTable.refresh();
             }
         }), KeyCombination.keyCombination("CTRL+SHIFT+B"));
-        barElement.addMenuItem(1, "_Refresh", event -> {if (libraryReference != null) {
-            memberTable.refresh();
-            bookTable.refresh();}
-            else {
-            libraryTable.refresh();
-            personTable.refresh();
+        barElement.addMenuItem(1, "_Refresh", event -> {
+            if (libraryReference != null) {
+                memberTable.refresh();
+                bookTable.refresh();
+            } else {
+                libraryTable.refresh();
+                personTable.refresh();
             }
         }, KeyCombination.keyCombination("F5"));
 
@@ -124,7 +131,7 @@ public class MainMenuBar {
 
         if (Boolean.parseBoolean(config.getProperty("autosave"))) {
             Thread runnable = new Thread(() -> {
-                while(true) {
+                while (true) {
                     try {
                         save(statusBar);
                         Thread.sleep(60000 * Integer.parseInt(config.getProperty("autosaveInterval")));//autosaveInterval property is in minutes, so need to multiply by 1 minute in milliseconds
@@ -146,7 +153,9 @@ public class MainMenuBar {
     private void save(GuiStatusBar statusBar) {
         try {
             LibraryDB.getFileDelegate().save(Loader.getLoader().computeJSON());
-            if (statusBar != null) {statusBar.setSaved(true);}
+            if (statusBar != null) {
+                statusBar.setSaved(true);
+            }
             Logger.DEFAULT_LOGGER.debug("Saved a copy of the data");
 
         } catch (IOException ex) {

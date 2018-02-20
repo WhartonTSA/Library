@@ -2,13 +2,13 @@ package org.whstsa.library.gui.components;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.gui.Config;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.util.FieldProperty;
 
-public class PreferenceFieldElement extends HBox implements Element{
+public class PreferenceFieldElement extends HBox implements Element {
 
     private LabelElement labelElement;
     private String id;
@@ -89,7 +89,14 @@ public class PreferenceFieldElement extends HBox implements Element{
         return this.id;
     }
 
-    public Object getResult() { return null; }
+    @Override
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    public Object getResult() {
+        return null;
+    }
 
     @Override
     public String getString() {
@@ -99,10 +106,5 @@ public class PreferenceFieldElement extends HBox implements Element{
     @Override
     public boolean getBoolean() {
         return false;
-    }
-
-    @Override
-    public void setID(String id) {
-        this.id = id;
     }
 }

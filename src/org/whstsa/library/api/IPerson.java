@@ -17,6 +17,13 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
     String getFirstName();
 
     /**
+     * Sets the first name of the person
+     *
+     * @param firstName the first name
+     */
+    void setFirstName(String firstName);
+
+    /**
      * Returns the last name of this person
      *
      * @return the last name
@@ -24,11 +31,25 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
     String getLastName();
 
     /**
+     * Sets the last name of the person
+     *
+     * @param lastName the last name
+     */
+    void setLastName(String lastName);
+
+    /**
      * Returns whether this person is a teacher
      *
      * @return the teacher status
      */
     boolean isTeacher();
+
+    /**
+     * Sets whether the person is now a teacher
+     *
+     * @param teacher teacher state
+     */
+    void setTeacher(boolean teacher);
 
     /**
      * Returns a list of library memberships
@@ -40,10 +61,10 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
     /**
      * Adds a membership to this person and returns the newly-created member object
      *
-     * @deprecated don't pass premade members
      * @param member the member to add
      * @return the newly-created member object
      * @throws MemberMismatchException if {@code member.getPerson() != this}
+     * @deprecated don't pass premade members
      */
     @Deprecated
     IMember addMembership(IMember member) throws MemberMismatchException;
@@ -55,27 +76,6 @@ public interface IPerson extends IBookContainerReadonly, Loadable, Serializable,
      * @return the newly-created member object
      */
     IMember addMembership(ILibrary library);
-
-    /**
-     * Sets whether the person is now a teacher
-     *
-     * @param teacher teacher state
-     */
-    void setTeacher(boolean teacher);
-
-    /**
-     * Sets the first name of the person
-     *
-     * @param firstName the first name
-     */
-    void setFirstName(String firstName);
-
-    /**
-     * Sets the last name of the person
-     *
-     * @param lastName the last name
-     */
-    void setLastName(String lastName);
 
     /**
      * Returns whether this person is eligible to be removed

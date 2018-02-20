@@ -13,7 +13,7 @@ import java.util.List;
 public class HelpText {
 
     private List<String> titles = new ArrayList<>();
-    private  List<TextFlow> pages;
+    private List<TextFlow> pages;
 
     public HelpText() {
         titles.addAll(LibraryManagerUtils.asList("Help",
@@ -28,24 +28,6 @@ public class HelpText {
                 "Simulate"
         ));
         this.pages = createPages();
-    }
-
-    public LabelElement getTitle(int pageIndex) {
-        return GuiUtils.createTitle(titles.get(pageIndex));
-    }
-
-    public VBox getContent(int pageIndex) {
-        LabelElement title = getTitle(pageIndex);
-        TextFlow text = getPage(pageIndex);
-        return GuiUtils.createVBox(5, title, text);
-    }
-
-    private TextFlow getPage(int pageIndex) {
-        return this.pages.get(pageIndex);
-    }
-
-    public int getPageAmount() {
-        return this.titles.size();
     }
 
     private static List<TextFlow> createPages() {
@@ -144,12 +126,30 @@ public class HelpText {
         return textFlows;
     }
 
-    private static TextFlow toTextFlow(Text ...text) {
+    private static TextFlow toTextFlow(Text... text) {
         return new TextFlow(text);
     }
 
     private static Text toText(String text) {
         return new Text(text);
+    }
+
+    public LabelElement getTitle(int pageIndex) {
+        return GuiUtils.createTitle(titles.get(pageIndex));
+    }
+
+    public VBox getContent(int pageIndex) {
+        LabelElement title = getTitle(pageIndex);
+        TextFlow text = getPage(pageIndex);
+        return GuiUtils.createVBox(5, title, text);
+    }
+
+    private TextFlow getPage(int pageIndex) {
+        return this.pages.get(pageIndex);
+    }
+
+    public int getPageAmount() {
+        return this.titles.size();
     }
 
 }

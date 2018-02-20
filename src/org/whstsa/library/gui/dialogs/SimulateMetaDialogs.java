@@ -14,6 +14,7 @@ import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.util.DayGenerator;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +53,9 @@ public class SimulateMetaDialogs {
     }
 
     private static Table<String> simulateTable(Table<String> table, int days) {
-        table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()) , false, TableColumn.SortType.DESCENDING, 2500);
+        table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()), false, TableColumn.SortType.DESCENDING, 2500);
         List<String> tableItems = FXCollections.observableArrayList();
-        for (int index = 0; index < days;index++) {
+        for (int index = 0; index < days; index++) {
             tableItems.add(World.getDate().toString());
             List<String> actions = DayGenerator.simulateDay();
             tableItems.addAll(actions);
@@ -74,7 +75,7 @@ public class SimulateMetaDialogs {
                 .setTitle("Results")
                 .setWidth(500)
                 .build();
-        Table<String> simulateTable =  new Table<>();
+        Table<String> simulateTable = new Table<>();
         simulateTable = simulateTable(simulateTable, days);
         simulateTable.getTable().setMinWidth(490);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();

@@ -15,7 +15,10 @@ import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.util.ListUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class LibraryManagerUtils {
@@ -33,7 +36,7 @@ public class LibraryManagerUtils {
         Tooltip.install(node, tooltip);
     }
 
-    public static List<String> asList(String ...items) {
+    public static List<String> asList(String... items) {
         return Arrays.asList(items);
     }
 

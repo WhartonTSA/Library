@@ -68,14 +68,14 @@ public class TextFieldElement extends TextField implements RequiredElement {
         return this.required;
     }
 
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
     public void setOnSatisfactionUpdate(Consumer<Boolean> onSatisfactionUpdate) {
         this.setOnKeyReleased(event -> {
             onSatisfactionUpdate.accept(this.isSatisfied());
         });
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
     }
 
     public final boolean isSatisfied() {

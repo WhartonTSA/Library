@@ -56,11 +56,6 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
     public JSONObject toJSON() {
         JSONObject object = new JSONObject();
 
@@ -108,7 +103,7 @@ public class Library implements ILibrary {
         if (book != null) {
             if (!this.books.contains(book)) {
                 this.books.add(book);
-                this.setQuantity(id ,5);
+                this.setQuantity(id, 5);
             }
         }
     }
@@ -268,6 +263,11 @@ public class Library implements ILibrary {
     }
 
     @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
     public boolean hasMember(IPerson person) {
         for (IMember member : this.members) {
             if (member.getPerson() == person) {
@@ -302,7 +302,9 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public Map<UUID, Integer> getBookQuantity() { return bookQuantity; }
+    public Map<UUID, Integer> getBookQuantity() {
+        return bookQuantity;
+    }
 
     @Override
     public int getQuantity(UUID id) {
@@ -315,6 +317,8 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public boolean checkOutOfStock(IBook book) { return getQuantity(book.getID()) == (getCheckouts().get(book) != null ? getCheckouts().get(book).size() : 0); }
+    public boolean checkOutOfStock(IBook book) {
+        return getQuantity(book.getID()) == (getCheckouts().get(book) != null ? getCheckouts().get(book).size() : 0);
+    }
 
 }

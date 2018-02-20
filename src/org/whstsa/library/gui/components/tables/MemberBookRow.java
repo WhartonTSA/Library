@@ -16,10 +16,16 @@ public class MemberBookRow {
         this.dueDate = dueDate;
     }
 
-    public IBook getBook() {return this.book;}
+    public IBook getBook() {
+        return this.book;
+    }
 
-    public String getTitle() {return this.title;}
+    public String getTitle() {
+        return this.title;
+    }
 
-    public Date getDueDate() {return this.dueDate;}
+    public Date getDueDate() {
+        return this.dueDate;
+    }
 
 }

@@ -31,10 +31,8 @@ public class Tester {
     private static final Random RANDOM = new Random();
     private static final String SEPARATOR = "----=====================----";
     private static final String SEPARATOR_MINI = "--==========--";
-
-    private final ILibrary library;
-
     private static Tester tester;
+    private final ILibrary library;
 
     public Tester() throws OutOfStockException {
         this.library = new Library("POPTROPICA");
@@ -122,10 +120,9 @@ public class Tester {
         IMember member = this.library.getMembers().get(0);
         IBook book = this.library.getBooks().get(0);
         try {
-            ICheckout checkout = this.library.reserveBook(member, book , 5);
+            ICheckout checkout = this.library.reserveBook(member, book, 5);
             System.out.println("Removing member while they have a book checked-out");
-        }
-        catch (OutOfStockException | MaximumCheckoutsException ex) {
+        } catch (OutOfStockException | MaximumCheckoutsException ex) {
             System.out.println(ex.getMessage());
         }
         try {

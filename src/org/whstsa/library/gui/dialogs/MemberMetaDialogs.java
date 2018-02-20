@@ -1,8 +1,6 @@
 package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -14,13 +12,13 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
+import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.components.tables.MemberBookRow;
-import org.whstsa.library.gui.factories.LibraryManagerUtils;
-import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -92,14 +90,14 @@ public class MemberMetaDialogs {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle(member.getName() + "'s Books")
                 .build();
-            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            if (member.getBooks().size() > 0) {
-                dialogPane.add(booksTable(member).getTable(), 0, 0);
-            }
-            else {
-                dialogPane.add(GuiUtils.createLabel(member.getName() + " has no checked-out books."), 0, 0);
-            }
-        DialogUtils.getDialogResults(dialog, (results) -> {});
+        GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
+        if (member.getBooks().size() > 0) {
+            dialogPane.add(booksTable(member).getTable(), 0, 0);
+        } else {
+            dialogPane.add(GuiUtils.createLabel(member.getName() + " has no checked-out books."), 0, 0);
+        }
+        DialogUtils.getDialogResults(dialog, (results) -> {
+        });
     }
 
     private static Table<MemberBookRow> booksTable(IMember member) {
@@ -119,8 +117,7 @@ public class MemberMetaDialogs {
                     setText(item.replace("o", ""));
                     setTooltip(GuiUtils.createToolTip("Green text indicates a book is checked out. \n" +
                             "Red text indicates a book is past due."));
-                }
-                else {
+                } else {
                     setTextFill(Color.WHITE);//There are no bugs if you can't see them
                     setText("");
                 }
@@ -128,7 +125,7 @@ public class MemberMetaDialogs {
         });
 
         List<MemberBookRow> tableData = new ArrayList<>();
-        for (ICheckout checkout: member.getCheckouts()) {
+        for (ICheckout checkout : member.getCheckouts()) {
             tableData.add(new MemberBookRow(checkout.getBook(), checkout.getDueDate()));
         }
         ObservableReference<List<MemberBookRow>> observableReference = () -> tableData;

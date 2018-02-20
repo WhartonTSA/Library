@@ -5,14 +5,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.factories.GuiUtils;
 
-public class SearchBarElement<T> extends ToolBar implements Element{
+public class SearchBarElement<T> extends ToolBar implements Element {
 
     private LabelElement labelElement;
     private String id;
@@ -52,8 +53,7 @@ public class SearchBarElement<T> extends ToolBar implements Element{
 
             if (!subentries.equals(table.getItems())) {
                 filteredLabel.setText("Results have been filtered.");
-            }
-            else {
+            } else {
                 filteredLabel.setText("");
             }
 
@@ -84,7 +84,14 @@ public class SearchBarElement<T> extends ToolBar implements Element{
         return this.id;
     }
 
-    public Object getResult() { return null; }
+    @Override
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    public Object getResult() {
+        return null;
+    }
 
     @Override
     public String getString() {
@@ -94,11 +101,6 @@ public class SearchBarElement<T> extends ToolBar implements Element{
     @Override
     public boolean getBoolean() {
         return false;
-    }
-
-    @Override
-    public void setID(String id) {
-        this.id = id;
     }
 
 }

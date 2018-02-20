@@ -2,14 +2,10 @@ package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import org.whstsa.library.api.Callback;
-import org.whstsa.library.api.Identifiable;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.ObjectDelegate;
@@ -49,8 +45,7 @@ public class PopulateMetaDialogs {
             if (checkBox.selectedProperty().get()) {//Disables choicebox upon selecting
                 choiceBox.setDisable(true);
                 choiceBox.getSelectionModel().select(0);
-            }
-            else {
+            } else {
                 choiceBox.setDisable(false);
             }
         });
@@ -74,8 +69,7 @@ public class PopulateMetaDialogs {
             if (checkBox.selectedProperty().get()) {
                 choiceBox.setDisable(true);
                 choiceBox.getSelectionModel().select(0);
-            }
-            else {
+            } else {
                 choiceBox.setDisable(false);
             }
         });
@@ -83,7 +77,7 @@ public class PopulateMetaDialogs {
     }
 
     private static void executePopulateDialog(Dialog<Map<String, Element>> dialog, Callback<Integer> callback, String resultKey) {
-        DialogUtils.getDialogResults(dialog , (results) -> {
+        DialogUtils.getDialogResults(dialog, (results) -> {
             int amount;
             ILibrary library;
             amount = (int) results.get(resultKey).getResult();
@@ -98,9 +92,9 @@ public class PopulateMetaDialogs {
     }
 
     public static Table<String> populateTable(Table<String> table, int amount, boolean forBook, ILibrary library) {
-        table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()) , false, TableColumn.SortType.DESCENDING, 2500);
+        table.addColumn("Results", cellData -> new ReadOnlyStringWrapper(cellData.getValue()), false, TableColumn.SortType.DESCENDING, 2500);
         List<String> tableItems = FXCollections.observableArrayList();
-        for (int index = 0; index < amount;index++) {
+        for (int index = 0; index < amount; index++) {
             tableItems.add(forBook ? DayGenerator.generateBook(library == null ? DayGenerator.randomLibrary() : library) : DayGenerator.generateMember(library == null ? DayGenerator.randomLibrary() : library));
         }
         ObservableReference<List<String>> observableReference = () -> tableItems;
@@ -113,7 +107,7 @@ public class PopulateMetaDialogs {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Results")
                 .build();
-        Table<String> populateTable =  new Table<>();
+        Table<String> populateTable = new Table<>();
         populateTable = populateTable(populateTable, amount, forBook, library);
         GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
         dialogPane.addRow(0, GuiUtils.createLabel("Added " + amount + (forBook ? " books" : " members") + (library == null ? " in all libraries." : " in " + library.getName() + ".")));

@@ -17,7 +17,7 @@ public class Config {
         this.configFile = configFile;
         try {
             properties.load(new FileReader(this.configFile));
-        } catch (Exception ex){
+        } catch (Exception ex) {
             LibraryDB.LOGGER.debug("Couldn't load config.");
             ex.printStackTrace();
         }

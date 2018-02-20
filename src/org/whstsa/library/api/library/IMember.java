@@ -5,7 +5,10 @@ import org.whstsa.library.api.Identifiable;
 import org.whstsa.library.api.Serializable;
 import org.whstsa.library.api.Unique;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.*;
+import org.whstsa.library.api.exceptions.BookNotRegisteredException;
+import org.whstsa.library.api.exceptions.CheckedInException;
+import org.whstsa.library.api.exceptions.MemberMismatchException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 
 import java.util.List;
 import java.util.Map;

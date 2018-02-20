@@ -1,8 +1,6 @@
 package org.whstsa.library.commands.functional;
 
 import org.json.JSONObject;
-import org.whstsa.library.World;
-import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.commands.api.ICommand;
 import org.whstsa.library.commands.api.ICommandSender;
@@ -10,7 +8,6 @@ import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.util.DayGenerator;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,8 +20,7 @@ public class PopulatePeopleCommand implements ICommand {
         int totalPeopleAdded;
         try {
             totalPeopleAdded = Integer.parseInt(args[0]);
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             ex.printStackTrace();
             return null;
         }

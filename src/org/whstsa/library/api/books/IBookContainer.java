@@ -10,7 +10,7 @@ public interface IBookContainer extends IBookContainerReadonly, Serializable, Un
     /**
      * Adds a book to the book-container, and the amount of copies for that book
      *
-     * @param book the book to add
+     * @param book     the book to add
      * @param quantity the amount of copies for book
      */
     void addBook(IBook book, int quantity);

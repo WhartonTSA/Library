@@ -20,16 +20,14 @@ import java.util.Date;
 
 public class GuiStatusBar extends HBox {
 
+    private static final String LIBRARY_SAVED = "The library is saved.";
+    private static final String LIBRARY_UNSAVED = "The library is unsaved. Exiting will erase all progress since last save.";
+    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
     private LabelElement statusLabel;
     private LabelElement dateLabel;
     private boolean saved;
     private boolean statusOverride;//Used to override the normal status and replace with more urgent message
-
     private String currentStatus = "";
-
-    private static final String LIBRARY_SAVED = "The library is saved.";
-    private static final String LIBRARY_UNSAVED = "The library is unsaved. Exiting will erase all progress since last save.";
-    private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
     public GuiStatusBar() {
         Image icon = new Image("file:LibraryManagerIcon.png");
@@ -100,12 +98,12 @@ public class GuiStatusBar extends HBox {
         this.statusLabel.setText(newLabel);
     }
 
-    public void setSaved(boolean saved) {
-        this.saved = saved;
-    }
-
     public boolean getSaved() {
         return this.saved;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
     }
 
 }

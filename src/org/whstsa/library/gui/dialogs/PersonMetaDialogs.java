@@ -9,14 +9,10 @@ import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.exceptions.CannotDeregisterException;
 import org.whstsa.library.api.impl.Person;
-import org.whstsa.library.api.impl.library.Library;
-import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.components.Element;
-import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
-import org.whstsa.library.gui.factories.GuiUtils;
 
 import java.util.Map;
 

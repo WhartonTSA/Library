@@ -19,12 +19,12 @@ public class AboutText {
                 "This software is available under the M.I.T. license. ");
     }
 
-    public TextFlow getTextFlow() {
-        return toTextFlow(aboutTextContent);
+    private static TextFlow toTextFlow(Text... text) {
+        return new TextFlow(text);
     }
 
-    private static TextFlow toTextFlow(Text ...text) {
-        return new TextFlow(text);
+    public TextFlow getTextFlow() {
+        return toTextFlow(aboutTextContent);
     }
 
 }

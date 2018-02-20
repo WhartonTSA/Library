@@ -11,7 +11,6 @@ import javafx.scene.text.TextFlow;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.CheckedInException;
 import org.whstsa.library.api.exceptions.MemberMismatchException;
 import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.library.ICheckout;
@@ -80,16 +79,15 @@ public class CheckoutMetaDialogs {
         ToolBar toolBar = new ToolBar();
         if (fine) {
             toolBar.getItems().addAll(checkoutButton,
-                    GuiUtils.createTextFlow("checkout", 15, "-fx-base: #1e1e1e;","Checking out ", "0", " books to ", member.getName() + "."),
+                    GuiUtils.createTextFlow("checkout", 15, "-fx-base: #1e1e1e;", "Checking out ", "0", " books to ", member.getName() + "."),
                     spacer,
                     fineLabel,
                     payFine,
                     mainSpacer,
                     closeButton);
-        }
-        else {
+        } else {
             toolBar.getItems().addAll(checkoutButton,
-                    GuiUtils.createTextFlow("checkout", 15, "-fx-base: #1e1e1e;","Checking out ", "0", " books to ", member.getName() + "."),
+                    GuiUtils.createTextFlow("checkout", 15, "-fx-base: #1e1e1e;", "Checking out ", "0", " books to ", member.getName() + "."),
                     mainSpacer,
                     closeButton);
         }
@@ -147,7 +145,7 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    private static void checkoutMemberDialog(Callback<IMember> callback, IMember member,  ObservableReference<ILibrary> libraryReference) {
+    private static void checkoutMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
                 .setTitle("Checking out " + member.getName() + ".")
                 .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference.poll()), true, -1)
@@ -234,16 +232,15 @@ public class CheckoutMetaDialogs {
         ToolBar toolBar = new ToolBar();
         if (fine) {
             toolBar.getItems().addAll(checkinButton,
-                    GuiUtils.createTextFlow("checkin", 15, "-fx-base: #1e1e1e;","Returning ", "0", " books from ", member.getName() + "."),
+                    GuiUtils.createTextFlow("checkin", 15, "-fx-base: #1e1e1e;", "Returning ", "0", " books from ", member.getName() + "."),
                     spacer,
                     fineLabel,
                     payFine,
                     mainSpacer,
                     closeButton);
-        }
-        else {
+        } else {
             toolBar.getItems().addAll(checkinButton,
-                    GuiUtils.createTextFlow("checkin", 15, "-fx-base: #1e1e1e;","Returning ", "0", " books from ", member.getName() + "."),
+                    GuiUtils.createTextFlow("checkin", 15, "-fx-base: #1e1e1e;", "Returning ", "0", " books from ", member.getName() + "."),
                     mainSpacer,
                     closeButton);
         }

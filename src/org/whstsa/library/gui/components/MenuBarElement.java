@@ -12,6 +12,10 @@ public class MenuBarElement extends MenuBar {
     public MenuBarElement() {
     }
 
+    public static Menu createMenu(String title) {
+        return new Menu(title);
+    }
+
     public void addMenu(String title) {
         super.getMenus().add(new Menu(title));
     }
@@ -61,6 +65,7 @@ public class MenuBarElement extends MenuBar {
         }
         ((Menu) super.getMenus().get(menuIndex).getItems().get(subMenuIndex)).getItems().add(menuItem);
     }
+
     public void addSubMenuItem(int menuIndex, int subMenuIndex, String title, ClickHandlerMenuItem clickHandler, KeyCombination keyCombo) {
         addSubMenuItem(menuIndex, subMenuIndex, title, clickHandler, keyCombo, false);
     }
@@ -70,10 +75,6 @@ public class MenuBarElement extends MenuBar {
     }
 
     public void addSubMenuSeparator(int menuIndex, int subMenuIndex) {
-        ((Menu )super.getMenus().get(menuIndex).getItems().get(subMenuIndex)).getItems().add(new SeparatorMenuItem());
-    }
-
-    public static Menu createMenu(String title) {
-        return new Menu(title);
+        ((Menu) super.getMenus().get(menuIndex).getItems().get(subMenuIndex)).getItems().add(new SeparatorMenuItem());
     }
 }

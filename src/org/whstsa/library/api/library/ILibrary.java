@@ -16,12 +16,12 @@ public interface ILibrary extends IBookContainer, Loadable, Identifiable {
     /**
      * Creates a checkout object for a member and book
      *
-     * @param member the member checking a book out
-     * @param book   the book being checked out
+     * @param member   the member checking a book out
+     * @param book     the book being checked out
      * @param quantity the total quantity of books being added
      * @return the checkout object
      * @throws BookNotRegisteredException if {@code !books.contain(book)}
-     * @throws OutOfStockException if there are no more copies available to book
+     * @throws OutOfStockException        if there are no more copies available to book
      */
     ICheckout reserveBook(IMember member, IBook book, int quantity) throws BookNotRegisteredException, OutOfStockException, MaximumCheckoutsException;
 
@@ -44,6 +44,7 @@ public interface ILibrary extends IBookContainer, Loadable, Identifiable {
 
     /**
      * Searches for a member within the library's member tracker
+     *
      * @param person the member to search for
      * @return the member, or null if there is no member
      */
@@ -51,6 +52,7 @@ public interface ILibrary extends IBookContainer, Loadable, Identifiable {
 
     /**
      * Returns whether the library is tracking the given person
+     *
      * @param person the person to check for
      * @return whether the person holds a membership here
      */

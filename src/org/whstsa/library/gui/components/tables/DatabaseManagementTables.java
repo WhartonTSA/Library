@@ -19,8 +19,8 @@ import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.api.GuiLibraryManager;
 import org.whstsa.library.gui.api.GuiMain;
-import org.whstsa.library.gui.api.MainMenuBar;
 import org.whstsa.library.gui.api.GuiStatusBar;
+import org.whstsa.library.gui.api.MainMenuBar;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.dialogs.*;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -317,13 +317,11 @@ public class DatabaseManagementTables {
                 if (((VBox) mainContainer.getTop()).getChildren().get(1).getId().equals("toolbar") || newSelection == null) {
                     checkout.setDisable(true);
                     checkin.setDisable(true);
-                }
-                else {
+                } else {
                     checkout.setDisable(false);
                     checkin.setDisable(false);
                 }
-            }
-            else {
+            } else {
                 checkout.setDisable(false);
                 checkin.setDisable(false);
             }
@@ -357,8 +355,7 @@ public class DatabaseManagementTables {
                     viewBooks.setDisable(false);
                     mainBookTable.getTable().getSelectionModel().clearSelection();
 
-                }
-                else {
+                } else {
                     LibraryDB.LOGGER.debug("Switching to Book table");
                     mainContainer.setCenter(bookTableView);
                     ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books", "booksTitle"));
@@ -482,8 +479,7 @@ public class DatabaseManagementTables {
                     if (item.equals("N/A")) {
                         setTextFill(Color.BLACK);
                     }
-                }
-                else {
+                } else {
                     setTextFill(Color.BLACK);//If cell has no content, leave it blank (Omitting this caused the repeating date issue)
                     setText("");
                 }

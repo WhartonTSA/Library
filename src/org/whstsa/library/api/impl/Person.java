@@ -102,13 +102,28 @@ public class Person implements IPerson {
     }
 
     @Override
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    @Override
     public String getLastName() {
         return this.lastName;
     }
 
     @Override
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    @Override
     public boolean isTeacher() {
         return this.teacher;
+    }
+
+    @Override
+    public void setTeacher(boolean teacher) {
+        this.teacher = teacher;
     }
 
     @Override
@@ -142,21 +157,6 @@ public class Person implements IPerson {
     @Override
     public void load() {
         Loader.getLoader().loadPerson(this);
-    }
-
-    @Override
-    public void setTeacher(boolean teacher) {
-        this.teacher = teacher;
-    }
-
-    @Override
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    @Override
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     @Override

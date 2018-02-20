@@ -112,10 +112,10 @@ public class Checkout implements ICheckout {
     public boolean isReturned() {
         return this.returned;
     }
-    
+
     @Override
     public boolean isOverdue() {
-    	return this.getDaysPast() != 0;
+        return this.getDaysPast() != 0;
     }
 
     @Override

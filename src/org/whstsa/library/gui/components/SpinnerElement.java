@@ -6,7 +6,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import org.whstsa.library.gui.factories.GuiUtils;
 
-public class SpinnerElement extends Spinner implements Element{//Only ints for now
+public class SpinnerElement extends Spinner implements Element {//Only ints for now
 
     private String id;
     private LabelElement label;
@@ -25,8 +25,7 @@ public class SpinnerElement extends Spinner implements Element{//Only ints for n
             }
             try {
                 Integer.parseInt(newValue);
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 Platform.runLater(() -> this.getEditor().setText(oldValue));
             }
         });
@@ -52,6 +51,11 @@ public class SpinnerElement extends Spinner implements Element{//Only ints for n
     }
 
     @Override
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    @Override
     public Object getResult() {
         this.getEditor().commitValue();
         return this.getValue();
@@ -67,11 +71,6 @@ public class SpinnerElement extends Spinner implements Element{//Only ints for n
     @Override
     public boolean getBoolean() {
         return false;
-    }
-
-    @Override
-    public void setID(String id) {
-        this.id = id;
     }
 
 }

@@ -3,7 +3,6 @@ package org.whstsa.library;
 import javafx.application.Application;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,23 +19,36 @@ import org.whstsa.library.util.CommandWatcher;
 import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Scanner;
 
 /**
  * Created by eric on 11/19/17.
  */
 public class LibraryDB extends Application {
 
+    public static final Readline READER = new Readline(System.in, System.out);
+    public static final boolean TESTING = false;
+    public static final Logger LOGGER = new Logger();
+    private static IOFileDelegate FILE_DELEGATE;
     private Stage stage;
     private InterfaceManager interfaceManager;
     private IOFileSelection jsonFileBrowser;
     private File jsonRawFile;
     private Config config;
     private String jsonPath;
+
+    public static IOFileDelegate getFileDelegate() {
+        return FILE_DELEGATE;
+    }
+
+    private static JSONObject getJSONCommandLine() throws IOException, JSONException {
+        String path = READER.question("What is the path to the JSON file? (can be relative)");
+        boolean relative = READER.getBoolean("Is this file relative?");
+        FILE_DELEGATE = new IOFileDelegate(path, relative);
+        return FILE_DELEGATE.parse();
+    }
 
     public void start(Stage stage) {
         BackgroundWorker.getBackgroundWorker().start();
@@ -45,11 +57,10 @@ public class LibraryDB extends Application {
         stage.setTitle("Library Manager 1.0");
         stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
         File configFile = new File("src/org/whstsa/library/config.properties");
-        if ( configFile.exists()) {
+        if (configFile.exists()) {
             LOGGER.debug("Found config at " + configFile.getAbsolutePath());
             this.config = new Config(configFile);
-        }
-        else {
+        } else {
             try {
                 LOGGER.debug("Couldn't find config. Creating new one.");
                 configFile.createNewFile();
@@ -110,18 +121,6 @@ public class LibraryDB extends Application {
         callback.callback(null);
     }
 
-    public static final Readline READER = new Readline(System.in, System.out);
-
-    public static final boolean TESTING = false;
-
-    public static final Logger LOGGER = new Logger();
-
-    private static IOFileDelegate FILE_DELEGATE;
-
-    public static IOFileDelegate getFileDelegate() {
-        return FILE_DELEGATE;
-    }
-
     public File getJsonRawFile() {
         return this.jsonRawFile;
     }
@@ -133,13 +132,6 @@ public class LibraryDB extends Application {
     private void setDirectory(String path) {
         int slashIndex = path.lastIndexOf("\\");
         this.jsonPath = path.substring(0, slashIndex);
-    }
-
-    private static JSONObject getJSONCommandLine() throws IOException, JSONException {
-        String path = READER.question("What is the path to the JSON file? (can be relative)");
-        boolean relative = READER.getBoolean("Is this file relative?");
-        FILE_DELEGATE = new IOFileDelegate(path, relative);
-        return FILE_DELEGATE.parse();
     }
 
 }

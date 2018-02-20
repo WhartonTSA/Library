@@ -1,7 +1,6 @@
 package org.whstsa.library.api;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyListProperty;
 import org.whstsa.library.util.Logger;
 
 import java.util.ArrayList;
@@ -12,12 +11,12 @@ public class BackgroundWorker extends Thread {
 
     private static final BackgroundWorker singleton;
 
-    private List<Runnable> tickedOperationList = new ArrayList<>();
-    private Logger logger = new Logger("BackgroundWorker");
-
     static {
         singleton = new BackgroundWorker();
     }
+
+    private List<Runnable> tickedOperationList = new ArrayList<>();
+    private Logger logger = new Logger("BackgroundWorker");
 
     private BackgroundWorker() {
         this.logger.log("Background worker has loaded.");

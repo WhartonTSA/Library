@@ -2,9 +2,8 @@ package org.whstsa.library.gui.components;
 
 
 import javafx.scene.Node;
-        import javafx.scene.control.Label;
+import javafx.scene.control.Label;
 import javafx.scene.text.Font;
-import org.whstsa.library.gui.factories.GuiUtils;
 
 public class LabelElement extends Label implements Element {
 

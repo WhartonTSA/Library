@@ -4,14 +4,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.*;
+import org.whstsa.library.api.exceptions.BookNotRegisteredException;
+import org.whstsa.library.api.exceptions.CheckedInException;
+import org.whstsa.library.api.exceptions.MemberMismatchException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
 
 import java.util.*;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public class Member implements IMember {
@@ -97,7 +99,7 @@ public class Member implements IMember {
             } catch (CheckedInException e) {
                 // The error is swallowed at the moment
             }
-            this.getCheckoutMap().replace(checkout.getBook() , this.getCheckouts().stream().filter(checkouts -> !checkouts.equals(checkout)).collect(Collectors.toList()));
+            this.getCheckoutMap().replace(checkout.getBook(), this.getCheckouts().stream().filter(checkouts -> !checkouts.equals(checkout)).collect(Collectors.toList()));
             if (this.getCheckoutMap().get(checkout.getBook()).size() == 0) {
                 this.books.remove(checkout.getBook());
             }

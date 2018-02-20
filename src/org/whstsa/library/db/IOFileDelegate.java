@@ -1,5 +1,8 @@
 package org.whstsa.library.db;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,9 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.stream.Stream;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by eric on 11/19/17.

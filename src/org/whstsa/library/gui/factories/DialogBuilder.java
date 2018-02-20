@@ -2,32 +2,23 @@ package org.whstsa.library.gui.factories;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.adapter.JavaBeanBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
-import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.gui.components.ChoiceBoxElement;
 import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.RequiredElement;
 import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandlerCheckBox;
-import org.whstsa.library.util.Logger;
 
-import java.awt.*;
 import java.util.*;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -61,13 +52,13 @@ public class DialogBuilder {
         this.closingButtons = new ArrayList<>();
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+
     public DialogBuilder setTitle(String title) {
         this.title = title;
         return this;
-    }
-
-    public String getTitle() {
-        return this.title;
     }
 
     public DialogBuilder addElement(Element element) {
@@ -79,7 +70,7 @@ public class DialogBuilder {
         return this;
     }
 
-    public DialogBuilder addAllElements(Element ...elements) {
+    public DialogBuilder addAllElements(Element... elements) {
         return this.addAllElements(Arrays.asList(elements));
     }
 
@@ -200,7 +191,7 @@ public class DialogBuilder {
         return this.addButtons(button);
     }
 
-    public DialogBuilder addButtons(ButtonType ...buttons) {
+    public DialogBuilder addButtons(ButtonType... buttons) {
         return this.addButtons(Arrays.asList(buttons));
     }
 

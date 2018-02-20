@@ -61,10 +61,10 @@ public interface ICheckout extends Serializable, Unique {
      * @return the check-in status
      */
     boolean isReturned();
-    
+
     /**
      * Returns whether this checkout is overdue
-     * 
+     *
      * @return the overdue status
      */
     boolean isOverdue();

@@ -30,7 +30,9 @@ public class BookStatusRow {
         return this.ownerName;
     }
 
-    public Date getDueDate() {return this.dueDate;}
+    public Date getDueDate() {
+        return this.dueDate;
+    }
 
 
 }

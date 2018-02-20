@@ -1,12 +1,11 @@
 package org.whstsa.library.gui.components;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.util.ChoiceBoxProperty;
 
 import java.util.ArrayList;
@@ -65,6 +64,11 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements RequiredElement
     }
 
     @Override
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    @Override
     public Object getResult() {
         return this.getSelectionModel().getSelectedItem();
     }
@@ -78,11 +82,6 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements RequiredElement
     @Override
     public boolean getBoolean() {
         return false;
-    }
-
-    @Override
-    public void setID(String id) {
-        this.id = id;
     }
 
     @Override

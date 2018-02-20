@@ -4,7 +4,10 @@ import java.util.function.Consumer;
 
 public interface RequiredElement extends Element {
     boolean isRequired();
-    boolean isSatisfied();
-    void setOnSatisfactionUpdate(Consumer<Boolean> onSatisfactionUpdate);
+
     void setRequired(boolean required);
+
+    boolean isSatisfied();
+
+    void setOnSatisfactionUpdate(Consumer<Boolean> onSatisfactionUpdate);
 }
