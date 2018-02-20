@@ -79,7 +79,7 @@ public class DayGenerator {
                     ICheckout checkout = member.getCheckouts().get(0);
                     try {
                         actions.add(member.getName() + " returned " + checkout.getBook().getName() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
-                        member.removeBook(checkout);
+                        member.returnCheckout(checkout);
                     } catch (OutstandingFinesException e) {
                         actions.add(e.getMessage());
                     }

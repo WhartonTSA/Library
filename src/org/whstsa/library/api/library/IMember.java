@@ -75,7 +75,7 @@ public interface IMember extends IBookHolder, Serializable, Unique, Identifiable
      * @throws OutstandingFinesException if {@code totalFines > 0}
      */
 
-    void removeBook(ICheckout checkout) throws OutstandingFinesException;
+    void returnCheckout(ICheckout checkout) throws OutstandingFinesException;
 
     /**
      * Removes a book from this member
@@ -83,7 +83,6 @@ public interface IMember extends IBookHolder, Serializable, Unique, Identifiable
      * @param book the book to remove
      * @throws OutstandingFinesException if {@code totalFines > 0}
      */
-    @Override
     void removeBook(IBook book) throws OutstandingFinesException;
 
     /**
@@ -92,7 +91,6 @@ public interface IMember extends IBookHolder, Serializable, Unique, Identifiable
      * @param id the id of the book to remove
      * @throws OutstandingFinesException if {@code totalFines > 0}
      */
-    @Override
     void removeBook(UUID id) throws OutstandingFinesException;
 
     /**

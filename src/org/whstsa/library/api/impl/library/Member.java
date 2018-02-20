@@ -12,6 +12,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.util.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -89,20 +90,26 @@ public class Member implements IMember {
     }
 
     @Override
-    public void removeBook(ICheckout checkout) throws OutstandingFinesException { //TODO check checkout for issue
-        if (this.getCheckouts().contains(checkout)) {
+    public void returnCheckout(ICheckout checkout) throws OutstandingFinesException {
+        Logger.DEFAULT_LOGGER.debug("Started checkin process");
+        List<ICheckout> checkoutList = this.books.get(checkout.getBook());
+        if (checkoutList == null || checkoutList.size() == 0) {
+            Logger.DEFAULT_LOGGER.warn("Ignoring return checkout for unknown book");
+            return;
+        }
+        if (!checkoutList.contains(checkout)) {
             if (checkout.getFine() != 0) {
+                Logger.DEFAULT_LOGGER.warn("Terminating checkin process due to unresolved fines");
                 throw new OutstandingFinesException(this, OutstandingFinesException.Actions.REMOVE_BOOK, checkout.getFine());
             }
             try {
                 checkout.checkIn();
             } catch (CheckedInException e) {
+                Logger.DEFAULT_LOGGER.warn("Checkout was already checked in - continuing");
                 // The error is swallowed at the moment
             }
-            this.getCheckoutMap().replace(checkout.getBook(), this.getCheckouts().stream().filter(checkouts -> !checkouts.equals(checkout)).collect(Collectors.toList()));
-            if (this.getCheckoutMap().get(checkout.getBook()).size() == 0) {
-                this.books.remove(checkout.getBook());
-            }
+            Logger.DEFAULT_LOGGER.log(String.format("Checking in %s for person %s", checkout.getBook().getName(), this.getName()));
+            checkoutList.remove(checkout);
         }
     }
 

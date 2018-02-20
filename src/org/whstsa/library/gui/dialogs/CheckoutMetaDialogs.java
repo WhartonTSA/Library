@@ -267,14 +267,14 @@ public class CheckoutMetaDialogs {
             viewMembers.setDisable(false);
             viewBooks.setSelected(true);
             viewMembers.setSelected(false);
-            ObservableList<ICheckout> selectedBooks = mainTable.getTable().getSelectionModel().getSelectedItems();
+            ObservableList<ICheckout> selectedCheckouts = mainTable.getTable().getSelectionModel().getSelectedItems();
             if (fine) {
                 Stream<ICheckout> checkouts = member.getCheckouts().stream().filter(ICheckout::isOverdue).filter(checkout -> !checkout.isReturned());
                 checkouts.forEach(ICheckout::payFine);
             }
-            selectedBooks.forEach(returnBook -> {
+            selectedCheckouts.forEach(returnBook -> {
                 try {
-                    member.removeBook(returnBook);
+                    member.returnCheckout(returnBook);
                 } catch (OutstandingFinesException | MemberMismatchException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
@@ -323,7 +323,7 @@ public class CheckoutMetaDialogs {
                 }
                 ICheckout checkout = matches.get(0);
                 try {
-                    member.removeBook(checkout);
+                    member.returnCheckout(checkout);
                     callback.callback(member);
                 } catch (OutstandingFinesException | MemberMismatchException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
