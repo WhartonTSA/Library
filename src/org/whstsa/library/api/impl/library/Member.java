@@ -97,7 +97,7 @@ public class Member implements IMember {
             Logger.DEFAULT_LOGGER.warn("Ignoring return checkout for unknown book");
             return;
         }
-        if (!checkoutList.contains(checkout)) {
+        if (checkoutList.contains(checkout)) {
             if (checkout.getFine() != 0) {
                 Logger.DEFAULT_LOGGER.warn("Terminating checkin process due to unresolved fines");
                 throw new OutstandingFinesException(this, OutstandingFinesException.Actions.REMOVE_BOOK, checkout.getFine());
