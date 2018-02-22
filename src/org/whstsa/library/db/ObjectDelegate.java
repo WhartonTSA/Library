@@ -75,11 +75,14 @@ public class ObjectDelegate {
         Map<UUID, IBook> bookMap = getBookMap();
         Map<UUID, IPerson> personMap = getPersonMap();
         Map<UUID, ILibrary> libraryMap = getLibraryMap();
+        Map<UUID, IMember> memberMap = new HashMap<>();
+        libraryMap.forEach((id, library) -> memberMap.putAll(library.getMemberMap()));
 
         Map<UUID, Serializable> serializableMap = new HashMap<>();
-        bookMap.forEach(serializableMap::put);
-        personMap.forEach(serializableMap::put);
-        libraryMap.forEach(serializableMap::put);
+        serializableMap.putAll(bookMap);
+        serializableMap.putAll(personMap);
+        serializableMap.putAll(libraryMap);
+        serializableMap.putAll(memberMap);
 
         return serializableMap;
     }
