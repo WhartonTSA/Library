@@ -2,6 +2,7 @@ package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -21,10 +22,7 @@ import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.gui.components.Element;
-import org.whstsa.library.gui.components.LabelElement;
-import org.whstsa.library.gui.components.Table;
-import org.whstsa.library.gui.components.TextFieldElement;
+import org.whstsa.library.gui.components.*;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -46,63 +44,6 @@ public class CheckoutMetaDialogs {
     private static String BOOK = "Book";
     private static String RETURN = "Return";
     private static String QUANTITY = "Quantity";
-
-    public static void checkOutPreMenu(Callback<IMember> callback, ObservableReference<ILibrary> libraryReference) {
-        Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Choose a member to checkout")
-                .addChoiceBox(CHECKOUT, LibraryManagerUtils.getMemberNames(libraryReference.poll()), true, 0)
-                .build();
-        DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(CHECKOUT).getResult() != null) {
-                IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(CHECKOUT).getResult(), libraryReference.poll());
-                assert selectedMember != null;
-                checkoutMemberDialog(member -> callback.callback(selectedMember), selectedMember, libraryReference);
-            }
-        });
-    }
-
-    private static void checkoutMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
-        Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Checking out " + member.getName() + ".")
-                .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference.poll()), true, -1)
-                .addCheckBox(PAYFINE, false, true, member.getFine() <= 0)
-                .build();
-        if (member.getFine() > 0) {
-            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12);
-            fineLabel.setTextFill(Color.RED);
-            dialogPane.add(fineLabel, 1, 1);
-        }
-        DialogUtils.getDialogResults(dialog, (results) -> {
-            if (member.getFine() > 0) {
-                if (!results.get(PAYFINE).getBoolean()) {
-                    DialogUtils.createDialog("Couldn't pay fine.", null, null, Alert.AlertType.ERROR).show();
-                    return;
-                }
-                try {
-                    member.getCheckouts().forEach(ICheckout::getFine);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-            IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
-            Integer quantity = null;
-            Element quantityElement = results.get(QUANTITY);
-            if (quantityElement instanceof TextFieldElement) {
-                TextFieldElement textFieldQuantityElement = (TextFieldElement) quantityElement;
-                quantity = textFieldQuantityElement.getNumber();
-            }
-            if (quantity == null) {
-                quantity = 1;
-            }
-            try {
-                libraryReference.poll().reserveBook(member, book, quantity);
-                callback.callback(member);
-            } catch (Exception ex) {
-                DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
-            }
-        });
-    }
 
     private static void checkoutManagementView(boolean returning, Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ILibrary library) {
         viewBooks.setDisable(true);
@@ -226,18 +167,12 @@ public class CheckoutMetaDialogs {
         });
     }
 
-    public static void checkInPreMenu(Callback<IMember> callback, ObservableReference<ILibrary> libraryReference) {
+    public static void checkInPreMenu(Callback<IMember> callback, ILibrary library) {
+        checkoutManagementPreMenu(true, callback, library);
+    }
 
-        Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Choose a member to checkin")
-                .addRequiredChoiceBox(RETURN, LibraryManagerUtils.getMemberNames(libraryReference.poll()), true, 0, false)
-                .build();
-        DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(RETURN).getResult() != null) {
-                IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(RETURN).getResult(), libraryReference.poll());
-                checkinMemberDialog(member -> callback.callback(selectedMember), selectedMember, libraryReference);
-            }
-        });
+    public static void checkOutPreMenu(Callback<IMember> callback, ILibrary library) {
+        checkoutManagementPreMenu(false, callback, library);
     }
 
     public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainController, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ObservableReference<ILibrary> library) {
@@ -248,24 +183,37 @@ public class CheckoutMetaDialogs {
         checkoutManagementView(true, callback, member, mainController, bookTable, viewBooks, viewMembers, library.poll());
     }
 
-    private static void checkinMemberDialog(Callback<IMember> callback, IMember member, ObservableReference<ILibrary> libraryReference) {
+    private static void checkoutManagementPreMenu(boolean returning, Callback<IMember> callback, ILibrary library) {
         Dialog<Map<String, Element>> dialog = new DialogBuilder()
-                .setTitle("Returning " + member.getName() + "'s books.")
-                .addRequiredChoiceBox(RETURN, member.getCheckoutMap(), true, -1, false)
-                .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event ->
-                        member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(ICheckout::payFine))
+                .setTitle(returning ? "Choose a member to checkin" : "Choose a member to checkout")
+                .addRequiredChoiceBox(returning ? RETURN : CHECKOUT, LibraryManagerUtils.getMemberNameMap(library), true, 0, false)
                 .build();
-        if (member.getFine() > 0) {
-            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12);
-            fineLabel.setTextFill(Color.RED);
-            dialogPane.add(fineLabel, 1, 1);
+        DialogUtils.getDialogResults(dialog, results -> {
+            IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(returning ? RETURN : CHECKOUT).getResult(), library);
+            checkoutManagementDialog(returning, callback, selectedMember, library);
+        });
+    }
+
+    private static void checkoutManagementDialog(boolean returning, Callback<IMember> callback, IMember member, ILibrary library) {
+        final boolean hasFine = member.getFine() > 0;
+        Dialog<Map<String, Element>> dialog;
+        DialogBuilder dialogBuilder = new DialogBuilder()
+                .setTitle((returning ? "Checking out - " : "Checking in - ") + member.getName())
+                .addRequiredChoiceBox(BOOK, returning ? (Map) member.getCheckoutMap() : (Map) LibraryManagerUtils.getBookNameMap(library), true, -1, false);
+        if (hasFine) {
+            CheckBoxElement payFine = new CheckBoxElement(PAYFINE, PAYFINE, false, false);
+            payFine.setLabel(GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, GuiUtils.createLabel(PAYFINE), GuiUtils.createLabel("($" + member.getFine() + ")", 12, Color.RED)));
+            dialogBuilder.addRequiredElement(payFine);
         }
+        dialog = dialogBuilder.build();
         DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(RETURN).getResult() != null) {
-                IBook returnBook = LibraryManagerUtils.getBookFromTitle((String) results.get(RETURN).getResult(), libraryReference.poll());
+            if (member.getFine() > 0) {
+                member.getCheckouts().forEach(ICheckout::payFine);
+            }
+            IBook book = LibraryManagerUtils.getBookFromTitle(results.get(BOOK).getResult().toString(), library);
+            if (returning) {
                 List<ICheckout> checkouts = member.getCheckouts(true);
-                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(returnBook)).collect(Collectors.toList());
+                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(book)).collect(Collectors.toList());
                 if (matches.size() == 0) {
                     DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
                     return;
@@ -277,6 +225,13 @@ public class CheckoutMetaDialogs {
                 } catch (OutstandingFinesException | MemberMismatchException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
+            } else {
+                try {
+                    library.reserveBook(member, book, 1);
+                } catch (OutOfStockException | MaximumCheckoutsException e) {
+                    e.printStackTrace();
+                }
+                callback.callback(member);
             }
 
         });
