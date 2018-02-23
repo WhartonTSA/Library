@@ -321,4 +321,9 @@ public class Library implements ILibrary {
         return getQuantity(book.getID()) == (getCheckouts().get(book) != null ? getCheckouts().get(book).size() : 0);
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
+
 }

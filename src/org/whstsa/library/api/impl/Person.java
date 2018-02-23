@@ -163,4 +163,9 @@ public class Person implements IPerson {
     public boolean isRemovable() {
         return this.getBooks().size() == 0;
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

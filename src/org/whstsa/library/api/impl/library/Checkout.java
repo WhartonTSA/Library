@@ -126,6 +126,11 @@ public class Checkout implements ICheckout {
         this.returned = true;
     }
 
+    @Override
+    public String toString() {
+        return this.getBook().getName();
+    }
+
     private double getMultiplier() {
         return this.getOwner().getPerson().isTeacher() ? LATE_FEE_TEACHER : LATE_FEE;
     }

@@ -259,4 +259,9 @@ public class Member implements IMember {
     public String getName() {
         return this.getPerson().getName();
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

@@ -80,4 +80,9 @@ public class Book implements IBook {
         Loader.getLoader().loadBook(this);
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
+
 }
