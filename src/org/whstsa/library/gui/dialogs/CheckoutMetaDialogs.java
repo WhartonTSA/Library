@@ -45,6 +45,8 @@ public class CheckoutMetaDialogs {
     private static void checkoutManagementView(boolean returning, Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ILibrary library) {
         viewBooks.setDisable(true);
         viewMembers.setDisable(true);
+        viewMembers.setSelected(false);
+        viewBooks.setSelected(false);
 
         Button completionButton = GuiUtils.createButton(returning ? "Return" : "Checkout", true, GuiUtils.defaultClickHandler());
         completionButton.setStyle("-fx-base: #4fa9dd;");
@@ -73,14 +75,16 @@ public class CheckoutMetaDialogs {
         CheckBox shouldPayFine = null;
         ComputedProperty<Boolean, CheckBox> userDidConsentToPayFine = checkBox -> checkBox == null ? false : checkBox.selectedProperty().get();
 
+        Node oldCenter = mainContainer.getCenter();
+
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {
             ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             table.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            mainContainer.setCenter(bookTable.getTable());
-            viewBooks.setDisable(true);
-            viewBooks.setSelected(true);
-            viewMembers.setDisable(false);
-            viewMembers.setSelected(false);
+            mainContainer.setCenter(oldCenter);
+            viewBooks.setDisable(false);
+            viewBooks.setSelected(false);
+            viewMembers.setDisable(true);
+            viewMembers.setSelected(true);
         });
         closeButton.setStyle("-fx-base: #ff8787;");
 
@@ -139,10 +143,10 @@ public class CheckoutMetaDialogs {
                         .forEach(ICheckout::payFine);
             }
 
-            viewBooks.setDisable(true);
-            viewBooks.setSelected(true);
-            viewMembers.setDisable(false);
-            viewMembers.setSelected(false);
+            viewBooks.setDisable(false);
+            viewBooks.setSelected(false);
+            viewMembers.setDisable(true);
+            viewMembers.setSelected(true);
 
             ObservableList selectedBooks = table.getTable().getSelectionModel().getSelectedItems();
 
@@ -157,7 +161,7 @@ public class CheckoutMetaDialogs {
                     DialogUtils.createDialog("Error.", ex.getMessage(), null, Alert.AlertType.ERROR).showAndWait();
                 }
                 callback.callback(member);
-                mainContainer.setCenter(bookTable.getTable());
+                mainContainer.setCenter(oldCenter);
                 ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
                 table.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             });
