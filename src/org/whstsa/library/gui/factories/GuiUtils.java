@@ -271,11 +271,11 @@ public class GuiUtils {
     }
 
     public static LabelElement createLabel(String text, double size, Color color) {
-        return createLabel(text, new Font(size), Color.BLACK);
+        return createLabel(text, new Font(size), color);
     }
 
     public static LabelElement createLabel(String text, double size) {
-        return createLabel(text, LABEL_FONT, Color.BLACK);
+        return createLabel(text, size, Color.BLACK);
     }
 
     public static LabelElement createLabel(String text) {
