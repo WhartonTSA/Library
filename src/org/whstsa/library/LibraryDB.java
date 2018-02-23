@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.whstsa.library.api.BackgroundWorker;
 import org.whstsa.library.api.Callback;
+import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.db.IOFileDelegate;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.Config;
@@ -69,7 +70,7 @@ public class LibraryDB extends Application {
                 this.config.setProperty("tooltips", "true");
                 this.config.setProperty("autosave", "true");
                 this.config.setProperty("autosaveInterval", "10");
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 DialogUtils.createDialog("There was an error", "Couldn't create file.", null, Alert.AlertType.ERROR).show();
             }
         }
@@ -79,7 +80,7 @@ public class LibraryDB extends Application {
         if (TESTING) {
             try {
                 new Tester();
-            } catch (Exception e) {
+            } catch (OutOfStockException e) {
                 e.printStackTrace();
             }
         }

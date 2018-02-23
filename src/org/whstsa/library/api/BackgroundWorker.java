@@ -40,12 +40,7 @@ public class BackgroundWorker extends Thread {
     }
 
     public void tick() {
-        try {
-            this.tickedOperationList.forEach(Platform::runLater);
-        } catch (Exception ex) {
-            this.logger.error("Error occurred during tick!");
-            ex.printStackTrace();
-        }
+        this.tickedOperationList.forEach(Platform::runLater);
     }
 
     public List<Runnable> getTickOperations() {
