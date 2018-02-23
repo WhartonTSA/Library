@@ -48,6 +48,10 @@ public class CheckoutMetaDialogs {
         viewMembers.setSelected(false);
         viewBooks.setSelected(false);
 
+        if (returning) {
+            ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(member.getName() + "'a Books", "returnTitle"));
+        }
+
         Button completionButton = GuiUtils.createButton(returning ? "Return" : "Checkout", true, GuiUtils.defaultClickHandler());
         completionButton.setStyle("-fx-base: #4fa9dd;");
 
@@ -73,7 +77,7 @@ public class CheckoutMetaDialogs {
         });
 
         CheckBox shouldPayFine = null;
-        ComputedProperty<Boolean, CheckBox> userDidConsentToPayFine = checkBox -> checkBox == null ? false : checkBox.selectedProperty().get();
+        ComputedProperty<Boolean, CheckBox> userDidConsentToPayFine = checkBox -> checkBox != null && checkBox.selectedProperty().get();
 
         Node oldCenter = mainContainer.getCenter();
 
@@ -116,7 +120,7 @@ public class CheckoutMetaDialogs {
             Table<ICheckout> checkoutTable = (Table<ICheckout>) table;
             checkoutTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getName()), true, TableColumn.SortType.DESCENDING, 200);
             checkoutTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
-            checkoutTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);//TODO needs better fields for table columns
+            checkoutTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
             ObservableReference<List<ICheckout>> observableReference = member::getCheckouts;
             checkoutTable.setReference(observableReference);
 
@@ -200,7 +204,7 @@ public class CheckoutMetaDialogs {
         Dialog<Map<String, Element>> dialog;
         DialogBuilder dialogBuilder = new DialogBuilder()
                 .setTitle((returning ? "Checking out - " : "Checking in - ") + member.getName())
-                .addRequiredChoiceBox(BOOK, returning ? (Map) member.getCheckoutMap() : (Map) LibraryManagerUtils.getBookNameMap(library), true, -1, false);
+                .addRequiredChoiceBox(BOOK, returning ? (Map) member.getCheckoutMap() : LibraryManagerUtils.getBookNameMap(library), true, -1, false);
         if (hasFine) {
             CheckBoxElement payFine = new CheckBoxElement(PAYFINE, PAYFINE, false, false);
             payFine.setLabel(GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, GuiUtils.createLabel(PAYFINE), GuiUtils.createLabel("($" + member.getFine() + ")", 12, Color.RED)));

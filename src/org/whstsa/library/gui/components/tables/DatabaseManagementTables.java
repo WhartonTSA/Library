@@ -394,6 +394,9 @@ public class DatabaseManagementTables {
             if (mainContainer.getCenter().getId().equals("bookTable") && !((VBox) mainContainer.getTop()).getChildren().get(3).getId().equals("booksTitle")) {
                 ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(libraryReference.poll().getName() + " Books", "booksTitle"));
             }
+            if (!((VBox) mainContainer.getTop()).getChildren().get(0).getId().equals("toolbar")) {
+                LibraryManagerUtils.addTooltip(mainBookTable.getTable(), "Double-click to see the status of the copies of this book.");//TODO 
+            }
         });
 
         if (Boolean.parseBoolean(libraryDB.getConfig().getProperty("tooltips"))) {
