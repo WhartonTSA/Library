@@ -80,8 +80,8 @@ public class MainMenuBar {
         }), KeyCombination.keyCombination("CTRL+L"));
         barElement.addSubMenuItem(1, 0, "New _Book...", event -> BookMetaDialogs.createBook(book -> bookTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+B"), bookTable == null);
         barElement.addSubMenuItem(1, 0, "New _Membership...", event -> MemberMetaDialogs.createMember(member -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+M"), memberTable == null);
-        barElement.addSubMenuItem(1, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
-        barElement.addSubMenuItem(1, 0, "New _Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> memberTable.refresh(), libraryReference), KeyCombination.keyCombination("CTRL+R"), libraryReference == null);
+        barElement.addSubMenuItem(1, 0, "New _Checkout...", event -> CheckoutMetaDialogs.checkOutPreMenu(checkout -> memberTable.refresh(), libraryReference.poll()), KeyCombination.keyCombination("CTRL+C"), libraryReference == null);
+        barElement.addSubMenuItem(1, 0, "New _Return...", event -> CheckoutMetaDialogs.checkInPreMenu(checkout -> memberTable.refresh(), libraryReference.poll()), KeyCombination.keyCombination("CTRL+R"), libraryReference == null);
         barElement.addMenuSeparator(1);
         barElement.addMenuItem(1, "_Edit JSON... (Dev)", event -> EditJSONMetaDialogs.editConfirm(libraryDB.getJsonRawFile()), null);
         barElement.addSubMenu(1, MenuBarElement.createMenu("_Simulate"));
