@@ -17,7 +17,15 @@ public class IOFileSelection {
         this.libraryDB = libraryDB;
         dialog.setSelectedExtensionFilter(this.filter);
         this.dialog.setTitle("Open a JSON data file");
-        this.dialog.setInitialDirectory(new File(libraryDB.getConfig().getProperty("initialDirectory")));
+        File configFile = new File(libraryDB.getConfig().getProperty("initialDirectory"));
+        if (configFile.exists()) {
+            this.dialog.setInitialDirectory(configFile);
+        }
+        else {
+            LibraryDB.LOGGER.debug("Directory " + libraryDB.getConfig().getProperty("initialDirectory") + " couldn't be found, switching to home.");
+            this.dialog.setInitialDirectory(new File(System.getProperty("user.home")));
+            libraryDB.getConfig().setProperty("initialDirectory", System.getProperty("user.home"));
+        }
     }
 
     public IOFileSelection(LibraryDB libraryDB) {
@@ -25,14 +33,7 @@ public class IOFileSelection {
     }
 
     public File getFile() {
-        try {
-            return dialog.showOpenDialog(this.libraryDB.getStage());
-        } catch (Exception ex) {
-            LibraryDB.LOGGER.debug("Directory " + libraryDB.getConfig().getProperty("initialDirectory") + " couldn't be found, switching to home.");
-            this.dialog.setInitialDirectory(new File(System.getProperty("user.home")));
-            libraryDB.getConfig().setProperty("initialDirectory", System.getProperty("user.home"));
-            return getFile();
-        }
+        return dialog.showOpenDialog(this.libraryDB.getStage());
     }
 
 }
