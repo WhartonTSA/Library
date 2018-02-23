@@ -160,7 +160,7 @@ public class DialogBuilder {
         return this.addRequiredElement(GuiUtils.createChoiceBox(label, items, useLabel, selected, disabled));
     }
 
-    private DialogBuilder addRequiredElement(RequiredElement requiredElement) {
+    public DialogBuilder addRequiredElement(RequiredElement requiredElement) {
         requiredElement.setRequired(true);
         return this.addElement(requiredElement);
     }
