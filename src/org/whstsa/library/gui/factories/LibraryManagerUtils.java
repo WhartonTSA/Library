@@ -15,10 +15,7 @@ import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.util.ListUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LibraryManagerUtils {
@@ -42,6 +39,20 @@ public class LibraryManagerUtils {
 
     public static ObservableList<String> getMemberNames(ILibrary library) {
         return toObservableList(getNames(library.getMembers()));
+    }
+
+    public static Map<String, IMember> getMemberNameMap(ILibrary library) {
+        return getNameMap(library.getMembers());
+    }
+
+    public static Map<String, IBook> getBookNameMap(ILibrary library) {
+        return getNameMap(library.getBooks());
+    }
+
+    private static <T extends Identifiable> Map<String, T> getNameMap(List<T> itemList) {
+        Map<String, T> nameMap = new HashMap<>();
+        itemList.stream().forEach(item -> nameMap.put(item.getName(), item));
+        return nameMap;
     }
 
     public static ObservableList<String> getPeopleNames() {
