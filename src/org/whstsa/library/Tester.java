@@ -5,8 +5,7 @@ import org.whstsa.library.api.BookType;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.Serializable;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.MaximumCheckoutsException;
-import org.whstsa.library.api.exceptions.OutOfStockException;
+import org.whstsa.library.api.exceptions.*;
 import org.whstsa.library.api.impl.Book;
 import org.whstsa.library.api.impl.Person;
 import org.whstsa.library.api.impl.library.Checkout;
@@ -127,7 +126,7 @@ public class Tester {
         }
         try {
             this.library.removeMember(member);
-        } catch (Exception ex) {
+        } catch (CannotDeregisterException ex) {
             System.out.format("Failed: %s", ex.getMessage());
         }
     }
@@ -167,7 +166,7 @@ public class Tester {
             System.out.println("Successfully checked-in the book");
             System.out.println("Testing re-checkin returns");
             member.checkInAndPayFines(checkout);
-        } catch (Exception ex) {
+        } catch (MemberMismatchException | CheckedInException ex) {
             System.out.format("Failed to check-in the book: %s", ex.getMessage());
         }
     }
@@ -204,7 +203,7 @@ public class Tester {
         ICheckout checkout = new Checkout(member, new Book("BITCH DIE", "THICCY THICC", BookType.HORROR));
         try {
             member.checkout(checkout);
-        } catch (Exception ex) {
+        } catch (BookNotRegisteredException | MemberMismatchException ex) {
             System.out.format("Failed to check-out: %s", ex.getMessage());
         }
     }

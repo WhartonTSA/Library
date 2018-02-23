@@ -13,10 +13,7 @@ import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.ComputedProperty;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.MaximumCheckoutsException;
-import org.whstsa.library.api.exceptions.MemberMismatchException;
-import org.whstsa.library.api.exceptions.OutOfStockException;
-import org.whstsa.library.api.exceptions.OutstandingFinesException;
+import org.whstsa.library.api.exceptions.*;
 import org.whstsa.library.api.impl.library.Library;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
@@ -81,7 +78,7 @@ public class CheckoutMetaDialogs {
                 }
                 try {
                     member.getCheckouts().forEach(ICheckout::getFine);
-                } catch (Exception ex) {
+                } catch (NullPointerException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -98,7 +95,7 @@ public class CheckoutMetaDialogs {
             try {
                 libraryReference.poll().reserveBook(member, book, quantity);
                 callback.callback(member);
-            } catch (Exception ex) {
+            } catch (BookNotRegisteredException | OutOfStockException | MaximumCheckoutsException ex) {
                 DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
             }
         });
