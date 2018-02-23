@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.util.ChoiceBoxProperty;
@@ -77,6 +78,10 @@ public class ChoiceBoxElement<T, U> extends ChoiceBox implements RequiredElement
     public String getString() {
         Object result = this.getResult();
         return result == null ? null : result.toString();
+    }
+
+    public U getItem() {
+        return this.items.get(this.getString());
     }
 
     @Override
