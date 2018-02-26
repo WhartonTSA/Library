@@ -147,13 +147,7 @@ public class CheckoutMetaDialogs {
                         .forEach(ICheckout::payFine);
             }
 
-            viewBooks.setDisable(false);
-            viewBooks.setSelected(false);
-            viewMembers.setDisable(true);
-            viewMembers.setSelected(true);
-
-            ObservableList selectedBooks = table.getTable().getSelectionModel().getSelectedItems();
-
+            List selectedBooks = table.getSelectedItems();
             selectedBooks.forEach(book -> {
                 try {
                     if (returning) {
@@ -164,11 +158,17 @@ public class CheckoutMetaDialogs {
                 } catch (OutOfStockException | MaximumCheckoutsException ex) {
                     DialogUtils.createDialog("Error.", ex.getMessage(), null, Alert.AlertType.ERROR).showAndWait();
                 }
-                callback.callback(member);
-                mainContainer.setCenter(oldCenter);
-                ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
-                table.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
             });
+            callback.callback(member);
+            mainContainer.setCenter(oldCenter);
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
+            table.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+
+            viewBooks.setDisable(false);
+            viewBooks.setSelected(false);
+            viewMembers.setDisable(true);
+            viewMembers.setSelected(true);
         });
     }
 
