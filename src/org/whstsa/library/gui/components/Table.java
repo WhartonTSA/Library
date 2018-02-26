@@ -65,6 +65,10 @@ public class Table<T> {
         return this.getTable().getSelectionModel().getSelectedItem();
     }
 
+    public List<T> getSelectedItems() {
+        return this.getTable().getSelectionModel().getSelectedItems();
+    }
+
     public void refresh() {
         this.pollItems();
         TableColumn<T, ?> tableColumn = this.view.getColumns().get(0);
