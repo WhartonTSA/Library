@@ -30,9 +30,9 @@ public class BackgroundWorker extends Thread {
     public void run() {
         this.logger.log("Background worker has started.");
         while (true) {
-            this.tick();
             try {
-                Thread.sleep(1000);
+                this.tick();
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 this.logger.warn("Background worker has been stopped abruptly.");
             }
