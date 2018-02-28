@@ -49,7 +49,7 @@ public class CheckoutMetaDialogs {
         viewBooks.setSelected(false);
 
         if (returning) {
-            ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(member.getName() + "'a Books", "returnTitle"));
+            ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(member.getName() + "'s Books", "returnTitle"));
         }
 
         Button completionButton = GuiUtils.createButton(returning ? "Return" : "Checkout", true, GuiUtils.defaultClickHandler());
