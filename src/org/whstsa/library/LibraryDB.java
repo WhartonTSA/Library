@@ -133,7 +133,7 @@ public class LibraryDB extends Application {
             System.exit(0);
         }
         this.jsonRawFile = rawJSON;
-        setDirectory(this.jsonRawFile.getPath());
+        setDirectory(this.jsonRawFile.getParentFile().toString());
         try {
             FILE_DELEGATE = new IOFileDelegate(rawJSON);
             JSONObject root = FILE_DELEGATE.parse();
@@ -156,8 +156,7 @@ public class LibraryDB extends Application {
     }
 
     private void setDirectory(String path) {
-        int slashIndex = path.lastIndexOf("\\");
-        this.jsonPath = path.substring(0, slashIndex);
+        this.jsonPath = path;
     }
 
 }
