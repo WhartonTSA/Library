@@ -110,6 +110,11 @@ public class DialogBuilder {
         return this;
     }
 
+    public DialogBuilder setWidth(int width) {
+        this.width = width;
+        return this;
+    }
+
     public DialogBuilder addTextField(String prompt, String placeholder) {
         return this.addTextField(prompt, placeholder, false);
     }
@@ -232,6 +237,10 @@ public class DialogBuilder {
         GridPane grid = this.gridPaneOperator.mutate(DialogUtils.buildGridPane(), this.elementList);
 
         dialog.getDialogPane().setContent(grid);
+
+        if (this.width != null) {
+            dialog.getDialogPane().setMinWidth(this.width);
+        }
 
         Platform.runLater(() -> {
             if (grid.getChildren().size() == 0) {
