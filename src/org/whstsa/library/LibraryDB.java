@@ -21,8 +21,12 @@ import org.whstsa.library.util.Logger;
 import org.whstsa.library.util.Readline;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 
 /**
  * Created by eric on 11/19/17.
@@ -52,6 +56,8 @@ public class LibraryDB extends Application {
     }
 
     public void start(Stage stage) {
+        final String javaCWD = new File(".").getPath().replace("file:/", "");
+
         BackgroundWorker.getBackgroundWorker().start();
         new CommandWatcher(System.in, System.out).run();
         this.stage = stage;
@@ -72,9 +78,21 @@ public class LibraryDB extends Application {
                 this.config.setProperty("tooltips", "true");
                 this.config.setProperty("autosave", "true");
                 this.config.setProperty("autosaveInterval", "10");
+
+                File dataFile = new File(Paths.get(javaCWD, "libraryDatabase.json").toUri());
+                if (!dataFile.exists()) {
+                    Logger.DEFAULT_LOGGER.debug("Creating file at " + dataFile.getPath());
+                    dataFile.getParentFile().mkdirs();
+                    dataFile.createNewFile();
+                    FileWriter fileWriter = new FileWriter(dataFile);
+                    fileWriter.write("{\"books\":[],\"libraries\":[],\"people\":[]}");
+                    fileWriter.close();
+                }
+                this.config.setProperty("initialDirectory", javaCWD);
+                this.config.save();
             } catch (IOException ex) {
                 ex.printStackTrace();
-                DialogUtils.createDialog("There was an error", "Couldn't create file.", null, Alert.AlertType.ERROR).showAndWait();
+                DialogUtils.createDialog("There was an error", "Couldn't create file.\n" + ex.getMessage(), null, Alert.AlertType.ERROR).showAndWait();
             }
         }
         this.stage.setResizable(true);

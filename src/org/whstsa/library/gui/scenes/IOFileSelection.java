@@ -3,6 +3,7 @@ package org.whstsa.library.gui.scenes;
 import javafx.stage.FileChooser;
 import org.whstsa.library.LibraryDB;
 
+import javax.swing.plaf.FileChooserUI;
 import java.io.File;
 
 public class IOFileSelection {
@@ -13,15 +14,15 @@ public class IOFileSelection {
     private LibraryDB libraryDB;
 
     public IOFileSelection(LibraryDB libraryDB, String... acceptedFiletypes) {
-        this.filter = new FileChooser.ExtensionFilter("JSON files", acceptedFiletypes);
         this.libraryDB = libraryDB;
-        dialog.setSelectedExtensionFilter(this.filter);
+        filter = new FileChooser.ExtensionFilter("JSON file", "*.json");
+        dialog.getExtensionFilters().add(filter);
+        dialog.setSelectedExtensionFilter(filter);
         this.dialog.setTitle("Open a JSON data file");
-        File configFile = new File(libraryDB.getConfig().getProperty("initialDirectory"));
+        File configFile = new File(libraryDB.getConfig().getProperty("initialDirectory") == null ? System.getProperty("user.home") : libraryDB.getConfig().getProperty("initialDirectory"));
         if (configFile.exists()) {
             this.dialog.setInitialDirectory(configFile);
-        }
-        else {
+        } else {
             LibraryDB.LOGGER.debug("Directory " + libraryDB.getConfig().getProperty("initialDirectory") + " couldn't be found, switching to home.");
             this.dialog.setInitialDirectory(new File(System.getProperty("user.home")));
             libraryDB.getConfig().setProperty("initialDirectory", System.getProperty("user.home"));
