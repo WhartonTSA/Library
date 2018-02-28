@@ -159,7 +159,7 @@ public class GuiUtils {
     public static Button createButton(String title, boolean nativeWidth, double width, Pos pos, ClickHandler clickHandler) {
         LibraryDB.LOGGER.debug("Assembling button with title " + title + " (CLICK HANDLER: " + Logger.assertion(clickHandler != null) + ")");
         Button button = new Button(title);
-        if (title.length() < 10 && width == 80.0 && !nativeWidth) {//If title is more than 10 characters or nativeWidth == true, default to the automatic button width. Otherwise, set width to 80
+        if (title.length() < 10 && width == 80.0) {//If title is more than 10 characters or nativeWidth == true, default to the automatic button width. Otherwise, set width to 80
             button.setPrefWidth(80.0);
         } else if (!nativeWidth) {
             button.setPrefWidth(width);
@@ -178,7 +178,7 @@ public class GuiUtils {
     }
 
     public static Button createButton(String title, double width, ClickHandler clickHandler) {
-        return createButton(title, false, width, clickHandler);
+        return createButton(title, true, width, clickHandler);
     }
 
     public static Button createButton(String title, boolean nativeWidth, ClickHandler clickHandler) {
@@ -186,7 +186,7 @@ public class GuiUtils {
     }
 
     public static Button createButton(String title, ClickHandler clickHandler) {
-        return createButton(title, false, clickHandler);
+        return createButton(title, true, clickHandler);
     }
 
     public static Button createButton(String title) {
