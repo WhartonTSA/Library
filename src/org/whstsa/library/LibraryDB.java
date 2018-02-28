@@ -62,7 +62,11 @@ public class LibraryDB extends Application {
         new CommandWatcher(System.in, System.out).run();
         this.stage = stage;
         stage.setTitle("Library Manager 1.0");
-        stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
+        try {
+            stage.getIcons().add(new Image(this.getClass().getResource("/LibraryManagerIcon.png").toString()));
+        } catch (NullPointerException ex) {
+            Logger.DEFAULT_LOGGER.debug("Not setting stage icon in dev mode.");
+        }
         File configFile = new File(Config.determineOptimalFileLocation());
         if (configFile.exists()) {
             LOGGER.debug("Found config at " + configFile.getAbsolutePath());

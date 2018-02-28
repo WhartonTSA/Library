@@ -2,7 +2,6 @@ package org.whstsa.library.gui.components;
 
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import org.whstsa.library.gui.factories.GuiUtils;
 
 import java.util.function.Consumer;
