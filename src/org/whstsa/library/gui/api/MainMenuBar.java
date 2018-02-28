@@ -40,11 +40,12 @@ public class MainMenuBar {
         barElement.addMenuItem(0, "_New Data File...", event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save New File");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON file", "json"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON file", "*.json"));
             fileChooser.setInitialDirectory(new File(config.getProperty("initialDirectory")));
             fileChooser.setInitialFileName(".json");
             File file = fileChooser.showSaveDialog(libraryDB.getStage());//I'll probably make a class for this, or overhaul the IOFileSelection class
             try {
+                file.getParentFile().mkdirs();
                 if (file.createNewFile()) {
                     LibraryDB.LOGGER.debug("File saved at path " + file.getPath());
                     FileOutputStream out = new FileOutputStream(file);
