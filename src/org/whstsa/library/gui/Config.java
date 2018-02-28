@@ -1,6 +1,7 @@
 package org.whstsa.library.gui;
 
 import javafx.scene.control.Alert;
+import org.apache.commons.lang3.SystemUtils;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.gui.factories.DialogUtils;
 
@@ -54,6 +55,16 @@ public class Config {
                 notified = true;
             }
             ex.printStackTrace();
+        }
+    }
+
+    public static String determineOptimalFileLocation() {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            return System.getProperty("user.home") + "/AppData/Local/LibraryDB/config.properties";
+        } else if (SystemUtils.IS_OS_MAC) {
+            return System.getProperty("user.home") + "/Library/Application\\ Support/LibraryDB/config.properties";
+        } else {
+            return System.getProperty("user.home") + "/.librarydb/config.properties";
         }
     }
 

@@ -57,13 +57,15 @@ public class LibraryDB extends Application {
         this.stage = stage;
         stage.setTitle("Library Manager 1.0");
         stage.getIcons().add(new Image("file:LibraryManagerIcon.png"));
-        File configFile = new File("src/org/whstsa/library/config.properties");
+        File configFile = new File(Config.determineOptimalFileLocation());
         if (configFile.exists()) {
             LOGGER.debug("Found config at " + configFile.getAbsolutePath());
             this.config = new Config(configFile);
         } else {
             try {
                 LOGGER.debug("Couldn't find config. Creating new one.");
+                LOGGER.debug(configFile.getPath());
+                configFile.getParentFile().mkdirs();
                 configFile.createNewFile();
                 this.config = new Config(configFile);
                 this.config.setProperty("initialDirectory", "null");
@@ -71,7 +73,8 @@ public class LibraryDB extends Application {
                 this.config.setProperty("autosave", "true");
                 this.config.setProperty("autosaveInterval", "10");
             } catch (IOException ex) {
-                DialogUtils.createDialog("There was an error", "Couldn't create file.", null, Alert.AlertType.ERROR).show();
+                ex.printStackTrace();
+                DialogUtils.createDialog("There was an error", "Couldn't create file.", null, Alert.AlertType.ERROR).showAndWait();
             }
         }
         this.stage.setResizable(true);
