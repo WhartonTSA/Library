@@ -126,13 +126,6 @@ public interface ILibrary extends IBookContainer, Loadable, Identifiable {
     Map<UUID, IMember> getMemberMap();
 
     /**
-     * Returns a list of people at this library
-     *
-     * @return the list of people
-     */
-    List<IPerson> getPeople();
-
-    /**
      * Returns a map that maps books to a list of checkouts for that book
      *
      * @return the checkout map
