@@ -40,7 +40,7 @@ public class PersonMetaDialogs {
                 Loader.getLoader().loadPerson(person);
                 callback.callback(person);
             }
-        }, FIRST_NAME, LAST_NAME);
+        });
     }
 
     public static void updatePerson(IPerson person, Callback<IPerson> callback) {

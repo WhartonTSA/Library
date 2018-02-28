@@ -26,7 +26,6 @@ public class ListUtils {
                 scores.put(score, item);
             }
         });
-
         Optional<Map.Entry<Integer, T>> itemEntry = scores.entrySet().stream().sorted(Comparator.comparingInt(Map.Entry::getKey)).findFirst();
         if (itemEntry.isPresent()) {
             return itemEntry.get().getValue();
@@ -34,4 +33,5 @@ public class ListUtils {
 
         return null;
     }
+
 }

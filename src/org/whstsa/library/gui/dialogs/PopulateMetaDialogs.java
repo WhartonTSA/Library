@@ -88,7 +88,7 @@ public class PopulateMetaDialogs {
             }
             displayPopulateTable(amount, true, library);
             callback.callback(amount);
-        }, resultKey);
+        });
     }
 
     public static Table<String> populateTable(Table<String> table, int amount, boolean forBook, ILibrary library) {

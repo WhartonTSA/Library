@@ -33,7 +33,7 @@ public class SimulateMetaDialogs {
             days = (int) results.get(SIMULATE).getResult();
             displaySimulateTable(days);
             callback.callback(days);
-        }, SIMULATE);
+        });
     }
 
     public static void advanceTime(Callback<Integer> callback) {
@@ -49,7 +49,7 @@ public class SimulateMetaDialogs {
             cal.add(Calendar.DAY_OF_MONTH, days);
             World.setDate(cal.getTime());
             callback.callback(days);
-        }, SIMULATE);
+        });
     }
 
     private static Table<String> simulateTable(Table<String> table, int days) {

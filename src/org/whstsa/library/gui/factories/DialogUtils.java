@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.gui.components.Element;
@@ -15,7 +14,6 @@ import org.whstsa.library.util.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DialogUtils {
@@ -74,43 +72,12 @@ public class DialogUtils {
         return createDialog(null);
     }
 
-    public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback, String... expectedKeys) {
-        Stage alertStage = (Stage) dialog.getDialogPane().getScene().getWindow();
-        final List<Boolean> isClosable = new ArrayList<>();
-        isClosable.add(false);
-        alertStage.setOnCloseRequest((event) -> {
-            if (!isClosable.get(0)) {
-                event.consume();
-            }
-        });
-        dialog.show();
-        dialog.setOnCloseRequest((event) -> {
-            Map<String, Element> responses = dialog.getResult();
-            if (expectedKeys.length != 0) {
-                List<String> missingKeys = new ArrayList<>();
-                for (String key : expectedKeys) {
-                    if (!responses.containsKey(key)) {
-                        missingKeys.add(key);
-                    }
-                }
-                isClosable.set(0, false);
-                if (missingKeys.size() >= 1) {
-                    event.consume();
-                    StringBuilder message = new StringBuilder();
-                    for (String missing : missingKeys) {
-                        message.append("- " + missing + "\n");
-                    }
-                    DialogUtils.notify("Please answer all required fields", message.toString(), AlertType.ERROR);
-                    return;
-                }
-                isClosable.set(0, true);
-            }
-            callback.callback(dialog.getResult());
-        });
-    }
-
     public static void getDialogResults(Dialog<Map<String, Element>> dialog, Callback<Map<String, Element>> callback) {
-        DialogUtils.getDialogResults(dialog, callback, new String[]{});
+        dialog.show();
+        dialog.getDialogPane().getButtonTypes().stream().filter(buttonType -> buttonType != ButtonType.CANCEL && buttonType != ButtonType.CLOSE).forEach(buttonType -> {
+            Node button = dialog.getDialogPane().lookupButton(buttonType);
+            button.onMouseReleasedProperty().set(event -> callback.callback(dialog.getResult()));
+        });
     }
 
     private static void notify(String title, String message, AlertType type) {

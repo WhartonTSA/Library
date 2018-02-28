@@ -49,7 +49,7 @@ public class MemberMetaDialogs {
                 libraryReference.poll().addMember(person);
                 callback.callback(person);
             }
-        }, EXISTING);
+        });
     }
 
     public static void updateMember(IMember member, Callback<IMember> callback) {

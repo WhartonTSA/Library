@@ -1,8 +1,6 @@
 package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.ObservableList;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -14,12 +12,17 @@ import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.ComputedProperty;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.*;
-import org.whstsa.library.api.impl.library.Library;
+import org.whstsa.library.api.exceptions.MaximumCheckoutsException;
+import org.whstsa.library.api.exceptions.MemberMismatchException;
+import org.whstsa.library.api.exceptions.OutOfStockException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.gui.components.*;
+import org.whstsa.library.gui.components.CheckBoxElement;
+import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.gui.components.LabelElement;
+import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
@@ -30,9 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static javafx.scene.layout.Priority.ALWAYS;
 
 public class CheckoutMetaDialogs {
 
@@ -163,7 +163,6 @@ public class CheckoutMetaDialogs {
             mainContainer.setCenter(oldCenter);
             ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
             table.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
 
             viewBooks.setDisable(false);
             viewBooks.setSelected(false);

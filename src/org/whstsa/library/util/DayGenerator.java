@@ -10,6 +10,7 @@ import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +77,12 @@ public class DayGenerator {
         ObjectDelegate.getAllMembers().forEach(member -> {
             if (chance(5)) {
                 if (member.getBooks().size() != 0 && (RANDOM.nextBoolean() || deregisterPendingPeople.contains(member.getID()))) {
-                    ICheckout checkout = member.getCheckouts().get(0);
+                    ICheckout checkout;
+                    try {
+                        checkout = member.getCheckouts().get(0);
+                    } catch (IndexOutOfBoundsException ex) {
+                        return;
+                    }
                     try {
                         actions.add(member.getName() + " returned " + checkout.getBook().getName() + " (" + member.getLibrary().getQuantity(checkout.getBook().getID()) + ")");
                         member.returnCheckout(checkout);
@@ -126,8 +132,10 @@ public class DayGenerator {
     }
 
     public static String generateBook(ILibrary library) {
-        // Creating a new book and adding it to a random library
         String bookName = generateBookTitle();
+        if (LibraryManagerUtils.getBookNameMap(library).containsKey(bookName)) {
+            return String.format("%s was re-routed to another library", bookName);
+        }
         String authorName = generateName();
         BookType bookType = randomBookType();
         IBook book = new Book(bookName, authorName, bookType);
