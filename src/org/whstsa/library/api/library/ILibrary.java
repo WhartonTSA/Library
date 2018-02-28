@@ -1,28 +1,29 @@
 package org.whstsa.library.api.library;
 
 import org.whstsa.library.api.IPerson;
+import org.whstsa.library.api.Identifiable;
 import org.whstsa.library.api.Loadable;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.books.IBookContainer;
-import org.whstsa.library.api.exceptions.BookNotRegisteredException;
-import org.whstsa.library.api.exceptions.CannotDeregisterException;
-import org.whstsa.library.api.exceptions.MemberMismatchException;
+import org.whstsa.library.api.exceptions.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface ILibrary extends IBookContainer, Loadable {
+public interface ILibrary extends IBookContainer, Loadable, Identifiable {
 
     /**
      * Creates a checkout object for a member and book
      *
-     * @param member the member checking a book out
-     * @param book   the book being checked out
+     * @param member   the member checking a book out
+     * @param book     the book being checked out
+     * @param quantity the total quantity of books being added
      * @return the checkout object
      * @throws BookNotRegisteredException if {@code !books.contain(book)}
+     * @throws OutOfStockException        if there are no more copies available to book
      */
-    ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException;
+    ICheckout reserveBook(IMember member, IBook book, int quantity) throws BookNotRegisteredException, OutOfStockException, MaximumCheckoutsException;
 
     /**
      * Creates a member object and adds them to this library
@@ -50,6 +51,7 @@ public interface ILibrary extends IBookContainer, Loadable {
 
     /**
      * Searches for a member within the library's member tracker
+     *
      * @param person the member to search for
      * @return the member, or null if there is no member
      */
@@ -57,6 +59,7 @@ public interface ILibrary extends IBookContainer, Loadable {
 
     /**
      * Returns whether the library is tracking the given person
+     *
      * @param person the person to check for
      * @return whether the person holds a membership here
      */
@@ -123,17 +126,41 @@ public interface ILibrary extends IBookContainer, Loadable {
     Map<UUID, IMember> getMemberMap();
 
     /**
-     * Returns the name of this library
-     *
-     * @return the name of this library
-     */
-    String getName();
-
-    /**
      * Returns a map that maps books to a list of checkouts for that book
      *
      * @return the checkout map
      */
     Map<IBook, List<ICheckout>> getCheckouts();
+
+    /**
+     * Returns the variable bookQuantity
+     *
+     * @return the variable bookQuantity
+     */
+    Map<UUID, Integer> getBookQuantity();
+
+    /**
+     * Returns the quantity for a certain book
+     *
+     * @param id
+     * @return quantity
+     */
+    int getQuantity(UUID id);
+
+    /**
+     * Sets quantity to book by specified integer
+     *
+     * @param id
+     * @param amount
+     */
+    void setQuantity(UUID id, int amount);
+
+    /**
+     * Returns true/false if the book IS out of stock
+     *
+     * @param book
+     * @return true if out of stock, false if in stock
+     */
+    boolean checkOutOfStock(IBook book);
 
 }

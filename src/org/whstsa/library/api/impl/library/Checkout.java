@@ -5,7 +5,6 @@ import org.whstsa.library.World;
 import org.whstsa.library.api.DateUtils;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CheckedInException;
-import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.IMember;
 
@@ -91,13 +90,8 @@ public class Checkout implements ICheckout {
     }
 
     @Override
-    public double payFine() throws NotEnoughMoneyException {
-        if (this.getFine() == 0) {
-            return this.member.getPerson().getWallet();
-        }
-        double balance = this.member.getPerson().deductMoney(this.getFine());
+    public void payFine() {
         this.resetDueDate();
-        return balance;
     }
 
     @Override
@@ -118,10 +112,10 @@ public class Checkout implements ICheckout {
     public boolean isReturned() {
         return this.returned;
     }
-    
+
     @Override
     public boolean isOverdue() {
-    	return this.getDaysPast() != 0;
+        return this.getDaysPast() != 0;
     }
 
     @Override
@@ -130,6 +124,11 @@ public class Checkout implements ICheckout {
             throw new CheckedInException(this);
         }
         this.returned = true;
+    }
+
+    @Override
+    public String toString() {
+        return this.getBook().getName();
     }
 
     private double getMultiplier() {

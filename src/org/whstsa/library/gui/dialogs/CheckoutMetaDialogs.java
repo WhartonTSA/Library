@@ -1,284 +1,243 @@
 package org.whstsa.library.gui.dialogs;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.whstsa.library.api.Callback;
+import org.whstsa.library.api.ComputedProperty;
 import org.whstsa.library.api.ObservableReference;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.CheckedInException;
+import org.whstsa.library.api.exceptions.MaximumCheckoutsException;
 import org.whstsa.library.api.exceptions.MemberMismatchException;
+import org.whstsa.library.api.exceptions.OutOfStockException;
 import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
-import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.gui.components.CheckBoxElement;
+import org.whstsa.library.gui.components.Element;
 import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.Table;
+import org.whstsa.library.gui.factories.DialogBuilder;
 import org.whstsa.library.gui.factories.DialogUtils;
 import org.whstsa.library.gui.factories.GuiUtils;
+import org.whstsa.library.gui.factories.LibraryManagerUtils;
+import org.whstsa.library.util.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CheckoutMetaDialogs {
 
-    public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ObservableReference<ILibrary> libraryReference) {
+    private static String CHECKOUT = "Checkout";
+    private static String PAYFINE = "Pay Fine";
+    private static String BOOK = "Book";
+    private static String RETURN = "Return";
+    private static String QUANTITY = "Quantity";
 
-        Button checkoutButton = GuiUtils.createButton("Checkout", true, GuiUtils.defaultClickHandler());
+    private static void checkoutManagementView(boolean returning, Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ILibrary library) {
+        viewBooks.setDisable(true);
+        viewMembers.setDisable(true);
+        viewMembers.setSelected(false);
+        viewBooks.setSelected(false);
 
-        LabelElement spacer = null;
-        TextFlow fineLabel = null;
-        CheckBox payFine = null;
-        boolean fine = false;
-
-        if (member.getFine() > 0) {//If member has an outstanding fine, will give user option to pay fine
-            fine = true;
-            spacer = GuiUtils.createLabel("      ");
-            fineLabel = GuiUtils.createTextFlow("Fine", 14, "", "Outstanding fine of ", "$" + member.getFine(), ". Pay fine?");
-            ((Text) fineLabel.getChildren().get(1)).setFill(Color.RED);
-            payFine = GuiUtils.createCheckBox("", false);
-            payFine.selectedProperty().addListener((observable, oldValue, newValue) -> checkoutButton.setDisable(false));
-            checkoutButton.setDisable(true);
+        if (returning) {
+            ((VBox) mainContainer.getTop()).getChildren().set(3, LibraryManagerUtils.createTitleBar(member.getName() + "'s Books", "returnTitle"));
         }
 
-        HBox mainSpacer = new HBox(new Label(""));
-        HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
+        Button completionButton = GuiUtils.createButton(returning ? "Return" : "Checkout", true, GuiUtils.defaultClickHandler());
+        completionButton.setStyle("-fx-base: #4fa9dd;");
 
-        Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
-            bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        HBox mainSpacer = new HBox();
+        HBox.setHgrow(mainSpacer, Priority.ALWAYS);
+
+        List<Node> toolBarNodes = new ArrayList<>();
+
+        final boolean hasFine = member.getFine() > 0;
+
+        final ToolBar toolBar = new ToolBar();
+        toolBar.setId("toolbar");
+        toolBar.setBackground(new Background(new BackgroundFill(Color.web("#d1e3ff"), null, null)));
+
+        final Table table = returning ? new Table<ICheckout>() : bookTable;
+        table.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        table.getTable().getSelectionModel().selectedIndexProperty().addListener((obs, oldSelection, newSelection) -> {
+            toolBar.getItems().set(1, GuiUtils.createTextFlow(returning ? "checkin" : "checkout", 15, "-fx-base: #000000;",
+                    returning ? "Returning" : "Checking out ",
+                    table.getTable().getSelectionModel().getSelectedIndices().size() + "",
+                    returning ? " books from " : " books to ",
+                    member.getName() + "."));
         });
 
-        ToolBar toolBar = new ToolBar();
-        if (fine) {
-            toolBar.getItems().addAll(checkoutButton,
-                    GuiUtils.createTextFlow("checkout", 15, "-fx-base: #1e1e1e;","Checking out ", "0", " books to ", member.getName() + "."),
-                    spacer,
-                    fineLabel,
-                    payFine,
-                    mainSpacer,
-                    closeButton);
+        CheckBox shouldPayFine = null;
+        ComputedProperty<Boolean, CheckBox> userDidConsentToPayFine = checkBox -> checkBox != null && checkBox.selectedProperty().get();
+
+        Node oldCenter = mainContainer.getCenter();
+
+        Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {
+            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
+            table.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            mainContainer.setCenter(oldCenter);
+            viewBooks.setDisable(false);
+            viewBooks.setSelected(false);
+            viewMembers.setDisable(true);
+            viewMembers.setSelected(true);
+        });
+        closeButton.setStyle("-fx-base: #ff8787;");
+
+        toolBarNodes.add(completionButton);
+        toolBarNodes.add(GuiUtils.createTextFlow("checkout", 15, "-fx-base: #1e1e1e;", returning ? "Returning " : "Checking out ", "0", returning ? " books from " : " books to ", member.getName() + "."));
+
+        if (hasFine) {
+            LabelElement spacer = GuiUtils.createLabel("      ");
+
+            TextFlow fineLabel = GuiUtils.createTextFlow("Fine", 14, "", "Outstanding fine of ", "$" + member.getFine(), ". Pay fine?");
+            ((Text) fineLabel.getChildren().get(1)).setFill(Color.RED);
+
+            shouldPayFine = GuiUtils.createCheckBox(null, false);
+            shouldPayFine.selectedProperty().addListener(((observable, oldValue, newValue) -> completionButton.setDisable(!newValue)));
+
+            completionButton.setDisable(true);
+
+            toolBarNodes.add(spacer);
+            toolBarNodes.add(fineLabel);
+            toolBarNodes.add(shouldPayFine);
         }
-        else {
-            toolBar.getItems().addAll(checkoutButton,
-                    GuiUtils.createTextFlow("checkout", 15, "-fx-base: #1e1e1e;","Checking out ", "0", " books to ", member.getName() + "."),
-                    mainSpacer,
-                    closeButton);
+
+        toolBarNodes.add(mainSpacer);
+        toolBarNodes.add(closeButton);
+
+        toolBar.getItems().addAll(toolBarNodes);
+
+        if (returning) {
+            Table<ICheckout> checkoutTable = (Table<ICheckout>) table;
+            checkoutTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getName()), true, TableColumn.SortType.DESCENDING, 200);
+            checkoutTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
+            checkoutTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getBook().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);
+            ObservableReference<List<ICheckout>> observableReference = member::getCheckouts;
+            checkoutTable.setReference(observableReference);
+
+            checkoutTable.getTable().setId("returnTable");
+        } else {
+            LibraryManagerUtils.addTooltip(table.getTable(), "CTRL + Click to select multiple books");
         }
+
+        mainContainer.setCenter(table.getTable());
         ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
-        toolBar.setStyle("-fx-base: #d1e3ff;");
-        checkoutButton.setStyle("fx-base: #dddddd;");
-        bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        bookTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-            toolBar.getItems().set(1, GuiUtils.createTextFlow("checkout", 15, "-fx-base: #000000;",
-                    "Checking out ",
-                    bookTable.getTable().getSelectionModel().getSelectedIndices().size() + "",
-                    " books to ",
-                    member.getName() + "."))
-        );
+        final CheckBox _shouldPayFine = shouldPayFine;
 
-        mainContainer.setCenter(bookTable.getTable());
-
-        checkoutButton.setOnMouseClicked(event -> {
-            ObservableList<IBook> selectedBooks = bookTable.getTable().getSelectionModel().getSelectedItems();
-            if (member.getFine() > 0) {
-                try {
-                    member.getCheckouts().forEach(ICheckout::getFine);
-                } catch (Exception ex) {
-                    DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
+        completionButton.setOnMouseClicked(event -> {
+            if (hasFine) {
+                if (!userDidConsentToPayFine.get(_shouldPayFine)) {
+                    Logger.DEFAULT_LOGGER.debug("Ignoring click because the user did not pay fine.");
+                    // TODO: Outstanding fines
+                    return;
                 }
+                member.getCheckouts().stream()
+                        .filter(ICheckout::isOverdue)
+                        .filter(checkout -> !checkout.isReturned())
+                        .forEach(ICheckout::payFine);
             }
+
+            List selectedBooks = table.getSelectedItems();
             selectedBooks.forEach(book -> {
                 try {
-                    libraryReference.poll().reserveBook(member, book);
-                    System.out.println("Checking out " + book.getTitle() + " to " + member.getName() + ".");
-                } catch (Exception ex) {
-                    DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
+                    if (returning) {
+                        member.returnCheckout(((ICheckout) book));
+                    } else {
+                        library.reserveBook(member, (IBook) book, 1);
+                    }
+                } catch (OutOfStockException | MaximumCheckoutsException ex) {
+                    DialogUtils.createDialog("Error.", ex.getMessage(), null, Alert.AlertType.ERROR).showAndWait();
                 }
             });
             callback.callback(member);
-            bookTable.refresh();
+            mainContainer.setCenter(oldCenter);
             ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
-            bookTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+            table.getTable().getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+            viewBooks.setDisable(false);
+            viewBooks.setSelected(false);
+            viewMembers.setDisable(true);
+            viewMembers.setSelected(true);
         });
-
-
-        /*Dialog<Map<String, Element>> dialog = new DialogBuilder()//TODO Old checkout dialog
-                .setTitle("Checking out " + member.getName() + ".")
-                .addChoiceBox(BOOK, LibraryManagerUtils.getBookTitles(libraryReference), true, -1)
-                .addCheckBox(PAYFINE, false, true, member.getFine() <= 0)
-                .build();
-        if (member.getFine() > 0) {
-            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12, Pos.CENTER_RIGHT);
-            fineLabel.setTextFill(Color.RED);
-            dialogPane.add(fineLabel, 1, 1);
-        }
-        DialogUtils.getDialogResults(dialog, (results) -> {
-            if (member.getFine() > 0) {
-                if (!results.get(PAYFINE).getBoolean()) {
-                    DialogUtils.createDialog("Couldn't pay fine. Member does not have enough money.", null, null, Alert.AlertType.ERROR).show();
-                    return;
-                }
-                try {
-                    member.getCheckouts().forEach(checkout -> checkout.getFine());
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-            IBook book = LibraryManagerUtils.getBookFromTitle((String) results.get(BOOK).getResult(), libraryReference.poll());
-            try {
-                libraryReference.poll().reserveBook(member, book);
-                callback.callback(member);
-            } catch (Exception ex) {
-                DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
-            }
-        });*/
     }
 
-    public static void checkinMember(Callback<IMember> callback, IMember member, BorderPane mainContainer, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ObservableReference<ILibrary> libraryReference) {
-        /*Dialog<Map<String, Element>> dialog = new DialogBuilder()TODO Old checkin dialog
-                .setTitle("Returning " + member.getName() + "'s books.")
-                .addChoiceBox(RETURN, member.getCheckoutMap(), true, -1)
-                .addCheckBox("Pay Fine", false, true, member.getFine() <= 0, event ->
-                    member.getCheckouts().stream().filter(checkout -> checkout.getFine() > 0).forEach(checkout -> {
-                        try {
-                            checkout.payFine();
-                        } catch (NotEnoughMoneyException ex) {
-                            DialogUtils.createDialog("Couldn't pay fine. Member does not have enough money.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
-                        }
-                    })
-                )
+    public static void checkInPreMenu(Callback<IMember> callback, ILibrary library) {
+        checkoutManagementPreMenu(true, callback, library);
+    }
+
+    public static void checkOutPreMenu(Callback<IMember> callback, ILibrary library) {
+        checkoutManagementPreMenu(false, callback, library);
+    }
+
+    public static void checkoutMember(Callback<IMember> callback, IMember member, BorderPane mainController, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ObservableReference<ILibrary> library) {
+        checkoutManagementView(false, callback, member, mainController, bookTable, viewBooks, viewMembers, library.poll());
+    }
+
+    public static void checkinMember(Callback<IMember> callback, IMember member, BorderPane mainController, Table<IBook> bookTable, ToggleButton viewBooks, ToggleButton viewMembers, ObservableReference<ILibrary> library) {
+        checkoutManagementView(true, callback, member, mainController, bookTable, viewBooks, viewMembers, library.poll());
+    }
+
+    private static void checkoutManagementPreMenu(boolean returning, Callback<IMember> callback, ILibrary library) {
+        Dialog<Map<String, Element>> dialog = new DialogBuilder()
+                .setTitle(returning ? "Choose a member to checkin" : "Choose a member to checkout")
+                .addRequiredChoiceBox(returning ? RETURN : CHECKOUT, LibraryManagerUtils.getMemberNameMap(library), true, 0, false)
                 .build();
-        if (member.getFine() > 0) {
-            GridPane dialogPane = (GridPane) dialog.getDialogPane().getContent();
-            LabelElement fineLabel = GuiUtils.createLabel("$" + member.getFine(), 12, Pos.CENTER_RIGHT);
-            fineLabel.setTextFill(Color.RED);
-            dialogPane.add(fineLabel, 1, 1);
-        }
-        DialogUtils.getDialogResults(dialog, (results) -> {
-            if (results.get(RETURN).getResult() != null) {
-                IBook returnBook = LibraryManagerUtils.getBookFromTitle((String) results.get(RETURN).getResult(), libraryReference.poll());
-                List<ICheckout> checkouts = member.getCheckouts(true);
-                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(returnBook)).collect(Collectors.toList());
-                if (matches.size() == 0) {
-                    DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
-                    return;
-                }
-                ICheckout checkout = matches.get(0);
-                try {
-                    checkout.getOwner().checkIn(checkout);
-                    member.removeBook(checkout.getBook());
-                    callback.callback(member);
-                } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
-                    DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
-                }
-            }
-
-        });*/
-
-        Button checkinButton = GuiUtils.createButton("Return", true, GuiUtils.defaultClickHandler());
-
-        LabelElement spacer = null;
-        TextFlow fineLabel = null;
-        CheckBox payFine = null;
-        boolean fine = false;
-
-        if (member.getFine() > 0) {//If member has an outstanding fine, will give user option to pay fine
-            fine = true;
-            spacer = GuiUtils.createLabel("      ");
-            fineLabel = GuiUtils.createTextFlow("Fine", 14, "", "Outstanding fine of ", "$" + member.getFine(), ". Pay fine?");
-            ((Text) fineLabel.getChildren().get(1)).setFill(Color.RED);
-            payFine = GuiUtils.createCheckBox("", false);
-        }
-
-        Table<IBook> mainTable = new Table<>();
-
-        mainTable.addColumn("Title", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getTitle()), true, TableColumn.SortType.DESCENDING, 200);
-        mainTable.addColumn("Author", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getAuthorName()), true, TableColumn.SortType.DESCENDING, 100);
-        mainTable.addColumn("Genre", (cellData) -> new ReadOnlyStringWrapper(cellData.getValue().getType().getGenre()), true, TableColumn.SortType.DESCENDING, 50);//TODO needs better fields for table columns
-        ObservableReference<List<IBook>> observableReference = member::getBooks;
-        mainTable.setReference(observableReference);
-
-        HBox mainSpacer = new HBox(new Label(""));
-        HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
-
-        Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
-            mainContainer.setCenter(bookTable.getTable());
-            viewBooks.setDisable(true);
-            viewMembers.setDisable(false);
+        DialogUtils.getDialogResults(dialog, results -> {
+            IMember selectedMember = LibraryManagerUtils.getMemberFromName((String) results.get(returning ? RETURN : CHECKOUT).getResult(), library);
+            checkoutManagementDialog(returning, callback, selectedMember, library);
         });
+    }
 
-        ToolBar toolBar = new ToolBar();
-        if (fine) {
-            toolBar.getItems().addAll(checkinButton,
-                    GuiUtils.createTextFlow("checkin", 15, "-fx-base: #1e1e1e;","Returning ", "0", " books from ", member.getName() + "."),
-                    spacer,
-                    fineLabel,
-                    payFine,
-                    mainSpacer,
-                    closeButton);
+    private static void checkoutManagementDialog(boolean returning, Callback<IMember> callback, IMember member, ILibrary library) {
+        final boolean hasFine = member.getFine() > 0;
+        Dialog<Map<String, Element>> dialog;
+        DialogBuilder dialogBuilder = new DialogBuilder()
+                .setTitle((returning ? "Checking out - " : "Checking in - ") + member.getName())
+                .addRequiredChoiceBox(BOOK, returning ? (Map) member.getCheckoutMap() : LibraryManagerUtils.getBookNameMap(library), true, -1, false);
+        if (hasFine) {
+            CheckBoxElement payFine = new CheckBoxElement(PAYFINE, PAYFINE, false, false);
+            payFine.setLabel(GuiUtils.createSplitPane(GuiUtils.Orientation.HORIZONTAL, GuiUtils.createLabel(PAYFINE), GuiUtils.createLabel("($" + member.getFine() + ")", 12, Color.RED)));
+            dialogBuilder.addRequiredElement(payFine);
         }
-        else {
-            toolBar.getItems().addAll(checkinButton,
-                    GuiUtils.createTextFlow("checkin", 15, "-fx-base: #1e1e1e;","Returning ", "0", " books from ", member.getName() + "."),
-                    mainSpacer,
-                    closeButton);
-        }
-        ((VBox) mainContainer.getTop()).getChildren().set(1, toolBar);
-        toolBar.setStyle("-fx-base: #d1e3ff;");
-        checkinButton.setStyle("fx-base: #dddddd;");
-
-        mainTable.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-        mainTable.getTable().getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) ->
-            toolBar.getItems().set(1, GuiUtils.createTextFlow("checkout", 15, "-fx-base: #000000;",
-                    "Returning ",
-                    mainTable.getTable().getSelectionModel().getSelectedIndices().size() + "",
-                    " books from ",
-                    member.getName() + "."))
-        );
-
-        mainContainer.setCenter(mainTable.getTable());
-
-        checkinButton.setOnMouseClicked(event -> {
-            ObservableList<IBook> selectedBooks = mainTable.getTable().getSelectionModel().getSelectedItems();
+        dialog = dialogBuilder.build();
+        DialogUtils.getDialogResults(dialog, (results) -> {
             if (member.getFine() > 0) {
-                try {
-                    member.getCheckouts().forEach(ICheckout::getFine);
-                } catch (Exception ex) {
-                    DialogUtils.createDialog("There was an error.", ex.getMessage(), null, Alert.AlertType.ERROR).show();
-                }
+                member.getCheckouts().forEach(ICheckout::payFine);
             }
-            selectedBooks.forEach(returnBook -> {
+            IBook book = LibraryManagerUtils.getBookFromTitle(results.get(BOOK).getResult().toString(), library);
+            if (returning) {
                 List<ICheckout> checkouts = member.getCheckouts(true);
-                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(returnBook)).collect(Collectors.toList());
+                List<ICheckout> matches = checkouts.stream().filter(checkout -> checkout.getBook().equals(book)).collect(Collectors.toList());
                 if (matches.size() == 0) {
                     DialogUtils.createDialog("Error.", "Checkout does not exist", null, Alert.AlertType.ERROR).show();
                     return;
                 }
                 ICheckout checkout = matches.get(0);
                 try {
-                    checkout.getOwner().checkIn(checkout);
-                    member.removeBook(checkout.getBook());
+                    member.returnCheckout(checkout);
                     callback.callback(member);
-                } catch (OutstandingFinesException | MemberMismatchException | CheckedInException e) {
+                } catch (OutstandingFinesException | MemberMismatchException e) {
                     DialogUtils.createDialog("Error.", e.getMessage(), null, Alert.AlertType.ERROR).show();
                 }
-            });
-            mainTable.refresh();
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
+            } else {
+                try {
+                    library.reserveBook(member, book, 1);
+                } catch (OutOfStockException | MaximumCheckoutsException e) {
+                    e.printStackTrace();
+                }
+                callback.callback(member);
+            }
+
         });
     }
 }

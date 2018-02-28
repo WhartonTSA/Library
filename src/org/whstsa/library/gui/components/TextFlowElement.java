@@ -38,6 +38,11 @@ public class TextFlowElement extends TextFlow implements Element {
     }
 
     @Override
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    @Override
     public Object getResult() {
         return null;
     }
@@ -50,11 +55,6 @@ public class TextFlowElement extends TextFlow implements Element {
     @Override
     public boolean getBoolean() {
         return false;
-    }
-
-    @Override
-    public void setID(String id) {
-        this.id = id;
     }
 
 

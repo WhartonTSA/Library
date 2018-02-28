@@ -2,8 +2,8 @@ package org.whstsa.library.gui.components;
 
 
 import javafx.scene.Node;
-        import javafx.scene.control.Label;
-        import org.whstsa.library.gui.factories.GuiUtils;
+import javafx.scene.control.Label;
+import javafx.scene.text.Font;
 
 public class LabelElement extends Label implements Element {
 
@@ -12,6 +12,7 @@ public class LabelElement extends Label implements Element {
 
     public LabelElement(String id, String label) {
         super.setText(label);
+        super.setFont(Font.font(14));
         this.id = id;
     }
 

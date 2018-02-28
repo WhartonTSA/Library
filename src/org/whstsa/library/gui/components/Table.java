@@ -7,12 +7,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
-import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.ObservableReference;
-import org.whstsa.library.api.library.ILibrary;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Table<T> {
@@ -43,8 +39,8 @@ public class Table<T> {
         column.setSortable(sortable);
         column.setSortType(sortType);
         if (width != null) {
-            this.view.setColumnResizePolicy( TableView.CONSTRAINED_RESIZE_POLICY );
-            column.setMaxWidth( 1f * Integer.MAX_VALUE * width );
+            this.view.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            column.setMaxWidth(1f * Integer.MAX_VALUE * width);
         }
         this.view.getColumns().add(column);
     }
@@ -67,6 +63,10 @@ public class Table<T> {
 
     public T getSelected() {
         return this.getTable().getSelectionModel().getSelectedItem();
+    }
+
+    public List<T> getSelectedItems() {
+        return this.getTable().getSelectionModel().getSelectedItems();
     }
 
     public void refresh() {

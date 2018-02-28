@@ -4,7 +4,6 @@ import org.whstsa.library.api.Serializable;
 import org.whstsa.library.api.Unique;
 import org.whstsa.library.api.books.IBook;
 import org.whstsa.library.api.exceptions.CheckedInException;
-import org.whstsa.library.api.exceptions.NotEnoughMoneyException;
 
 import java.util.Date;
 
@@ -46,11 +45,8 @@ public interface ICheckout extends Serializable, Unique {
 
     /**
      * Pays off the fine, if any, of this checkout.
-     *
-     * @return the new balance
-     * @throws NotEnoughMoneyException
      */
-    double payFine() throws NotEnoughMoneyException;
+    void payFine();
 
     /**
      * Returns the days past the due date, or zero if it has not passed the due date
@@ -65,10 +61,10 @@ public interface ICheckout extends Serializable, Unique {
      * @return the check-in status
      */
     boolean isReturned();
-    
+
     /**
      * Returns whether this checkout is overdue
-     * 
+     *
      * @return the overdue status
      */
     boolean isOverdue();

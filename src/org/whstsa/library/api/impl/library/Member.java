@@ -4,11 +4,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.whstsa.library.api.IPerson;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.*;
+import org.whstsa.library.api.exceptions.BookNotRegisteredException;
+import org.whstsa.library.api.exceptions.CheckedInException;
+import org.whstsa.library.api.exceptions.MemberMismatchException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 import org.whstsa.library.api.library.ICheckout;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.ObjectDelegate;
+import org.whstsa.library.util.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,12 +84,36 @@ public class Member implements IMember {
     }
 
     @Override
-    public void addBook(IBook book) {
+    public void addBook(IBook book, int quantity) {
         ICheckout checkout = new Checkout(this, book);
         this.checkout(checkout);
     }
 
     @Override
+    public void returnCheckout(ICheckout checkout) throws OutstandingFinesException {
+        Logger.DEFAULT_LOGGER.debug("Started checkin process");
+        List<ICheckout> checkoutList = this.books.get(checkout.getBook());
+        if (checkoutList == null || checkoutList.size() == 0) {
+            Logger.DEFAULT_LOGGER.warn("Ignoring return checkout for unknown book");
+            return;
+        }
+        if (checkoutList.contains(checkout)) {
+            if (checkout.getFine() != 0) {
+                Logger.DEFAULT_LOGGER.warn("Terminating checkin process due to unresolved fines");
+                throw new OutstandingFinesException(this, OutstandingFinesException.Actions.REMOVE_BOOK, checkout.getFine());
+            }
+            try {
+                checkout.checkIn();
+            } catch (CheckedInException e) {
+                Logger.DEFAULT_LOGGER.warn("Checkout was already checked in - continuing");
+                // The error is swallowed at the moment
+            }
+            Logger.DEFAULT_LOGGER.log(String.format("Checking in %s for person %s", checkout.getBook().getName(), this.getName()));
+            checkoutList.remove(checkout);
+        }
+    }
+
+    @Override //TODO ASK ERIC ABOUT INTENTION OF REMOVING ALL CHECKOUTS/BOOK
     public void removeBook(IBook book) throws OutstandingFinesException {
         if (this.books.containsKey(book)) {
             for (ICheckout checkout : this.books.get(book)) {
@@ -114,7 +142,7 @@ public class Member implements IMember {
     }
 
     @Override
-    public void checkInAndPayFines(ICheckout checkout) throws NotEnoughMoneyException, MemberMismatchException, CheckedInException {
+    public void checkInAndPayFines(ICheckout checkout) throws MemberMismatchException, CheckedInException {
         if (checkout.getOwner() != this) {
             throw new MemberMismatchException(String.format(MEMBER_MISMATCH_CHECKIN, checkout.getOwner().getID(), this.getID()));
         }
@@ -128,7 +156,7 @@ public class Member implements IMember {
     public void addBook(UUID id) {
         IBook book = this.getLibrary().getBookMap().get(id);
         if (book != null) {
-            this.addBook(book);
+            this.addBook(book.getID());
         }
     }
 
@@ -213,7 +241,7 @@ public class Member implements IMember {
     }
 
     @Override
-    public List<ICheckout> getCheckouts(boolean notReturned){
+    public List<ICheckout> getCheckouts(boolean notReturned) {
         List<ICheckout> checkouts = new ArrayList<>();
         this.books.values().forEach(checkouts::addAll);
         if (notReturned) {
@@ -232,4 +260,8 @@ public class Member implements IMember {
         return this.getPerson().getName();
     }
 
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

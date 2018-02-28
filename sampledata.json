@@ -1,16 +1,59 @@
 {
-    "books": [],
+    "books": [
+        {
+            "authorName": "Chinua Achebe",
+            "title": "Things Fall Apart",
+            "uuid": "16642b5d-e798-4bac-b266-4e5351bbf6ba",
+            "bookType": "FICTION"
+        },
+        {
+            "authorName": "Margaret Mitchell",
+            "title": "Gone With The Wind",
+            "uuid": "7ff99c0c-8638-48b9-8275-93a3665a01e6",
+            "bookType": "FICTION"
+        }
+    ],
     "libraries": [{
-        "books": [],
-        "members": [],
-        "name": "test 123",
-        "uuid": "b995f803-8e9f-4533-b72f-9ae783087449"
+        "books": [
+            "7ff99c0c-8638-48b9-8275-93a3665a01e6",
+            "16642b5d-e798-4bac-b266-4e5351bbf6ba"
+        ],
+        "members": [{
+            "checkouts": {},
+            "personID": "a266892e-2e45-4cec-b19d-2bec43f1e61c",
+            "uuid": "a3754800-3288-40f1-9868-3a85468fd0c7"
+        }],
+        "name": "Wharton High School",
+        "quantities": {
+            "7ff99c0c-8638-48b9-8275-93a3665a01e6": 5,
+            "16642b5d-e798-4bac-b266-4e5351bbf6ba": 5
+        },
+        "uuid": "ef04c666-7556-4bf8-b377-e7ebf03ef4fd"
     }],
-    "people": [{
-        "firstName": "Eric",
-        "lastName": "Rabil",
-        "teacher": false,
-        "wallet": 0,
-        "uuid": "57709fc1-f5a8-4db5-9583-aa499a77d805"
-    }]
+    "people": [
+        {
+            "firstName": "Eric",
+            "lastName": "Rabil",
+            "teacher": false,
+            "uuid": "884b6cfd-8929-4344-bce1-044a41f50b54"
+        },
+        {
+            "firstName": "Andre",
+            "lastName": "Roberts",
+            "teacher": false,
+            "uuid": "e8ebad2b-3210-45da-9280-0c230df12194"
+        },
+        {
+            "firstName": "Cameron",
+            "lastName": "Newborn",
+            "teacher": true,
+            "uuid": "a266892e-2e45-4cec-b19d-2bec43f1e61c"
+        },
+        {
+            "firstName": "Micheal",
+            "lastName": "Sawyer",
+            "teacher": true,
+            "uuid": "f111639b-dcc6-41d6-8ae8-8ed0ad3a8466"
+        }
+    ]
 }

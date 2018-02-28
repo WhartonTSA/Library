@@ -8,11 +8,12 @@ import java.util.UUID;
 public interface IBookContainer extends IBookContainerReadonly, Serializable, Unique {
 
     /**
-     * Adds a book to the book-container
+     * Adds a book to the book-container, and the amount of copies for that book
      *
-     * @param book the book to add
+     * @param book     the book to add
+     * @param quantity the amount of copies for book
      */
-    void addBook(IBook book);
+    void addBook(IBook book, int quantity);
 
     /**
      * Removes a book from the book-container

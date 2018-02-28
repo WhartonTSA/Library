@@ -1,6 +1,7 @@
 package org.whstsa.library.gui.factories;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,12 +12,15 @@ import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
 import org.whstsa.library.api.Callback;
 import org.whstsa.library.api.Operator;
-import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.library.ICheckout;
+import org.whstsa.library.gui.components.ChoiceBoxElement;
 import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.gui.components.RequiredElement;
+import org.whstsa.library.gui.components.TextFieldElement;
 import org.whstsa.library.util.ClickHandlerCheckBox;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class DialogBuilder {
 
@@ -27,6 +31,7 @@ public class DialogBuilder {
     private Map<ButtonType, Callback<Event>> buttonActionMap;
     private List<ButtonType> closingButtons;
     private Integer width = null;
+    private Integer height = null;
 
     private Operator<GridPane, List<Element>, GridPane> gridPaneOperator;
 
@@ -47,13 +52,13 @@ public class DialogBuilder {
         this.closingButtons = new ArrayList<>();
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+
     public DialogBuilder setTitle(String title) {
         this.title = title;
         return this;
-    }
-
-    public String getTitle() {
-        return this.title;
     }
 
     public DialogBuilder addElement(Element element) {
@@ -65,16 +70,44 @@ public class DialogBuilder {
         return this;
     }
 
-    public DialogBuilder addAllElements(Element ...elements) {
+    public DialogBuilder addAllElements(Element... elements) {
         return this.addAllElements(Arrays.asList(elements));
     }
 
+    public DialogBuilder addLabel(String text, int size) {
+        return this.addElement(GuiUtils.createLabel(text, size));
+    }
+
     public DialogBuilder addLabel(String text) {
+        if (text == null) {
+            return this;
+        }
         return this.addElement(GuiUtils.createLabel(text));
     }
 
+    public DialogBuilder addTextField(String prompt, String placeholder, boolean inline, boolean required) {
+        TextFieldElement textFieldElement = GuiUtils.createTextField(prompt, inline, placeholder);
+        return required ? this.addRequiredElement(textFieldElement) : this.addElement(textFieldElement);
+    }
+
+    public DialogBuilder addTextField(String prompt, String placeholder, String value, boolean inline, boolean required) {
+        TextFieldElement textFieldElement = GuiUtils.createTextField(prompt, inline, placeholder);
+        textFieldElement.setText(value);
+        return required ? this.addRequiredElement(textFieldElement) : this.addElement(textFieldElement);
+    }
+
     public DialogBuilder addTextField(String prompt, String placeholder, boolean inline) {
-        return this.addElement(GuiUtils.createTextField(prompt, inline, placeholder));
+        return this.addTextField(prompt, placeholder, inline, false);
+    }
+
+    public DialogBuilder setWidth(Integer width) {
+        this.width = width;
+        return this;
+    }
+
+    public DialogBuilder setHeight(Integer height) {
+        this.height = height;
+        return this;
     }
 
     public DialogBuilder setWidth(int width) {
@@ -110,16 +143,43 @@ public class DialogBuilder {
         return this.addCheckBox(prompt, false);
     }
 
-    public DialogBuilder addChoiceBox(String label, ObservableList<String> items, boolean useLabel, int selected) {
+    public <T> DialogBuilder addChoiceBox(String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
+        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected, disabled));
+    }
+
+    public <T> DialogBuilder addChoiceBox(String label, ObservableList<T> items, boolean useLabel, int selected) {
+        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected, false));
+    }
+
+    public <K, V> DialogBuilder addChoiceBox(String label, Map<K, V> items, boolean useLabel, int selected) {
         return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected));
     }
 
-    public DialogBuilder addChoiceBox(String label, Map<IBook,List<ICheckout>> items, boolean useLabel, int selected) {
-        return this.addElement(GuiUtils.createChoiceBox(label, items, true, selected));
+    public <K, V> DialogBuilder addRequiredChoiceBox(String label, Map<K, V> items, boolean useLabel, int selected, boolean disabled) {
+        ChoiceBoxElement choiceBoxElement = GuiUtils.createChoiceBox(label, items, useLabel, selected);
+        choiceBoxElement.setDisable(disabled);
+        return this.addRequiredElement(choiceBoxElement);
     }
 
-    public DialogBuilder addChoiceBox(ObservableList<String> items) {
-        return addChoiceBox("", items, false, -1);
+    public <T> DialogBuilder addRequiredChoiceBox(String label, ObservableList<T> items, boolean useLabel, int selected, boolean disabled) {
+        return this.addRequiredElement(GuiUtils.createChoiceBox(label, items, useLabel, selected, disabled));
+    }
+
+    public DialogBuilder addRequiredElement(RequiredElement requiredElement) {
+        requiredElement.setRequired(true);
+        return this.addElement(requiredElement);
+    }
+
+    public <T> DialogBuilder addChoiceBox(ObservableList<T> items) {
+        return addChoiceBox("", items, false, -1, false);
+    }
+
+    public DialogBuilder addSpinner(String label, boolean useLabel, int start, int end, int selectedIndex) {
+        return this.addElement(GuiUtils.createSpinner(label, useLabel, start, end, selectedIndex));
+    }
+
+    public DialogBuilder addSpinner(String label, boolean useLabel, int start, int end) {
+        return this.addSpinner(label, useLabel, start, end, start);
     }
 
     public DialogBuilder setIsCancellable(boolean cancellable) {
@@ -136,7 +196,7 @@ public class DialogBuilder {
         return this.addButtons(button);
     }
 
-    public DialogBuilder addButtons(ButtonType ...buttons) {
+    public DialogBuilder addButtons(ButtonType... buttons) {
         return this.addButtons(Arrays.asList(buttons));
     }
 
@@ -215,6 +275,33 @@ public class DialogBuilder {
             }
         });
 
+        Consumer<Boolean> updateButtonState = disabled -> {
+            this.getRawButtonList().forEach(button -> {
+                Node buttonNode = dialog.getDialogPane().lookupButton(button);
+                if (buttonNode != null) {
+                    buttonNode.setDisable(disabled);
+                }
+            });
+        };
+
+        BooleanProperty isSubmittable = new SimpleBooleanProperty(true);
+
+        Runnable indexElements = () -> {
+            isSubmittable.set(true);
+            this.getRequiredElements().forEach(requiredElement -> {
+                if (!requiredElement.isSatisfied()) {
+                    isSubmittable.set(false);
+                }
+            });
+            updateButtonState.accept(!isSubmittable.get());
+        };
+
+        this.getRequiredElements().forEach(requiredElement -> {
+            requiredElement.setOnSatisfactionUpdate(satisfied -> indexElements.run());
+        });
+
+        indexElements.run();
+
         final Node cancelNode = dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
         if (cancelNode != null) {
             cancelNode.addEventFilter(ActionEvent.ACTION, event -> {
@@ -222,6 +309,14 @@ public class DialogBuilder {
                 dialog.getDialogPane().getScene().getWindow().hide();
                 event.consume();
             });
+        }
+
+        if (this.height != null) {
+            ((GridPane) dialog.getDialogPane().getContent()).setMinHeight(this.height);
+        }
+
+        if (this.width != null) {
+            ((GridPane) dialog.getDialogPane().getContent()).setMinWidth(this.width);
         }
 
         return dialog;
@@ -243,6 +338,14 @@ public class DialogBuilder {
         buttonList.add(ButtonType.CANCEL);
         buttonList.addAll(this.getRawButtonList());
         return buttonList;
+    }
+
+    protected final List<RequiredElement> getRequiredElements() {
+        return this.elementList.stream()
+                .filter(element -> element instanceof RequiredElement)
+                .map(element -> (RequiredElement) element)
+                .filter(RequiredElement::isRequired)
+                .collect(Collectors.toList());
     }
 
 }

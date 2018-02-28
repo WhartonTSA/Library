@@ -7,6 +7,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by eric on 11/19/17.
@@ -74,11 +75,14 @@ public class ObjectDelegate {
         Map<UUID, IBook> bookMap = getBookMap();
         Map<UUID, IPerson> personMap = getPersonMap();
         Map<UUID, ILibrary> libraryMap = getLibraryMap();
+        Map<UUID, IMember> memberMap = new HashMap<>();
+        libraryMap.forEach((id, library) -> memberMap.putAll(library.getMemberMap()));
 
         Map<UUID, Serializable> serializableMap = new HashMap<>();
-        bookMap.forEach(serializableMap::put);
-        personMap.forEach(serializableMap::put);
-        libraryMap.forEach(serializableMap::put);
+        serializableMap.putAll(bookMap);
+        serializableMap.putAll(personMap);
+        serializableMap.putAll(libraryMap);
+        serializableMap.putAll(memberMap);
 
         return serializableMap;
     }
@@ -94,5 +98,10 @@ public class ObjectDelegate {
     private static Loader getLoader() {
         return Loader.getLoader();
     }
+
+    public static List<IPerson> getActivePeople() {
+        return getPeople().stream().filter(person -> person.getMemberships().size() > 0).collect(Collectors.toList());
+    }
+
 
 }

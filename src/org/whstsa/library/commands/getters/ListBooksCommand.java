@@ -20,7 +20,7 @@ public class ListBooksCommand implements ICommand {
             if (full) {
                 result.put(book.getID().toString(), book.toJSON());
             } else {
-                result.put(book.getID().toString(), book.getTitle());
+                result.put(book.getID().toString(), book.getName());
             }
         });
         return result;

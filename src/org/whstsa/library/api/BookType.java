@@ -1,30 +1,25 @@
 package org.whstsa.library.api;
 
-import javax.xml.ws.Holder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public enum BookType {
-    GENERIC ("Generic"),
-    FICTION ("Fiction"),
-    NONFICTION ("Nonfiction"),
-    SCIENCE_FICTION ("Science Fiction"),
-    FANTASY ("Fantasy"),
-    HORROR ("Horror"),
-    MYSTERY ("Mystery"),
-    BIOGRAPHY ("Biography"),
-    CHILDRENS ("Children's"),
-    GRAPHIC_NOVEL ("Graphic Novel");
+    GENERIC("Generic"),
+    FICTION("Fiction"),
+    NONFICTION("Nonfiction"),
+    SCIENCE_FICTION("Science Fiction"),
+    FANTASY("Fantasy"),
+    HORROR("Horror"),
+    MYSTERY("Mystery"),
+    BIOGRAPHY("Biography"),
+    CHILDRENS("Children's"),
+    GRAPHIC_NOVEL("Graphic Novel");
 
     public final String genre;
 
     BookType(String genre) {
         this.genre = genre;
-    }
-
-    public String getGenre() {
-        return this.genre;
     }
 
     public static BookType getGenre(String genre) {
@@ -50,5 +45,9 @@ public enum BookType {
             list.add(book.getGenre());
         }
         return list;
+    }
+
+    public String getGenre() {
+        return this.genre;
     }
 }

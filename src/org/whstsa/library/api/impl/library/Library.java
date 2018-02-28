@@ -21,6 +21,7 @@ public class Library implements ILibrary {
 
     private List<IBook> books;
     private List<IMember> members;
+    private Map<UUID, Integer> bookQuantity;
 
     private String name;
 
@@ -31,6 +32,7 @@ public class Library implements ILibrary {
         this.members = new ArrayList<>();
         this.name = name;
         this.uuid = UUID.randomUUID();
+        this.bookQuantity = new HashMap<>();
     }
 
     public static ILibrary findLibrary(UUID memberID) {
@@ -54,11 +56,6 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
     public JSONObject toJSON() {
         JSONObject object = new JSONObject();
 
@@ -74,15 +71,20 @@ public class Library implements ILibrary {
 
         object.put("name", this.name);
 
+        JSONObject quantities = new JSONObject();
+        this.bookQuantity.forEach((id, quantity) -> quantities.put(id.toString(), quantity));
+        object.put("quantities", quantities);
+
         return object;
     }
 
     @Override
-    public void addBook(IBook book) {
+    public void addBook(IBook book, int quantity) {
         if (this.books.contains(book)) {
             return;
         }
         this.books.add(book);
+        this.setQuantity(book.getID(), quantity);
     }
 
     @Override
@@ -101,6 +103,7 @@ public class Library implements ILibrary {
         if (book != null) {
             if (!this.books.contains(book)) {
                 this.books.add(book);
+                this.setQuantity(id, 5);
             }
         }
     }
@@ -135,20 +138,20 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public ICheckout reserveBook(IMember member, IBook book) throws BookNotRegisteredException {
+    public ICheckout reserveBook(IMember member, IBook book, int quantity) throws BookNotRegisteredException, OutOfStockException, MaximumCheckoutsException {
+        if (!this.bookQuantity.containsKey(book.getID())) {
+            this.bookQuantity.put(book.getID(), 5);
+        }
+        if (this.bookQuantity.get(book.getID()) == null || checkOutOfStock(book)) {
+            throw new OutOfStockException(book, this);
+        }
+        if (member.getCheckouts().size() == (member.getPerson().isTeacher() ? 10 : 5)) {
+            throw new MaximumCheckoutsException(member);
+        }
         ICheckout checkout = new Checkout(member, book);
         member.checkout(checkout);
+        this.bookQuantity.put(book.getID(), bookQuantity.get(book.getID()));
         return checkout;
-    }
-
-    @Override
-    public IMember addMember(IPerson person) {
-        if (this.hasMember(person)) {
-            return this.getPersonMemberMap().get(person);
-        }
-        IMember member = person.addMembership(this);
-        this.members.add(member);
-        return member;
     }
 
     @Override
@@ -156,20 +159,25 @@ public class Library implements ILibrary {
         if (member.getLibrary() != this) {
             throw new MemberMismatchException("Member is not created for this library.");
         }
-        if (!this.members.contains(member)) {
+        if (!this.members.contains(member) && !this.getPeople().contains(member.getPerson())) {
             this.members.add(member);
         }
         return member;
     }
 
     @Override
-    public List<IPerson> getPeople() {
-        return this.members.stream().map(IMember::getPerson).collect(Collectors.toList());
+    public IMember getMember(IPerson person) {
+        return this.getPersonMemberMap().get(person);
     }
 
     @Override
-    public IMember getMember(IPerson person) {
-        return this.getPersonMemberMap().get(person);
+    public IMember addMember(IPerson person) {
+        IMember possibleMember = this.hasMember(person) ? this.getMember(person) : null;
+        if (possibleMember != null) {
+            return possibleMember;
+        }
+        IMember member = person.addMembership(this);
+        return this.addMember(member);
     }
 
     @Override
@@ -221,6 +229,11 @@ public class Library implements ILibrary {
     }
 
     @Override
+    public List<IPerson> getPeople() {
+        return this.members.stream().map(IMember::getPerson).collect(Collectors.toList());
+    }
+
+    @Override
     public List<UUID> getMemberIDs() {
         List<UUID> ids = new ArrayList<>();
         this.members.forEach(member -> ids.add(member.getID()));
@@ -250,9 +263,20 @@ public class Library implements ILibrary {
     }
 
     @Override
-    public boolean hasMember(IPerson person) {
-        return this.getPersonMemberMap().containsKey(person);
+    public void setName(String name) {
+        this.name = name;
     }
+
+    @Override
+    public boolean hasMember(IPerson person) {
+        for (IMember member : this.members) {
+            if (member.getPerson() == person) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public void load() {
@@ -275,6 +299,31 @@ public class Library implements ILibrary {
         Map<IPerson, IMember> personIMemberMap = new HashMap<>();
         this.members.forEach(member -> personIMemberMap.put(member.getPerson(), member));
         return personIMemberMap;
+    }
+
+    @Override
+    public Map<UUID, Integer> getBookQuantity() {
+        return bookQuantity;
+    }
+
+    @Override
+    public int getQuantity(UUID id) {
+        return this.bookQuantity.get(id);
+    }
+
+    @Override
+    public void setQuantity(UUID id, int amount) {
+        this.bookQuantity.put(id, amount);
+    }
+
+    @Override
+    public boolean checkOutOfStock(IBook book) {
+        return getQuantity(book.getID()) == (getCheckouts().get(book) != null ? getCheckouts().get(book).size() : 0);
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 
 }

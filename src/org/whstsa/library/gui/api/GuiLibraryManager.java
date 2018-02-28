@@ -1,36 +1,19 @@
 package org.whstsa.library.gui.api;
 
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import org.whstsa.library.LibraryDB;
 import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.gui.components.tables.DatabaseManagementTables;
-import org.whstsa.library.gui.components.SearchBarElement;
 
 public class GuiLibraryManager implements Gui {
 
     private final ILibrary library;
-    private final LibraryDB libraryDB;
-    public final BorderPane window;
+    private final BorderPane window;
 
     public GuiLibraryManager(ILibrary lib, LibraryDB libraryDB) {
-        library = lib;
-        this.libraryDB = libraryDB;
-        window = DatabaseManagementTables.libraryManagerTable(() -> this.library, this.libraryDB);
-        GuiMenuBar menuBar = new GuiMenuBar(false);
-        window.setTop(new VBox(menuBar.getMenu(), new HBox()));
-    }
-
-    public ILibrary getActiveLibrary() {
-        return library;
-    }
-
-    public BorderPane getWindow() {
-        return window;
+        this.library = lib;
+        this.window = DatabaseManagementTables.libraryManagerTable(() -> this.library, libraryDB);
     }
 
     @Override
@@ -40,7 +23,7 @@ public class GuiLibraryManager implements Gui {
 
     @Override
     public String getUUID() {
-        return "GUI_LIBRARY_MANAGER";
+        return "GUI_LIBRARY_MANAGER_" + library.getName().toUpperCase();
     }
 
 }

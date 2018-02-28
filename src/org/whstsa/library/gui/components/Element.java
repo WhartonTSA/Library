@@ -4,9 +4,14 @@ import javafx.scene.Node;
 
 public interface Element {
     Node getComputedElement();
+
     String getID();
-    Object getResult();
-    String getString();
-    boolean getBoolean();
+
     void setID(String id);
+
+    Object getResult();
+
+    String getString();
+
+    boolean getBoolean();
 }

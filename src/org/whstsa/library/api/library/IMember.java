@@ -1,16 +1,20 @@
 package org.whstsa.library.api.library;
 
 import org.whstsa.library.api.IPerson;
+import org.whstsa.library.api.Identifiable;
 import org.whstsa.library.api.Serializable;
 import org.whstsa.library.api.Unique;
 import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.exceptions.*;
+import org.whstsa.library.api.exceptions.BookNotRegisteredException;
+import org.whstsa.library.api.exceptions.CheckedInException;
+import org.whstsa.library.api.exceptions.MemberMismatchException;
+import org.whstsa.library.api.exceptions.OutstandingFinesException;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface IMember extends IBookHolder, Serializable, Unique {
+public interface IMember extends IBookHolder, Serializable, Unique, Identifiable {
 
     /**
      * Returns the library this member belongs to
@@ -25,13 +29,6 @@ public interface IMember extends IBookHolder, Serializable, Unique {
      * @return the person
      */
     IPerson getPerson();
-
-    /**
-     * Convenience method. Returns the name of the person
-     *
-     * @return the name of the person
-     */
-    String getName();
 
     /**
      * Returns the list of checkouts this member has made for a given book
@@ -72,12 +69,20 @@ public interface IMember extends IBookHolder, Serializable, Unique {
     Map<IBook, List<ICheckout>> getCheckoutMap();
 
     /**
+     * Removes a checkout from this member
+     *
+     * @param checkout the checkout to remove
+     * @throws OutstandingFinesException if {@code totalFines > 0}
+     */
+
+    void returnCheckout(ICheckout checkout) throws OutstandingFinesException;
+
+    /**
      * Removes a book from this member
      *
      * @param book the book to remove
      * @throws OutstandingFinesException if {@code totalFines > 0}
      */
-    @Override
     void removeBook(IBook book) throws OutstandingFinesException;
 
     /**
@@ -86,7 +91,6 @@ public interface IMember extends IBookHolder, Serializable, Unique {
      * @param id the id of the book to remove
      * @throws OutstandingFinesException if {@code totalFines > 0}
      */
-    @Override
     void removeBook(UUID id) throws OutstandingFinesException;
 
     /**
@@ -103,9 +107,8 @@ public interface IMember extends IBookHolder, Serializable, Unique {
      * Checks a checkout back in, paying any fines that it may have
      *
      * @param checkout The checkout to return
-     * @throws NotEnoughMoneyException if {@code fine > balance}
      * @throws MemberMismatchException if {@code checkout.member != this}
      * @throws CheckedInException      if {@code checkout.isReturned()}
      */
-    void checkInAndPayFines(ICheckout checkout) throws NotEnoughMoneyException, MemberMismatchException, CheckedInException;
+    void checkInAndPayFines(ICheckout checkout) throws MemberMismatchException, CheckedInException;
 }

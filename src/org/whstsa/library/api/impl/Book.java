@@ -51,18 +51,18 @@ public class Book implements IBook {
     }
 
     @Override
-    public String getTitle() {
+    public void setType(BookType type) {
+        this.type = type;
+    }
+
+    @Override
+    public String getName() {
         return this.title;
     }
 
     @Override
     public String getAuthorName() {
         return this.authorName;
-    }
-
-    @Override
-    public void setType(BookType type) {
-        this.type = type;
     }
 
     @Override
@@ -78,6 +78,11 @@ public class Book implements IBook {
     @Override
     public void load() {
         Loader.getLoader().loadBook(this);
+    }
+
+    @Override
+    public String toString() {
+        return this.getName();
     }
 
 }

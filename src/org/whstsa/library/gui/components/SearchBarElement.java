@@ -5,21 +5,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import org.whstsa.library.api.books.IBook;
-import org.whstsa.library.api.library.IMember;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import org.whstsa.library.gui.factories.GuiUtils;
 
-public class SearchBarElement extends ToolBar implements Element{
+public class SearchBarElement<T> extends ToolBar implements Element {
 
     private LabelElement labelElement;
     private String id;
 
-    public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane mainContainer, Table<IBook> table) {
+    public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane mainContainer, Table<T> table) {
         super();
         this.id = id;
         this.labelElement = GuiUtils.createLabel(label, 12);
@@ -31,14 +30,14 @@ public class SearchBarElement extends ToolBar implements Element{
 
         Label filteredLabel = GuiUtils.createLabel("", 12);
 
-        ObservableList<IBook> originalData = table.getTable().getItems();
+        ObservableList<T> originalData = table.getTable().getItems();
 
         searchField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (oldValue != null && (newValue.length() < oldValue.length())) {
                 table.getTable().setItems(originalData);
             }
             String value = newValue.toLowerCase();
-            ObservableList<IBook> subentries = FXCollections.observableArrayList();
+            ObservableList<T> subentries = FXCollections.observableArrayList();
 
             long count = table.getTable().getColumns().size();
             for (int i = 0; i < table.getItems().size(); i++) {
@@ -54,8 +53,7 @@ public class SearchBarElement extends ToolBar implements Element{
 
             if (!subentries.equals(table.getItems())) {
                 filteredLabel.setText("Results have been filtered.");
-            }
-            else {
+            } else {
                 filteredLabel.setText("");
             }
 
@@ -65,66 +63,14 @@ public class SearchBarElement extends ToolBar implements Element{
         HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
 
         Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
+            ((VBox) mainContainer.getTop()).getChildren().set(2, new HBox());
             table.refresh();
         });
 
         super.getItems().addAll(searchLabel, searchField, filteredLabel, mainSpacer, closeButton);
-        super.setStyle("-fx-base: #abdec8;");
-    }
-
-    public SearchBarElement(String id, String label, ObservableList<String> items, BorderPane mainContainer, Table<IMember> table, String literallyPutAnyStringHereIDCYoureFavoriteWordMaybe) {
-        super();
-        this.id = id;
-        this.labelElement = GuiUtils.createLabel(label, 12);
-
-        Label searchLabel = GuiUtils.createLabel(label);
-        //ChoiceBoxElement field = GuiUtils.createChoiceBox("Book:", items, true, 0);
-
-        TextField searchField = new TextField();
-
-        Label filteredLabel = GuiUtils.createLabel("", 12);
-
-        ObservableList<IMember> originalData = table.getTable().getItems();
-
-        searchField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (oldValue != null && (newValue.length() < oldValue.length())) {
-                table.getTable().setItems(originalData);
-            }
-            String value = newValue.toLowerCase();
-            ObservableList<IMember> subentries = FXCollections.observableArrayList();
-
-            long count = table.getTable().getColumns().size();
-            for (int i = 0; i < table.getItems().size(); i++) {
-                for (int j = 0; j < count; j++) {
-                    String entry = "" + table.getTable().getColumns().get(j).getCellData(i);
-                    if (entry.toLowerCase().contains(value)) {
-                        subentries.add(table.getTable().getItems().get(i));
-                        break;
-                    }
-                }
-            }
-            table.getTable().setItems(subentries);
-
-            if (!subentries.equals(table.getItems())) {
-                filteredLabel.setText("Results have been filtered.");
-            }
-            else {
-                filteredLabel.setText("");
-            }
-
-        });
-
-        HBox mainSpacer = new HBox(new Label(""));
-        HBox.setHgrow(mainSpacer, Priority.ALWAYS);//HBox that always grows to maximum width, keeps X button on right side of toolBar
-
-        Button closeButton = GuiUtils.createButton("X", false, 5, Pos.CENTER_RIGHT, event -> {//TODO Ugly close button
-            ((VBox) mainContainer.getTop()).getChildren().set(1, new HBox());
-            table.refresh();
-        });
-
-        super.getItems().addAll(searchLabel, searchField, filteredLabel, mainSpacer, closeButton);
-        super.setStyle("-fx-base: #abdec8;");
+        super.setBackground(new Background(new BackgroundFill(Color.web("#abdec8"), null, null)));
+        closeButton.setStyle("-fx-base: #ff8787;");
+        super.requestFocus();
     }
 
     public Node getComputedElement() {
@@ -138,7 +84,14 @@ public class SearchBarElement extends ToolBar implements Element{
         return this.id;
     }
 
-    public Object getResult() { return null; }
+    @Override
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    public Object getResult() {
+        return null;
+    }
 
     @Override
     public String getString() {
@@ -148,11 +101,6 @@ public class SearchBarElement extends ToolBar implements Element{
     @Override
     public boolean getBoolean() {
         return false;
-    }
-
-    @Override
-    public void setID(String id) {
-        this.id = id;
     }
 
 }
