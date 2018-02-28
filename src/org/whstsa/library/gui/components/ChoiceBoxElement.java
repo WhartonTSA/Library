@@ -4,7 +4,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.gui.factories.GuiUtils;
 import org.whstsa.library.gui.factories.LibraryManagerUtils;
 import org.whstsa.library.util.ChoiceBoxProperty;

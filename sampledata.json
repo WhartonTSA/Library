@@ -13,23 +13,45 @@
             "bookType": "FICTION"
         }
     ],
-    "libraries": [{
-        "books": [
-            "7ff99c0c-8638-48b9-8275-93a3665a01e6",
-            "16642b5d-e798-4bac-b266-4e5351bbf6ba"
-        ],
-        "members": [{
-            "checkouts": {},
-            "personID": "a266892e-2e45-4cec-b19d-2bec43f1e61c",
-            "uuid": "a3754800-3288-40f1-9868-3a85468fd0c7"
-        }],
-        "name": "Wharton High School",
-        "quantities": {
-            "7ff99c0c-8638-48b9-8275-93a3665a01e6": 5,
-            "16642b5d-e798-4bac-b266-4e5351bbf6ba": 5
+    "libraries": [
+        {
+            "books": [
+                "7ff99c0c-8638-48b9-8275-93a3665a01e6",
+                "16642b5d-e798-4bac-b266-4e5351bbf6ba"
+            ],
+            "members": [{
+                "checkouts": {"7ff99c0c-8638-48b9-8275-93a3665a01e6": [
+                    {
+                        "dueDate": "2018-03-31T12:08:58.433-04",
+                        "returned": false,
+                        "uuid": "bfbd2d88-824c-43ac-b232-11d0d71a42a6",
+                        "bookID": "7ff99c0c-8638-48b9-8275-93a3665a01e6"
+                    },
+                    {
+                        "dueDate": "2018-03-05T12:20:03.586-05",
+                        "returned": false,
+                        "uuid": "2a35cc9c-87ef-43d1-8e87-ecf6ddd305be",
+                        "bookID": "7ff99c0c-8638-48b9-8275-93a3665a01e6"
+                    }
+                ]},
+                "personID": "a266892e-2e45-4cec-b19d-2bec43f1e61c",
+                "uuid": "a3754800-3288-40f1-9868-3a85468fd0c7"
+            }],
+            "name": "Wharton High School",
+            "quantities": {
+                "7ff99c0c-8638-48b9-8275-93a3665a01e6": 5,
+                "16642b5d-e798-4bac-b266-4e5351bbf6ba": 5
+            },
+            "uuid": "ef04c666-7556-4bf8-b377-e7ebf03ef4fd"
         },
-        "uuid": "ef04c666-7556-4bf8-b377-e7ebf03ef4fd"
-    }],
+        {
+            "books": [],
+            "members": [],
+            "name": "asd",
+            "quantities": {},
+            "uuid": "66ff231f-d203-47d3-aeb8-44ea9ba255f7"
+        }
+    ],
     "people": [
         {
             "firstName": "Eric",
