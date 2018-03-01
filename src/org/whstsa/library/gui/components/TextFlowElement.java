@@ -29,7 +29,7 @@ public class TextFlowElement extends TextFlow implements Element {
 
     @Override
     public Node getComputedElement() {
-        return GuiUtils.createTextFlow(this.id, this.size, this.css, this.fields);
+        return this;
     }
 
     @Override
