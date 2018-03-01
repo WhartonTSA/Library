@@ -13,6 +13,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.api.library.IMember;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.components.tables.MemberBookRow;
 import org.whstsa.library.gui.factories.DialogBuilder;
@@ -59,6 +60,7 @@ public class MemberMetaDialogs {
     public static void deleteMember(IMember member, Callback<IMember> callback) {
         Dialog dialog = new DialogBuilder()
                 .setTitle("Remove Member")
+                .addElement(new LabelElement("member-remove-conf-dialog", "Are you sure you want to remove '" + member.getName() + "' from the library?"))
                 .addButton(ButtonType.YES, true, event -> {
                     if (!member.getPerson().isRemovable()) {
                         DialogUtils.createDialog("Person Still Active", member.getName() + " is ineligible to be withdrawn because they have books checked out.", null, Alert.AlertType.ERROR).showAndWait();

@@ -15,6 +15,7 @@ import org.whstsa.library.api.library.ILibrary;
 import org.whstsa.library.db.Loader;
 import org.whstsa.library.db.ObjectDelegate;
 import org.whstsa.library.gui.components.Element;
+import org.whstsa.library.gui.components.LabelElement;
 import org.whstsa.library.gui.components.Table;
 import org.whstsa.library.gui.components.tables.BookStatusRow;
 import org.whstsa.library.gui.factories.DialogBuilder;
@@ -83,6 +84,7 @@ public class BookMetaDialogs {
     public static void deleteBook(IBook book, Callback<IBook> callback) {
         Dialog dialog = new DialogBuilder()
                 .setTitle("Remove Book")
+                .addElement(new LabelElement("remove-book-conf-body", "Are you sure you want to remove '" + book.getName() + "' from the registry?"))
                 .addButton(ButtonType.YES, true, event -> {
                     try {
                         ObjectDelegate.getLibraries().get(0).removeBook(book);
