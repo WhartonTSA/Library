@@ -70,7 +70,7 @@ public class CheckoutMetaDialogs {
         table.getTable().getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         table.getTable().getSelectionModel().selectedIndexProperty().addListener((obs, oldSelection, newSelection) -> {
             toolBar.getItems().set(1, GuiUtils.createTextFlow(returning ? "checkin" : "checkout", 15, "-fx-base: #000000;",
-                    returning ? "Returning" : "Checking out ",
+                    returning ? "Returning " : "Checking out ",
                     table.getTable().getSelectionModel().getSelectedIndices().size() + "",
                     returning ? " books from " : " books to ",
                     member.getName() + "."));
